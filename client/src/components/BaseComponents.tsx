@@ -1,0 +1,73 @@
+import styled from 'styled-components'
+import TextareaAutosize from 'react-textarea-autosize'
+
+
+// minimal Div component
+type GridMapType = { [index: number]: string }
+const GridMap: GridMapType = {
+  1: '8.33%',
+  2: '16.66%',
+  3: '25%',
+  4: '33.33%',
+  5: '41.66%',
+  6: '50%',
+  7: '58.33%',
+  8: '66.66%',
+  9: '75%',
+  10: '83.33%',
+  11: '91.66%',
+  12: '100%'
+}
+type DivProps = {
+  column?: boolean,
+  row?: boolean,
+  width: number,
+}
+export const Div = styled.div<DivProps>`
+  display: flex;
+  flex-direction: ${props => props.column ? 'column' : props.row ? 'row' : 'column'};
+  width: ${props => GridMap[props.width]};
+`
+
+// text defaults
+export const H1 = styled.h1`
+  font-family: 'glypha';
+	text-align: left;
+  font-weight: unset;
+  font-size: 30px;
+
+  margin: unset;
+  padding: 0px;
+`
+export const H2 = styled.h2`
+  font-family: helvetica;
+	text-align: left;
+  font-weight: unset;
+  font-size: 14px;
+
+  margin: unset;
+  padding: 0px;
+`
+
+// default image using background-image
+type ImageProps = {
+  src: string
+  size: number,
+}
+export const Img = styled.div<ImageProps>`
+  background-image: ${props => `url(${process.env.REACT_APP_S3_BUCKET + props.src})`};
+  background-position: center;
+  background-size: cover;
+  padding-bottom: ${props => GridMap[props.size]};
+`
+
+// resizeable textarea using external lib
+export const TextArea = styled(TextareaAutosize)`
+	outline: none;
+	box-shadow: none;
+	border: none;
+	overflow: hidden;
+	resize: none;
+	padding: 0px;
+	text-align: left;
+`

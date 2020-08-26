@@ -1,0 +1,33 @@
+{
+  "username": "johnkauber",
+  "data": [
+    {
+      "component": "name",
+      "id": "77cdb1c8-18ef-45e3-9182-d613269ec68e",
+      "props": {
+        "name": "John Kauber"
+      }
+    },
+    {
+      "component": "headline",
+      "id": "86a1bdcf-8d81-4a56-a182-281b888450e1",
+      "props": {
+        "headline": "John is a Security Engineer and Analyst passionate about protecting critical systems from threat of attack."
+      }
+    },
+    {
+      "component": "image",
+      "id": "c7caf441-ee5a-472f-a290-9f8ee7348a98",
+      "props": {
+        "image": "mizmatcat.png"
+      }
+    },
+    {
+      "component": "bio",
+      "id": "4ea20364-8efe-485a-b655-22131a8b6656",
+      "props": {
+        "bio": "He’s currently a security engineer at BigCo, where he’s helping to build a system wide penetration testing platform to keep BigCo’s systems safe.  A big advocate for the EFF, part-time white hat hacker, and proud member of the Information Systems Security Association, John also founded the young hacker coalition (YHC) in 2018. John loves to travel internationally, and is rarely found abroad without a camera in his hand. You can find him in San Francisco, California."
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  ProfilesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: profiles
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: username
+          KeyType: HASH
+      AttributeDefinitions:
+        - AttributeName: username
+          AttributeType: S
