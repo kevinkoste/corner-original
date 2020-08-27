@@ -8,14 +8,14 @@
   "scripts": {
     "start": "tsc && node -r dotenv/config --es-module-specifier-resolution=node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "reset-resources": "yarn deploy && yarn populate",
-    "deploy": "aws cloudformation update-stack --stack-name linker --template-body file://src/resources/dynamodb-resources.yml",
-    "populate": "aws dynamodb put-item --table-name profiles --item file://src/resources/kauber.json"
+    "create-stack": "aws cloudformation create-stack --stack-name xyz --template-body file://src/resources/vpc-resources.yml",
+    "update-stack": "aws cloudformation update-stack --stack-name xyz --template-body file://src/resources/vpc-resources.yml"
   },
   "dependencies": {
     "@types/uuid": "^8.3.0",
     "aws-sdk": "^2.738.0",
     "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "cotter-node": "^0.1.2",
     "cotter-token-js": "^0.1.5",

@@ -6,20 +6,19 @@ import { Profile, EmptyProfile } from '../models/Profile'
 type StateType = {
   profile: Profile,
   editing: boolean,
-  auth: boolean
+  auth: boolean,
+  username: string
 }
 
 const initialState: StateType = {
   profile: EmptyProfile,
   editing: false,
-  auth: false
+  auth: false,
+  username: ""
 }
 
 type ProfileContextType = {
-  state: {
-    profile: Profile,
-    editing: boolean
-  }
+  state: StateType,
   dispatch: Dispatch<Action>
 }
 
@@ -33,6 +32,8 @@ const UPDATE_PROFILE = "UPDATE_PROFILE"
 const TOGGLE_EDITING = "TOGGLE_EDITING"
 const UPDATE_COMPONENT = "UPDATE_COMPONENT"
 const MOVE_COMPONENT = "MOVE_COMPONENT"
+const SET_AUTH = "SET_AUTH"
+
 
 // Valid action types
 type Action =
@@ -40,6 +41,8 @@ type Action =
  | { type: "TOGGLE_EDITING" }
  | { type: "UPDATE_COMPONENT", id: string, props: any }
  | { type: "MOVE_COMPONENT" }
+ | { type: "SET_AUTH", auth: boolean }
+
 
 
 // Action creators
@@ -53,6 +56,10 @@ export const toggleEditing = (): Action => {
 
 export const updateComponent = (id: string, props: any): Action => {
   return { type: UPDATE_COMPONENT, id: id, props: props}
+}
+
+export const setAuth = (auth: boolean): Action => {
+  return { type: SET_AUTH, auth: auth }
 }
 
 // export const moveComponent = (): Action => {
@@ -92,8 +99,16 @@ const ProfileReducer = (state: StateType, action: Action) => {
         }
       }
 
+    case SET_AUTH:
+      return {
+        ...state,
+        auth: action.auth
+      }
+
     case MOVE_COMPONENT:
       return state
+
+
 
     default:
       return state

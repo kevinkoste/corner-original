@@ -1,0 +1,135 @@
+# CloudFormation file
+Description: Resources implementing a VPC with 1 public subnet
+
+Resources:
+
+  # DynamoDB profiles table
+  ProfilesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: profiles
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: email
+          AttributeType: S
+        - AttributeName: username
+          AttributeType: S
+      KeySchema:
+        - AttributeName: email
+          KeyType: HASH
+      GlobalSecondaryIndexes: 
+        - IndexName: username-index
+          KeySchema: 
+            - AttributeName: username
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+              
+
+  # Core VPC resources: VPC, Subnet
+  XyzVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      InstanceTenancy: default
+      Tags: 
+        - Key: "Name"
+          Value: "XyzVPC"
+
+  XyzSubnetA:
+    Type: AWS::EC2::Subnet
+    DependsOn: XyzVPC
+    Properties:
+      VpcId:
+        Ref: XyzVPC
+      AvailabilityZone: us-west-1a
+      CidrBlock: 10.0.0.0/24
+      Tags: 
+        - Key: "Name"
+          Value: "XyzSubnetA"
+
+
+  # Resources for VPC public subnet networking
+  # Internet Gateway, Internet Gateway Attachment, Public Route Table/Route, Route Table Association
+  XyzInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: "Name"
+          Value: "XyzInternetGateway"
+
+  XyzVPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+        Ref: XyzVPC
+      InternetGatewayId:
+        Ref: XyzInternetGateway
+
+  XyzRouteTablePublic:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: XyzVPC
+      Tags:
+        - Key: Name
+          Value: Xyz-public-route-table
+
+  XyzRoutePublic:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      RouteTableId:
+        Ref: XyzRouteTablePublic
+      GatewayId:
+        Ref: XyzInternetGateway
+
+  XyzRouteTableAssociationSubnetA:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: XyzRouteTablePublic
+      SubnetId:
+        Ref: XyzSubnetA
+
+
+  # Resources for VPC public subnet networking
+  # Elastic IP, NAT Gateway, Private Route Table/Route, Route Table Associations
+  XyzEip:
+    Type: AWS::EC2::EIP
+    DependsOn: XyzVPC
+    Properties:
+      Domain: vpc
+      Tags: 
+        - Key: "Name"
+          Value: "XyzEIP"
+
+  XyzNatGateway:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId:
+        Fn::GetAtt: [ XyzEip, AllocationId ]
+      SubnetId:
+        Ref: XyzSubnetA
+
+  # Resources for EC2 instance: Instance, Security Group
+  # XyzInstanceSecurityGroup:
+  #   Type: AWS::EC2::SecurityGroup
+  #   Properties:
+  #     GroupDescription: Allow public connections
+  #     SecurityGroupIngress:
+  #     - IpProtocol: tcp
+  #       FromPort: 80
+  #       ToPort: 80
+  #       CidrIp: 0.0.0.0/0
+    
+  # XyzInstance:
+  #   Type: AWS::EC2::Instance
+  #   Properties:
+  #     AvailabilityZone: us-west-1a
+  #     ImageId: ami-05655c267c89566dd
+  #     SecurityGroupsIds: [ { "Fn::GetAtt" : [ "XyzInstanceSecurityGroup", "GroupId" ] } ]
+
+

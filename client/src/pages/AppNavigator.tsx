@@ -1,16 +1,21 @@
 import React, { useEffect } from 'react'
 import { Route, Switch, BrowserRouter } from 'react-router-dom'
 
-import { useProfileContext } from '../context/ProfileContext'
+import { useProfileContext, setAuth } from '../context/ProfileContext'
+import { HomePage } from '../pages/HomePage'
 import { ProfilePage } from '../pages/ProfilePage'
 import { LoginPage } from '../pages/LoginPage'
 
 export const AppNavigator: React.FC = () => {
 
-  const { state, dispatch } = useProfileContext()
+  const { dispatch } = useProfileContext()
 
   // on mount, try to get auth cookie
   useEffect(() => {
+    if (localStorage.getItem("ACCESS_TOKEN") != null) {
+      console.log('found access token: ', localStorage.getItem('ACCESS_TOKEN'))
+      dispatch(setAuth(true))
+    }
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -28,7 +33,7 @@ export const AppNavigator: React.FC = () => {
         </Route>
 
         <Route path='/'>
-          <h1>Home</h1>
+          <HomePage />
         </Route>
 
       </Switch>

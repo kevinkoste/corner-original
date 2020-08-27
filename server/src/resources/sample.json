@@ -1,5 +1,7 @@
 {
+  "email": "kevinkoste@gmail.com",
   "username": "johnkauber",
+  "authId": "4eed08ee-3025-46c7-998a-c9224ee1b577",
   "data": [
     {
       "component": "name",
@@ -19,7 +21,7 @@
       "component": "image",
       "id": "c7caf441-ee5a-472f-a290-9f8ee7348a98",
       "props": {
-        "image": "mizmatcat.png"
+        "image": "images/05449456-c9c5-46a4-a42b-bde2c7de2e32.png"
       }
     },
     {
