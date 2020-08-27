@@ -1,24 +1,81 @@
 import axios from './axiosLib'
+// import { axiosPublic, axiosProtect } from './axiosLib'
 
 import { Profile } from '../models/Profile'
-import { cotter } from '../libs/cotterLib'
+import { cotter, GetCotterToken } from '../libs/cotterLib'
 
-
-export const GetProfileData = (username: string): Promise<any> => {
-  // const user = cotter.getLoggedInUser()
-  // cotter.tokenHandler.getAccessToken().then(token => {
-  //   console.log(token)
-  // })
-
-  return axios.get<Profile>(`/profile/${username}`)
+// PUBLIC ROUTES //
+export const GetPublicProfileData = (username: string): Promise<any> => {
+  return axios({
+    method: 'get',
+    url: `/public/profile/${username}`,
+  })
 }
 
-export const PostProfileData = (profile: Profile): Promise<any> => { 
-  return axios.post(`/profile`, profile)
+export const PostPublicLoginData = (data: any): Promise<any> => { 
+  return axios({
+    method: 'post',
+    url: `/public/login`,
+    data: data
+  })
 }
 
-export const PostLoginData = (data: any): Promise<any> => { 
-  return axios.post(`/auth/login`, data)
+
+// PROTECTED ROUTES // 
+export const PostOnboardCheck = (): Promise<any> => {
+  return GetCotterToken()
+    .then(res => res.token)
+    .then(token => {
+
+      const user = cotter.getLoggedInUser()
+      const email = user.identifier
+      const authId = user.client_user_id
+
+      return axios({
+        method: 'post',
+        url: `/protect/onboard`,
+        headers: { authorization: `Bearer ${token}` },
+        data: {
+          email: email,
+          authId: authId
+        }
+      })
+    })
+    .catch(err => {
+      console.log(err)
+    })
+}
+
+
+export const GetProtectProfile = (username: string): Promise<any> => {
+  return GetCotterToken()
+    .then(res => res.token)
+    .then(token => {
+      return axios({
+        method: 'get',
+        url: `/protect/profile/${username}`,
+        headers: { authorization: `Bearer ${token}` },
+      })
+    })
+    .catch(err => {
+      console.log(err)
+    })
+}
+
+export const PostProtectProfileUpdate = (profile: Profile): Promise<any> => {
+  return GetCotterToken()
+    .then(res => res.token)
+    .then(token => {
+      return axios({
+        method: 'post',
+        url: `/protect/profile/${profile.username}`,
+        headers: { authorization: `Bearer ${token}` },
+        data: profile
+      })
+    })
+    .catch(err => {
+      console.log(err)
+    })
 }
 
 

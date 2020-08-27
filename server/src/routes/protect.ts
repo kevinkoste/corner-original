@@ -12,32 +12,9 @@ import s3 from '../libs/s3'
 const router = express.Router()
 router.use(authMiddleware)
 
-// protect/onboard - Updates the user Item in the db with username and data attribute
-router.post('/onboard', (req, res) => {
+// PROFILE ROUTES //
 
-  console.log('request body:', req.body)
-  console.log('request headers:', req.headers)
-
-  const email = req.body.email
-
-  console.log('email is:', email)
-
-  db.put({
-    TableName: 'profiles',
-    Item: {
-      email: req.body.email,
-      username: req.body.username,
-      data: req.body.data
-    }
-  }).then(data => {
-    res.status(200)
-  }).catch(err => {
-    console.log(err)
-    res.status(500)
-  })
-})
-
-// protect/:username - upload new profile data for auth'd user
+// POST /protect/:username - upload new profile data for auth'd user
 router.post('/:username', (req, res) => {
 
   const username = req.params.username
@@ -57,7 +34,7 @@ router.post('/:username', (req, res) => {
 
 })
 
-// protect/:username/upload-image - uploads a new image for a profile
+// POST /protect/:username/upload-image - uploads a new image for a profile
 // also need to try to delete profiles prev photo on new upload
 router.post('/:username/upload-image', (req, res) => {
 
@@ -89,19 +66,50 @@ router.post('/:username/upload-image', (req, res) => {
       res.status(500)
     })
   })
-  
-
 })
 
 
+// ONBOARDING ROUTES //
 
+// GET /protect/onboard/check - checks if a user has been onboarded
+router.post('/onboard/check', (req, res) => {
 
+  db.get({
+    TableName: 'profiles',
+    Key: { email: req.body.email }
+  }).then(data => {
+    console.log('found in db:', data.Item)
+    if ('data' in data.Item) {
+      res.status(200).send(true)
+    } else {
+      res.status(200).send(false)
+    }
+  }).catch(err => {
+    console.log(err)
+    res.status(500)
+  })
+})
 
+// POST /protect/onboard/update - Updates the user Item in the db with username and data attribute
+router.post('/onboard/update', (req, res) => {
 
+  console.log('request body:', req.body)
+  console.log('request headers:', req.headers)
 
-
+  db.put({
+    TableName: 'profiles',
+    Item: {
+      email: req.body.email,
+      username: req.body.username,
+      data: req.body.data
+    }
+  }).then(data => {
+    res.status(200)
+  }).catch(err => {
+    console.log(err)
+    res.status(500)
+  })
+})
 
 
 export default router
-
-

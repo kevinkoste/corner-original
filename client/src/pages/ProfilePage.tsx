@@ -8,7 +8,7 @@ import { ProfileHeader } from '../components/ProfileHeader'
 import { ProfileBody } from '../components/ProfileBody'
 
 import { useProfileContext, updateProfile, toggleEditing } from '../context/ProfileContext'
-import { GetProfileData, PostProfileData } from '../libs/apiLib'
+import { GetPublicProfileData, PostProtectProfileUpdate } from '../libs/apiLib'
 
 export const ProfilePage: React.FC = () => {
 
@@ -17,7 +17,7 @@ export const ProfilePage: React.FC = () => {
 
   // on component mount, get profile data from server
   useEffect(() => {
-    GetProfileData(username)
+    GetPublicProfileData(username)
       .then(res => {
         dispatch(updateProfile(res.data))
       })
@@ -30,7 +30,7 @@ export const ProfilePage: React.FC = () => {
   // on save profile, post new profile data to server
   const onClick = () => {
     if (state.editing) {
-      PostProfileData(state.profile)
+      PostProtectProfileUpdate(state.profile)
       .then(res => {
         console.log(res)
       })
