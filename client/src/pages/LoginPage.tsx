@@ -3,8 +3,9 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 // presentation
-import { Div } from '../components/BaseComponents'
+import { Div, Button } from '../components/BaseComponents'
 import { Header } from '../components/Header'
+import { useDetectMobile } from '../libs/hooksLib'
 
 // logic
 import { useAppContext, setAuth } from '../context/AppContext'
@@ -15,6 +16,8 @@ import { cotter } from '../libs/cotterLib'
 export const LoginPage: React.FC = () => {
 
 	let history = useHistory()
+	const mobile: boolean = useDetectMobile()
+
 	const { state, dispatch } = useAppContext()
 	
 	useEffect(() => {
@@ -47,19 +50,36 @@ export const LoginPage: React.FC = () => {
 
 			<Header title='Login' />
 
-			<div id="cotter-form-container" style={{ marginTop: 300, width: 300, height: 300 }} />
+			<BodyContainer column width={mobile ? 11 : 6}>
+				{ !state.auth &&
+					<div id="cotter-form-container" style={{ width: '100%', height: 300 }} />
+				}
 
-      <button onClick={onLogOutClick} style={{margin: '20px 0px 20px 0px'}}>
-        logout
-      </button>
-			
+				{ state.auth &&
+          <LogoutButton onClick={onLogOutClick} >
+            Join Corner
+          </LogoutButton>
+        }
+			</BodyContainer>
+
 		</PageContainer>
 	)
 }
 
 const PageContainer = styled(Div)`
-	max-width: 100vw;
+  max-width: 100vw;
+  min-height: 80vh;
 	align-items: center;
 	overflow: hidden;
-	position: relative;
+  position: relative;
+`
+
+const BodyContainer = styled(Div)`
+  align-items: center;
+  margin: auto;
+`
+
+const LogoutButton = styled(Button)`
+  margin-top: 20px;
+  align-self: flex-start;
 `

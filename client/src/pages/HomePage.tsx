@@ -1,17 +1,23 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { Div, H1, H2 } from '../components/BaseComponents'
+import { Div, H1, H2, Button } from '../components/BaseComponents'
 import { Header } from '../components/Header'
 
-import { useAppContext } from '../context/AppContext'
 import { useDetectMobile } from '../libs/hooksLib'
+import { useAppContext } from '../context/AppContext'
 
 
 export const HomePage: React.FC = () => {
 
+  let history = useHistory()
 	const mobile: boolean = useDetectMobile()
-  const { dispatch } = useAppContext()
+	const { state, dispatch } = useAppContext()
+
+	const onClick = () => {
+    history.push('/login')
+	}
 	
   return (
     <PageContainer column width={12}>
@@ -26,6 +32,13 @@ export const HomePage: React.FC = () => {
         <SubtitleText>
         Corner is a platform to meet young people with big ideas. It’s part website builder, part professional network, and part portfolio site.
         </SubtitleText>
+
+        { !state.auth &&
+          <LoginButton onClick={onClick} >
+            Join Corner
+          </LoginButton>
+        }
+
       </BodyContainer>
 
     </PageContainer>
@@ -34,15 +47,15 @@ export const HomePage: React.FC = () => {
 
 const PageContainer = styled(Div)`
   max-width: 100vw;
-  height: 100vh;
+  min-height: 80vh;
 	align-items: center;
 	overflow: hidden;
   position: relative;
 `
 
 const BodyContainer = styled(Div)`
-  flex: 1;
-  justify-content: center;
+  align-items: center;
+  margin: auto;
 `
 
 const TitleText = styled(H1)`
@@ -51,4 +64,9 @@ const TitleText = styled(H1)`
 
 const SubtitleText = styled(H2)`
   margin-top: 8px;
+`
+
+const LoginButton = styled(Button)`
+  margin-top: 20px;
+  align-self: flex-start;
 `

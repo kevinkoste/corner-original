@@ -26,6 +26,7 @@ export const AppNavigator: React.FC = () => {
       if ('username' in res.data) {
         console.log('signed in with:', res.data.username)
         dispatch(setUsername(res.data.username))
+        dispatch(setAuth(true))
       } else {
         console.log('no user signed in')
       }

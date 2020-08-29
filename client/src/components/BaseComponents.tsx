@@ -60,6 +60,8 @@ export const Img = styled.div<ImageProps>`
   background-image: ${props => `url(${process.env.REACT_APP_S3_BUCKET + props.src})`};
   background-position: center;
   background-size: cover;
+  position: relative;
+  text-align: center;
   padding-bottom: ${props => GridMap[props.size]};
 `
 
@@ -71,5 +73,26 @@ export const TextArea = styled(TextareaAutosize)`
 	overflow: hidden;
 	resize: none;
 	padding: 0px;
-	text-align: left;
+  text-align: left;
+  
+  font-family: 'source-serif';
+  font-size: 30px;
+`
+
+export const Button = styled.button`
+  /* removing default button styles */
+  display: inline-block;
+  border: none;
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+
+  font-family: 'inter';
+  font-size: 16px;
+
+  background-color: black;
+  color: white;
+  padding: 10px 20px 12px 20px;
+  cursor: pointer;
+  border-radius: 30px;
 `

@@ -118,20 +118,23 @@ export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 				</H1>
 			</Div>
 		)
-	} else if (!profileState.editing) {
-		return (
-			<ProfileImage size={12} src={props.image} />
-		)
 	} else {
 		return (
-			<ProfileImageUpload size={12} src={props.image}>
+			<ProfileImage size={12} src={props.image}>
 
-				<ProfileImageUploadInput
-					type='file'
-					onChange={handleFileUpload}
-				/>
+				{ (profileState.editing) &&
+					<ProfileImageUploadTopWrapper>
+						<ProfileImageUploadWrapper>
+							Choose Photo
+							<ProfileImageUploadInput
+								type='file'
+								onChange={handleFileUpload}
+							/>
+						</ProfileImageUploadWrapper>
+					</ProfileImageUploadTopWrapper>
+				}
 
-			</ProfileImageUpload>
+			</ProfileImage>
 		)
 	}
 }
@@ -151,33 +154,17 @@ const HeadlineText = styled(H1)`
 	margin-top: 20px;
 `
 
-const BioText = styled(H2)`
-	margin-top: 20px;
-`
-
-const ProfileImage = styled(Img)`
-	margin-top: 20px;
-` 
-
-const ProfileImageUpload = styled(Img)`
-	margin-top: 20px;
-	filter: blur(2px);
-
-	justify-content: center;
-	align-items: center;
-` 
-
-const ProfileImageUploadInput = styled.input`
-`
-
 const HeadlineTextArea = styled(TextArea)`
-	font-family: 'glypha';
 	font-size: 30px;
 	margin-top: 20px;
 
 	outline: 1px solid red;
 	outline-style: dashed;
   outline-offset: 5px;
+`
+
+const BioText = styled(H2)`
+	margin-top: 20px;
 `
 
 const BioTextArea = styled(TextArea)`
@@ -189,6 +176,45 @@ const BioTextArea = styled(TextArea)`
 	outline-style: dashed;
   outline-offset: 5px;
 `
+
+const ProfileImage = styled(Img)`
+	margin-top: 20px;
+` 
+
+const ProfileImageUploadInput = styled.input`
+	display: none;
+	width: unset;
+`
+
+const ProfileImageUploadTopWrapper = styled.div`
+	position: absolute;
+	top: 50%;
+	left: 50%;
+  transform: translate(0%,-50%);
+`
+
+const ProfileImageUploadWrapper = styled.label`
+	position: relative;
+	left: -50%;
+	text-align: center;
+	width: unset;
+
+	border: none;
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+
+  font-family: 'inter';
+  font-size: 16px;
+
+  background-color: black;
+  color: white;
+  padding: 10px 20px 12px 20px;
+  cursor: pointer;
+  border-radius: 30px;
+`
+
+
 
 
 // GenerateComponent takes JSON {id, component, props},

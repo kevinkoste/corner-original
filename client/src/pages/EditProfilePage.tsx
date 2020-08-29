@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 // presentation
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div } from '../components/BaseComponents'
+import { Div, Button } from '../components/BaseComponents'
 import { Header } from '../components/Header'
 
 // logic
@@ -58,20 +58,30 @@ export const EditProfilePage: React.FC = () => {
         {profileState.profile.components.map(component => GenerateEditComponent(component))}
       </BodyContainer>
 
-      <button onClick={onClick} style={{margin: '20px 0px 20px 0px'}}>
-        edit mode: {profileState.editing ? 'on' : 'off'}
-      </button>
+      {/* insert add component option! */}
+
+      <EditButton onClick={onClick} >
+        {profileState.editing ? 'Finish Editing' : 'Edit Corner'}
+      </EditButton>
 
 		</PageContainer>
 	)
 }
 
 const PageContainer = styled(Div)`
-	max-width: 100vw;
+  max-width: 100vw;
+  min-height: 100vh;
 	align-items: center;
 	overflow: hidden;
-	position: relative;
+  position: relative;
+  
 `
 
 const BodyContainer = styled(Div)`
+`
+
+const EditButton = styled(Button)`
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
 `
