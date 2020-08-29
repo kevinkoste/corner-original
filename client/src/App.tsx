@@ -1,13 +1,13 @@
 import React from 'react'
 
-import { ProfileProvider } from './context/ProfileContext'
+import { AppProvider } from './context/AppContext'
 import { AppNavigator } from './pages/AppNavigator'
 
 export const App: React.FC = () => {
 
   return (
-    <ProfileProvider>
+    <AppProvider>
       <AppNavigator />
-    </ProfileProvider>
+    </AppProvider>
   )
 }

@@ -1,29 +1,45 @@
 import React, { useEffect } from 'react'
-import { Route, Switch, BrowserRouter } from 'react-router-dom'
+import { Route, Switch, BrowserRouter, useHistory } from 'react-router-dom'
 
-import { useProfileContext, setAuth } from '../context/ProfileContext'
+import { useAppContext, setAuth } from '../context/AppContext'
+import { OnboardingProvider } from '../context/OnboardingContext'
+import { ProfileProvider } from '../context/ProfileContext'
+
 import { HomePage } from '../pages/HomePage'
-import { ProfilePage } from '../pages/ProfilePage'
+import { ProfilePage } from './ProfilePage'
+import { EditProfilePage } from './EditProfilePage'
 import { LoginPage } from '../pages/LoginPage'
 import { OnboardingPage } from '../pages/OnboardingPage'
-// import { CheckOnboarded } from '../libs/apiLib'
+import { PostProtectOnboardCheck, PostProtectInviteCheck } from '../libs/apiLib'
 
 
 export const AppNavigator: React.FC = () => {
 
-  const { dispatch } = useProfileContext()
+  let history = useHistory()
+  const { dispatch } = useAppContext()
 
   // on mount, handle auth checks
   useEffect(() => {
   
-    console.log('in appnavigator useeffect')
-
     if (localStorage.getItem('ACCESS_TOKEN') != null) {
       console.log('found access token: ', localStorage.getItem('ACCESS_TOKEN'))
       dispatch(setAuth(true))
 
       // check if user is onboarded
-      // CheckOnboarded()
+      // PostProtectOnboardCheck()
+      // .then(res => {
+      //   if (res.data) {
+      //     history.push('/home')
+      //   } else {
+      //     PostProtectInviteCheck()
+      //     .then(res => {
+      //       if (!res.data) {
+      //         history.push('/home')
+      //       }
+      //     })
+      //     .catch(err => console.log(err))
+      //   }
+      // })
 
     }
     
@@ -34,20 +50,30 @@ export const AppNavigator: React.FC = () => {
     <BrowserRouter>
       <Switch>
 
+        <Route exact path='/'>
+          <HomePage />
+        </Route>
+
         <Route exact path='/login'>
           <LoginPage />
         </Route>
 
         <Route exact path='/onboarding'>
-          <OnboardingPage />
+          <OnboardingProvider>
+            <OnboardingPage />
+          </OnboardingProvider>
         </Route>
 
-        <Route exact path='/:username'>
+        {/* public version of profile */}
+        <Route path='/:username'>
           <ProfilePage />
         </Route>
 
-        <Route path='/'>
-          <HomePage />
+        {/* if own profile, can navigate to edit version of profile */}
+        <Route exact path='/edit/:username'>
+          <ProfileProvider>
+            <EditProfilePage />
+          </ProfileProvider>
         </Route>
 
       </Switch>

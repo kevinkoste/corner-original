@@ -1,10 +1,11 @@
 import React from 'react'
 import styled, { keyframes } from 'styled-components'
 
-import { Div, H1 } from '../components/BaseComponents'
+import { Div, H1 } from './BaseComponents'
 import { useDetectMobile } from '../libs/hooksLib'
 
-export const HomeHeader: React.FC = () => {
+type HeaderProps = { title: string }
+export const Header: React.FC<HeaderProps> = ({ title }) => {
 
 	const mobile: boolean = useDetectMobile()
 
@@ -12,7 +13,7 @@ export const HomeHeader: React.FC = () => {
 		<HeaderContainer row width={mobile ? 11 : 6}>
 
 			<AnimatedName>
-				Home
+				{title}
 			</AnimatedName>
 
 			<AnimatedTitle>

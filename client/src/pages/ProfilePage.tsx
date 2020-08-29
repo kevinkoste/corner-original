@@ -1,25 +1,33 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
+// presentation
+import { useDetectMobile } from '../libs/hooksLib'
 import { Div } from '../components/BaseComponents'
-import { ProfileHeader } from '../components/ProfileHeader'
+import { Header } from '../components/Header'
 
-import { ProfileBody } from '../components/ProfileBody'
+// logic
+import { Profile, EmptyProfile } from '../models/Profile'
+import { GetPublicProfileData } from '../libs/apiLib'
+import { GenerateComponent } from '../components/ProfileComponents'
 
-import { useProfileContext, updateProfile, toggleEditing } from '../context/ProfileContext'
-import { GetPublicProfileData, PostProtectProfileUpdate } from '../libs/apiLib'
 
 export const ProfilePage: React.FC = () => {
 
+  const mobile: boolean = useDetectMobile()
+
   const { username } = useParams()
-  const { state, dispatch } = useProfileContext()
+  const [ profile, setProfile ] = useState<Profile>(EmptyProfile)
 
   // on component mount, get profile data from server
   useEffect(() => {
     GetPublicProfileData(username)
       .then(res => {
-        dispatch(updateProfile(res.data))
+        console.log('got public profile with res:')
+        console.log(res)
+
+        setProfile(res.data)
       })
       .catch(err => {
         console.log(err)
@@ -27,30 +35,14 @@ export const ProfilePage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // on save profile, post new profile data to server
-  const onClick = () => {
-    if (state.editing) {
-      PostProtectProfileUpdate(state.profile)
-      .then(res => {
-        console.log(res)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-    }
-    dispatch(toggleEditing())
-  }
-
 	return (
 		<PageContainer column width={12}>
 
-			<ProfileHeader />
+			<Header title={username} />
 
-			<ProfileBody />
-
-      <button onClick={onClick} style={{margin: '20px 0px 20px 0px'}}>
-        edit mode: {state.editing ? 'on' : 'off'}
-      </button>
+      <BodyContainer column width={mobile ? 11 : 6}>
+        {profile.components.map(component => GenerateComponent(component))}
+      </BodyContainer>
 
 		</PageContainer>
 	)
@@ -61,5 +53,8 @@ const PageContainer = styled(Div)`
 	align-items: center;
 	overflow: hidden;
 	position: relative;
+`
+
+const BodyContainer = styled(Div)`
 `
 

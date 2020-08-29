@@ -1,23 +1,38 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
+// presentation/types
+import { Div, H1, H2, Img, TextArea } from './BaseComponents'
+import {
+	NameComponent,
+	HeadlineComponent,
+	BioComponent,
+	HeadshotComponent,
+	ArticleComponent
+} from '../models/Profile'
+
+// logic
 import { useProfileContext, updateComponent } from '../context/ProfileContext'
-import { Div, H1, H2, Img, TextArea } from '../components/BaseComponents'
-import { Component, HeadlineProps, BioProps, ImageProps, ArticleProps } from '../models/Profile'
 import axios from '../libs/axiosLib'
 
 
-export const Headline: React.FC<HeadlineProps> = ({ id, headline }) => {
+export const Headline: React.FC<HeadlineComponent> = ({ id, props }) => {
 
-	const { state, dispatch } = useProfileContext()
+	const { profileState, profileDispatch } = useProfileContext()
 
-	const [textInput, setTextInput] = useState<string>(headline)
+	const [textInput, setTextInput] = useState<string>(props.headline)
 
 	const handleClickAway = () => {
-		dispatch(updateComponent(id, { headline: textInput }))
+		profileDispatch(updateComponent({
+			id: id,
+			type: 'headline',
+			props: {
+				headline: textInput
+			}
+		}))
 	}
 
-	if (!state.editing) {
+	if (!profileState.editing) {
 		return (
 			<HeadlineText>
 				{textInput}
@@ -34,17 +49,23 @@ export const Headline: React.FC<HeadlineProps> = ({ id, headline }) => {
 	}
 }
 
-export const Bio: React.FC<BioProps> = ({ id, bio }) => {
+export const Bio: React.FC<BioComponent> = ({ id, props }) => {
 
-	const { state, dispatch } = useProfileContext()
+  const { profileState, profileDispatch } = useProfileContext()
 
-	const [textInput, setTextInput] = useState<string>(bio)
+	const [textInput, setTextInput] = useState<string>(props.bio)
 
 	const handleClickAway = () => {
-		dispatch(updateComponent(id, { bio: textInput }))
+		profileDispatch(updateComponent({
+			id: id,
+			type: 'headline',
+			props: {
+				bio: textInput
+			}
+		}))
 	}
 	
-	if (!state.editing) {
+	if (!profileState.editing) {
 		return (
 			<BioText>
 				{textInput}
@@ -61,9 +82,9 @@ export const Bio: React.FC<BioProps> = ({ id, bio }) => {
 	}
 }
 
-export const Image: React.FC<ImageProps> = ({ id, image }) => {
+export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 
-	const { state, dispatch } = useProfileContext()
+  const { profileState, profileDispatch } = useProfileContext()
 
 	const [uploading, setUploading] = useState(false)
 
@@ -76,7 +97,13 @@ export const Image: React.FC<ImageProps> = ({ id, image }) => {
 				headers: { 'Content-Type': 'multipart/form-data' }
 			})
 			.then(res => {
-				dispatch(updateComponent(id, { image: res.data.image }))
+				profileDispatch(updateComponent({
+					id: id,
+					type: 'headshot',
+					props: {
+						image: res.data.image
+					}
+				}))
 				setUploading(false)
 			}).catch(err => {
 				setUploading(false)
@@ -91,13 +118,13 @@ export const Image: React.FC<ImageProps> = ({ id, image }) => {
 				</H1>
 			</Div>
 		)
-	} else if (!state.editing) {
+	} else if (!profileState.editing) {
 		return (
-			<ProfileImage size={12} src={image} />
+			<ProfileImage size={12} src={props.image} />
 		)
 	} else {
 		return (
-			<ProfileImageUpload size={12} src={image}>
+			<ProfileImageUpload size={12} src={props.image}>
 
 				<ProfileImageUploadInput
 					type='file'
@@ -109,11 +136,11 @@ export const Image: React.FC<ImageProps> = ({ id, image }) => {
 	}
 }
 
-export const Article: React.FC<ArticleProps> = ({ id, source, title, subtitle, date, link }) => {
+export const Article: React.FC<ArticleComponent> = ({ id, props }) => {
 
 	return (
 		<BioText>
-			{title}
+			{props.title}
 		</BioText>
 	)
 }
@@ -173,14 +200,23 @@ type ComponentIndex = {
 const Components: ComponentIndex  = {
 	headline: Headline,
   bio: Bio,
-  image: Image,
+  headshot: Headshot,
   article: Article
 }
-export const GenerateComponent = (item: Component, props?: any) => {
+// export const GenerateComponent = (item: Component, props?: any) => {
+//   // component exists
+//   if (typeof Components[item.component] !== 'undefined') {
+// 		return React.createElement(Components[item.component], {...item.props, id: item.id, key: item.id, ...props} )
+// 	}
+// 	// component does not exist
+//   return <React.Fragment key={item.id} />
+// }
+
+export const GenerateEditComponent = (component: any) => {
   // component exists
-  if (typeof Components[item.component] !== 'undefined') {
-		return React.createElement(Components[item.component], {...item.props, id: item.id, key: item.id, ...props} )
+  if (typeof Components[component.type] !== 'undefined') {
+		return React.createElement(Components[component.type], {...component?.props, id: component.id, key: component.id} )
 	}
 	// component does not exist
-  return <React.Fragment key={item.id} />
+  return <React.Fragment key={component.id} />
 }

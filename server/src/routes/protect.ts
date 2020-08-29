@@ -14,32 +14,38 @@ router.use(authMiddleware)
 
 // PROFILE ROUTES //
 
-// POST /protect/:username - upload new profile data for auth'd user
-router.post('/:username', (req, res) => {
+// POST /protect/profile - update profile data for auth'd user
+router.post('/profile', (req, res) => {
 
-  const username = req.params.username
+  // body: {email: email, authId: authId, profile: Profile}
 
+  console.log('in protect/profile with body:')
   console.log(req.body)
 
-  db.put({
-    TableName: "profiles",
-    Item: req.body
+  db.update({
+    TableName: 'profiles',
+    Key: { email: req.body.email },
+    UpdateExpression: "set username = :x, components = :y",
+    ExpressionAttributeValues: {
+      ":x": req.body.profile.username,
+      ":y": req.body.profile.components
+    }
   }).then(data => {
-    console.log('Sucessful put to Dynamodb')
-    res.status(200).send('Successfully saved profile')
+    res.status(200)
   }).catch(err => {
     console.log(err)
-    res.status(500).send('Unable to save profile')
+    res.status(500)
   })
 
 })
 
-// POST /protect/:username/upload-image - uploads a new image for a profile
+// POST /protect/upload-image/:username - uploads a new image for a profile
 // also need to try to delete profiles prev photo on new upload
-router.post('/:username/upload-image', (req, res) => {
+router.post('/upload-image/:username', (req, res) => {
 
-  console.log('handling image upload')
   const username = req.params.username
+
+  console.log('handling image upload for:', username)
 
   const imageId = uuidv4()
   const form = new multiparty.Form()
@@ -69,7 +75,7 @@ router.post('/:username/upload-image', (req, res) => {
 })
 
 
-// ONBOARDING ROUTES //
+// ONBOARDING/INVITED ROUTES //
 
 // GET /protect/onboard/check - checks if a user has been onboarded
 router.post('/onboard/check', (req, res) => {
@@ -79,7 +85,7 @@ router.post('/onboard/check', (req, res) => {
     Key: { email: req.body.email }
   }).then(data => {
     console.log('found in db:', data.Item)
-    if ('data' in data.Item) {
+    if ('components' in data.Item) {
       res.status(200).send(true)
     } else {
       res.status(200).send(false)
@@ -90,21 +96,23 @@ router.post('/onboard/check', (req, res) => {
   })
 })
 
-// POST /protect/onboard/update - Updates the user Item in the db with username and data attribute
-router.post('/onboard/update', (req, res) => {
+// POST /protect/invite/check - checks if email has been invited
+router.post('/invite/check', (req, res) => {
 
-  console.log('request body:', req.body)
-  console.log('request headers:', req.headers)
+  const email = req.body.email
 
-  db.put({
-    TableName: 'profiles',
-    Item: {
-      email: req.body.email,
-      username: req.body.username,
-      data: req.body.data
-    }
+  db.get({
+    TableName: 'invites',
+    Key: { email: email }
   }).then(data => {
-    res.status(200)
+    console.log(data)
+    if ('email' in data.Item) {
+      // person has been invited
+      res.status(200).send(true)
+    } else {
+      // email has not been invited
+      res.status(200).send(false)
+    }
   }).catch(err => {
     console.log(err)
     res.status(500)

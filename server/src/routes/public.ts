@@ -6,7 +6,7 @@ import db from '../libs/dynamo'
 
 const router = express.Router()
 
-// public/login - handles login or signup
+// POST /public/login - handles login or signup
 router.post('/login', (req, res) => {
 
   // Get access token from body
@@ -18,61 +18,54 @@ router.post('/login', (req, res) => {
     .then(valid => {
       if (!valid) throw Error('Invalid access token')
 
+      console.log('token is valid, updating table')
+
       // Get authId from decoded token and email from body
       const decoded = new CotterToken.CotterAccessToken(access_token)
       const authId = decoded.getClientUserID()
       const email = req.body.email
 
-      console.log('authId is:', authId)
-      console.log('email is:', email)
-
-      // now check if user exists in the db based on email
-      db.get({
+      // now add (or update if returning) user to db
+      db.update({
         TableName: 'profiles',
-        Key: { email: email }
-      }).then(data => {
-        console.log('db get result:', data)
-
-        // if email doesn't exist, put new Item to db and tell client to onboard (successful signup)
-        if (isEmpty(data)) {
-          db.put({
-            TableName: 'profiles',
-            Item: {
-              email: email,
-              authId: authId,
-            }
-          }).then(data => {
-            res.status(200).send('Onboard this fool!')
-          }).catch(err => {
-            console.log(err)
-            res.status(500)
-          })
-
-        // if email exists and token matches, send 200 and do nothing (successful login)
-        } else if (data.Item.authId === authId) {
-          res.status(200).send('Successful login')
-
-        // item exists but token doesnt match... not sure what to do here yet.
-        } else {
-          res.status(200).send('Successful login, but your token is ass')
+        Key: { email: email },
+        UpdateExpression: "set authId = :x",
+        ExpressionAttributeValues: {
+          ":x": authId
         }
-  
+      }).then(data => {
+
+        // then check if the user has been invited
+        db.get({
+          TableName: 'invites',
+          Key: { email: email }
+        }).then(data => {
+          console.log(data)
+          if ('email' in data.Item) {
+            // person has been invited
+            res.status(200).send(true)
+          } else {
+            // email has not been invited
+            res.status(200).send(false)
+          }
+          
+        }).catch(err => {
+          console.log(err)
+          res.status(500)
+        })
       }).catch(err => {
         console.log(err)
-        res.status(500)
+        res.status(500).end(err)
       })
     })
     .catch(err => {
+      console.log(err)
       res.status(403).end(err)
     })
 })
 
-const isEmpty = (obj: Object): boolean => {
-  return Object.keys(obj).length === 0 && obj.constructor === Object
-}
 
-
-// public/profile/:username - public route to access profile information
+// GET /public/profile/:username - public route to access profile information
 router.get('/profile/:username', (req, res) => {
 
   const username = req.params.username
@@ -91,9 +84,36 @@ router.get('/profile/:username', (req, res) => {
     } else {
       const profile = {
         username: data.Items[0].username,
-        data: data.Items[0].data
+        components: data.Items[0].components
       }
       res.status(200).send(profile)
+    }
+  }).catch(err => {
+    console.log(err)
+    res.status(500)
+  })
+})
+
+// GET /public/availability/:username - public route to access profile information
+router.get('/availability/:username', (req, res) => {
+
+  const username = req.params.username
+
+  db.query({
+    TableName: "profiles",
+    IndexName: "username-index",
+    KeyConditionExpression: "username = :key",
+    ExpressionAttributeValues: {
+        ":key": username
+    }
+  }).then(data => {
+    console.log(data)
+    if (data.Items.length < 1 || data.Items[0].username !== username) {
+      // username is available
+      res.status(200).send(true)
+    } else {
+      // username is not available
+      res.status(200).send(false)
     }
   }).catch(err => {
     console.log(err)

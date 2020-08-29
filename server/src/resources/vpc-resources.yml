@@ -24,6 +24,18 @@ Resources:
               KeyType: HASH
           Projection:
             ProjectionType: ALL
+
+  InvitesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: invites
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: email
+          KeyType: HASH
               
 
   # Core VPC resources: VPC, Subnet

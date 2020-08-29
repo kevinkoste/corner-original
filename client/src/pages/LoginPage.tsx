@@ -1,72 +1,51 @@
 import React, { useEffect } from 'react'
-import { Redirect } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { useProfileContext, setAuth } from '../context/ProfileContext'
-import { PostPublicLoginData, PostOnboardCheck } from '../libs/apiLib'
+// presentation
 import { Div } from '../components/BaseComponents'
-import { HomeHeader } from '../components/HomeHeader'
+import { Header } from '../components/Header'
+
+// logic
+import { useAppContext, setAuth } from '../context/AppContext'
+import { PostPublicLoginData } from '../libs/apiLib'
 import { cotter } from '../libs/cotterLib'
 
 
 export const LoginPage: React.FC = () => {
 
-	const { state, dispatch } = useProfileContext()
+	let history = useHistory()
+	const { state, dispatch } = useAppContext()
 	
 	useEffect(() => {
 
-		cotter
-		.signInWithLink()
-		.showEmailForm()
+		cotter.signInWithLink().showEmailForm()
 		.then(data => {
-			// cotter automatically sets the 'ACCESS_TOKEN' in localStorage
-			// now we are signed in, which will redirect us to home (see return statement)
-			dispatch(setAuth(true))
 
-			// also send this data in the backend to create new user
+			// send cotter signup success data to the backend
 			PostPublicLoginData(data)
 			.then(res => {
-
-				console.log('post login data server response', res)
+				dispatch(setAuth(true))
+				history.push('/onboarding')
 			})
 			.catch(err => console.log('post login data server error', err))
 
 		})
-		.catch(err => {
-			console.log('cotter login error', err)
-		})
+		.catch(err => console.log('cotter login error', err))
 
-			// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	// on save profile, post new profile data to server
-	const onClick = () => {
-		PostOnboardCheck()
-		.then(res => {
-			console.log('onboard check server response', res)
-		})
-		.catch(err => {
-			console.log('onboard check server error', err)
-		})
-	}
 	
-	if (state.auth) {
-		return <Redirect to="/" push={true} />
-	} else {
-		return (
-			<PageContainer column width={12}>
+	return (
+		<PageContainer column width={12}>
 
-				<HomeHeader />
+			<Header title='Login' />
 
-				<div id="cotter-form-container" style={{ width: 300, height: 300 }} />
+			<div id="cotter-form-container" style={{ marginTop: 300, width: 300, height: 300 }} />
 
-				<button onClick={onClick} style={{margin: '20px 0px 20px 0px'}}>
-					check onboarded
-				</button>
-
-			</PageContainer>
-		)
-	}
+		</PageContainer>
+	)
 }
 
 const PageContainer = styled(Div)`
@@ -75,4 +54,3 @@ const PageContainer = styled(Div)`
 	overflow: hidden;
 	position: relative;
 `
-

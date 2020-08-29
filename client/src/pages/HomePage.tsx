@@ -1,13 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { useProfileContext, setAuth } from '../context/ProfileContext'
+import { useAppContext, setAuth } from '../context/AppContext'
 import { Div } from '../components/BaseComponents'
-import { HomeHeader } from '../components/HomeHeader'
+import { Header } from '../components/Header'
 
 export const HomePage: React.FC = () => {
 
-  const { dispatch } = useProfileContext()
+  const { dispatch } = useAppContext()
   
   const onLogOutClick = () => {
     localStorage.removeItem("ACCESS_TOKEN")
@@ -17,7 +17,7 @@ export const HomePage: React.FC = () => {
   return (
     <PageContainer column width={12}>
 
-      <HomeHeader />
+      <Header title='Home' />
 
       <div id="cotter-form-container" style={{ width: 300, height: 300 }} />
 

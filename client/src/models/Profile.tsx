@@ -1,47 +1,87 @@
 // top-level type defining a profile
 export type Profile = {
   username: string,
-  data: Component[]
+  components: Component[]
 }
 
 export const EmptyProfile: Profile = {
   username: "",
-  data: []
+  components: []
 }
 
-// base for all profile components
+// COMPONENT PROPS TYPES //
+// export type NameProps = {
+//   name: string
+// }
+
+// export type HeadlineProps = {
+//   headline: string
+// }
+
+// export type BioProps = {
+//   bio: string
+// }
+
+// export type HeadshotProps = {
+//   image: string
+// }
+
+// export type ArticleProps = {
+//   source: string,
+//   title: string,
+//   subtitle: string,
+//   date: string,
+//   link: string
+// }
+
+// COMPONENT TYPES //
+
 export type Component = {
   id: string,
-  component: 'name' | 'headline' | 'bio' | 'image' | 'article',
-  props: NameProps | HeadlineProps | BioProps | ImageProps | ArticleProps
+  type: 'name' | 'headline' | 'bio' | 'headshot' | 'article',
+  props: any
 }
 
-// specific profile component types
-export type NameProps = {
+export type NameComponent = {
   id: string,
-  name: string
+  type: 'name',
+  props: {
+    name: string
+  }
 }
 
-export type HeadlineProps = {
+export type HeadlineComponent = {
   id: string,
-  headline: string
+  type: 'headline',
+  props: {
+    headline: string
+  }
 }
 
-export type BioProps = {
+export type BioComponent = {
   id: string,
-  bio: string
+  type: 'bio',
+  props: {
+    bio: string
+  }
 }
 
-export type ImageProps = {
+export type HeadshotComponent = {
   id: string,
-  image: string
+  type: 'headshot',
+  props: {
+    image: string
+  }
 }
 
-export type ArticleProps = {
+export type ArticleComponent = {
   id: string,
-  source: string,
-  title: string,
-  subtitle: string,
-  date: string,
-  link: string
+  type: 'article',
+  props: {
+    source: string,
+    title: string,
+    subtitle: string,
+    date: string,
+    link: string
+  }
 }
