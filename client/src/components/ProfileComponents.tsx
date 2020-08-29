@@ -1,11 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Div, H1, H2, Img } from './BaseComponents'
-import { HeadlineComponent, BioComponent, HeadshotComponent, ArticleComponent } from '../models/Profile'
+import { H1, H2, Img } from './BaseComponents'
+import { Component, HeadlineComponent, BioComponent, HeadshotComponent, ArticleComponent } from '../models/Profile'
 
 
-export const Headline: React.FC<HeadlineComponent> = ({ id, type, props }) => {
+export const Headline: React.FC<HeadlineComponent> = ({ id, props }) => {
 	return (
 		<HeadlineText>
 			{props.headline}
@@ -13,7 +13,7 @@ export const Headline: React.FC<HeadlineComponent> = ({ id, type, props }) => {
 	)
 }
 
-export const Bio: React.FC<BioComponent> = ({ id, type, props }) => {
+export const Bio: React.FC<BioComponent> = ({ id, props }) => {
 	return (
 		<BioText>
 			{props.bio}
@@ -21,20 +21,19 @@ export const Bio: React.FC<BioComponent> = ({ id, type, props }) => {
 	)
 }
 
-export const Headshot: React.FC<HeadshotComponent> = ({ id, type, props }) => {
+export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 	return (
 		<ProfileImage size={12} src={props.image} />
 	)
 }
 
-export const Article: React.FC<ArticleComponent> = ({ id, type, props }) => {
+export const Article: React.FC<ArticleComponent> = ({ id, props }) => {
 	return (
 		<BioText>
 			{props.title}
 		</BioText>
 	)
 }
-
 
 
 const HeadlineText = styled(H1)`
@@ -63,10 +62,10 @@ const Components: ComponentIndex  = {
   article: Article
 }
 
-export const GenerateComponent = (component: any) => {
+export const GenerateComponent = (component: Component) => {
   // component exists
-  if (typeof Components[component.type] !== 'undefined') {
-		return React.createElement(Components[component.type], {...component?.props, id: component.id, key: component.id} )
+  if (typeof Components[component.type] !== 'undefined') {		
+		return React.createElement(Components[component.type], {...component, key:component.id} )
 	}
 	// component does not exist
   return <React.Fragment key={component.id} />

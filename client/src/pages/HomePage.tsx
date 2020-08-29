@@ -1,38 +1,54 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { useAppContext, setAuth } from '../context/AppContext'
-import { Div } from '../components/BaseComponents'
+import { Div, H1, H2 } from '../components/BaseComponents'
 import { Header } from '../components/Header'
+
+import { useAppContext } from '../context/AppContext'
+import { useDetectMobile } from '../libs/hooksLib'
+
 
 export const HomePage: React.FC = () => {
 
+	const mobile: boolean = useDetectMobile()
   const { dispatch } = useAppContext()
-  
-  const onLogOutClick = () => {
-    localStorage.removeItem("ACCESS_TOKEN")
-    dispatch(setAuth(false))
-	}
 	
   return (
     <PageContainer column width={12}>
 
       <Header title='Home' />
 
-      <div id="cotter-form-container" style={{ width: 300, height: 300 }} />
+      <BodyContainer column width={mobile ? 11 : 6}>
+        <TitleText>
+          Welcome to Your Corner of the Internet
+        </TitleText>
 
-      <button onClick={onLogOutClick} style={{margin: '20px 0px 20px 0px'}}>
-        logout
-      </button>
+        <SubtitleText>
+        Corner is a platform to meet young people with big ideas. It’s part website builder, part professional network, and part portfolio site.
+        </SubtitleText>
+      </BodyContainer>
 
     </PageContainer>
   )
 }
 
 const PageContainer = styled(Div)`
-	max-width: 100vw;
+  max-width: 100vw;
+  height: 100vh;
 	align-items: center;
 	overflow: hidden;
-	position: relative;
+  position: relative;
 `
 
+const BodyContainer = styled(Div)`
+  flex: 1;
+  justify-content: center;
+`
+
+const TitleText = styled(H1)`
+  font-size: 32px;
+`
+
+const SubtitleText = styled(H2)`
+  margin-top: 8px;
+`

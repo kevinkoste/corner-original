@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import styled, { StyledFunction } from 'styled-components'
+import styled from 'styled-components'
 import { useHistory } from "react-router-dom"
 
 import { useDetectMobile } from '../libs/hooksLib'
@@ -25,6 +25,7 @@ export const OnboardingUsername: React.FC<OnboardingUsernameProps> = ({ id, titl
 		if (username !== "") {
 			setUsername(username)
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	// checks availability on a timeout
@@ -39,7 +40,8 @@ export const OnboardingUsername: React.FC<OnboardingUsernameProps> = ({ id, titl
 				.catch(err => console.log(err))
 			}
 		}, 750)
-    return () => clearTimeout(delayDebounceFn)
+		return () => clearTimeout(delayDebounceFn)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username])
 
 	// clear the placeholder on initial click
@@ -102,6 +104,7 @@ export const OnboardingName: React.FC<OnboardingNameProps> = ({ title, placehold
 				setComponent({...component, props: {...component.props, name: name } })
 			}
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	// clear the placeholder on initial click
@@ -162,6 +165,7 @@ export const OnboardingHeadline: React.FC<OnboardingHeadlineProps> = ({ title, p
 				setComponent({...component, props: {...component.props, headline: headline } })
 			}
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	// clear the placeholder on initial click
@@ -224,6 +228,7 @@ export const OnboardingHeadshot: React.FC<OnboardingHeadshotProps> = ({ id, titl
 				setComponent({...component, props: {...component.props, image: image } })
 			}
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	const handleFileUpload = (event: any) => {

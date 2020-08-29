@@ -31,19 +31,21 @@ export const Div = styled.div<DivProps>`
 
 // text defaults
 export const H1 = styled.h1`
-  font-family: 'glypha';
+  font-family: 'source-serif';
+  font-size: 30px;
 	text-align: left;
   font-weight: unset;
-  font-size: 30px;
 
   margin: unset;
   padding: 0px;
 `
 export const H2 = styled.h2`
-  font-family: helvetica;
+  font-family: 'inter';
+  font-size: 16px;
+  line-height: 24px;
+
 	text-align: left;
   font-weight: unset;
-  font-size: 14px;
 
   margin: unset;
   padding: 0px;

@@ -119,5 +119,28 @@ router.post('/invite/check', (req, res) => {
   })
 })
 
+// POST /protect/get-username - checks if email has been invited
+router.post('/get-username', (req, res) => {
+
+  const email = req.body.email
+
+  db.get({
+    TableName: 'profiles',
+    Key: { email: email }
+  }).then(data => {
+    console.log('db response for get-username check', data)
+    if ('email' in data.Item) {
+      // profile exists
+      res.status(200).json({ username: data.Item.username })
+    } else {
+      // profile doesn't exist
+      res.status(403)
+    }
+  }).catch(err => {
+    console.log(err)
+    res.status(500)
+  })
+})
+
 
 export default router

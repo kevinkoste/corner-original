@@ -36,6 +36,11 @@ export const LoginPage: React.FC = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
+	const onLogOutClick = () => {
+    cotter.logOut()
+    dispatch(setAuth(false))
+	}
+
 	
 	return (
 		<PageContainer column width={12}>
@@ -44,6 +49,10 @@ export const LoginPage: React.FC = () => {
 
 			<div id="cotter-form-container" style={{ marginTop: 300, width: 300, height: 300 }} />
 
+      <button onClick={onLogOutClick} style={{margin: '20px 0px 20px 0px'}}>
+        logout
+      </button>
+			
 		</PageContainer>
 	)
 }

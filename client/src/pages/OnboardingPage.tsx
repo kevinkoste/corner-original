@@ -45,12 +45,12 @@ export const OnboardingPage: React.FC = () => {
 		PostProtectOnboardCheck()
 		.then(res => {
 			if (res.data) {
-				history.push('/')
+				history.push(`/`)
 			} else {
 				PostProtectInviteCheck()
 				.then(res => {
 					if (!res.data) {
-						history.push('/')
+						history.push('/not-invited')
 					}
 				})
 				.catch(err => console.log(err))

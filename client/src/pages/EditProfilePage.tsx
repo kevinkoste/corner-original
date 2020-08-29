@@ -11,7 +11,6 @@ import { Header } from '../components/Header'
 import { GenerateEditComponent } from '../components/EditProfileComponents'
 import { useProfileContext, updateProfile, toggleEditing } from '../context/ProfileContext'
 import { GetPublicProfileData, PostProtectProfile } from '../libs/apiLib'
-import { Profile, EmptyProfile } from '../models/Profile'
 
 
 export const EditProfilePage: React.FC = () => {
@@ -53,7 +52,7 @@ export const EditProfilePage: React.FC = () => {
 	return (
 		<PageContainer column width={12}>
 
-			<Header title={username} />
+      <Header title={profileState.profile.components.find(component => component.type === 'name')?.props.name} />
 
       <BodyContainer column width={mobile ? 11 : 6}>
         {profileState.profile.components.map(component => GenerateEditComponent(component))}

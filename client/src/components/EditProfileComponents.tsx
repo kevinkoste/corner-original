@@ -4,7 +4,7 @@ import styled from 'styled-components'
 // presentation/types
 import { Div, H1, H2, Img, TextArea } from './BaseComponents'
 import {
-	NameComponent,
+	Component,
 	HeadlineComponent,
 	BioComponent,
 	HeadshotComponent,
@@ -203,19 +203,11 @@ const Components: ComponentIndex  = {
   headshot: Headshot,
   article: Article
 }
-// export const GenerateComponent = (item: Component, props?: any) => {
-//   // component exists
-//   if (typeof Components[item.component] !== 'undefined') {
-// 		return React.createElement(Components[item.component], {...item.props, id: item.id, key: item.id, ...props} )
-// 	}
-// 	// component does not exist
-//   return <React.Fragment key={item.id} />
-// }
 
-export const GenerateEditComponent = (component: any) => {
+export const GenerateEditComponent = (component: Component) => {
   // component exists
-  if (typeof Components[component.type] !== 'undefined') {
-		return React.createElement(Components[component.type], {...component?.props, id: component.id, key: component.id} )
+  if (typeof Components[component.type] !== 'undefined') {		
+		return React.createElement(Components[component.type], {...component, key:component.id} )
 	}
 	// component does not exist
   return <React.Fragment key={component.id} />

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Route, Switch, BrowserRouter, useHistory } from 'react-router-dom'
 
-import { useAppContext, setAuth } from '../context/AppContext'
+import { useAppContext, setAuth, setUsername } from '../context/AppContext'
 import { OnboardingProvider } from '../context/OnboardingContext'
 import { ProfileProvider } from '../context/ProfileContext'
 
@@ -10,7 +10,7 @@ import { ProfilePage } from './ProfilePage'
 import { EditProfilePage } from './EditProfilePage'
 import { LoginPage } from '../pages/LoginPage'
 import { OnboardingPage } from '../pages/OnboardingPage'
-import { PostProtectOnboardCheck, PostProtectInviteCheck } from '../libs/apiLib'
+import { PostProtectGetUsername, PostProtectOnboardCheck, PostProtectInviteCheck } from '../libs/apiLib'
 
 
 export const AppNavigator: React.FC = () => {
@@ -20,29 +20,18 @@ export const AppNavigator: React.FC = () => {
 
   // on mount, handle auth checks
   useEffect(() => {
+
+    PostProtectGetUsername()
+    .then(res => {
+      if ('username' in res.data) {
+        console.log('signed in with:', res.data.username)
+        dispatch(setUsername(res.data.username))
+      } else {
+        console.log('no user signed in')
+      }
+    })
+    .catch(err => console.log(err))
   
-    if (localStorage.getItem('ACCESS_TOKEN') != null) {
-      console.log('found access token: ', localStorage.getItem('ACCESS_TOKEN'))
-      dispatch(setAuth(true))
-
-      // check if user is onboarded
-      // PostProtectOnboardCheck()
-      // .then(res => {
-      //   if (res.data) {
-      //     history.push('/home')
-      //   } else {
-      //     PostProtectInviteCheck()
-      //     .then(res => {
-      //       if (!res.data) {
-      //         history.push('/home')
-      //       }
-      //     })
-      //     .catch(err => console.log(err))
-      //   }
-      // })
-
-    }
-    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -64,16 +53,16 @@ export const AppNavigator: React.FC = () => {
           </OnboardingProvider>
         </Route>
 
-        {/* public version of profile */}
-        <Route path='/:username'>
-          <ProfilePage />
-        </Route>
-
         {/* if own profile, can navigate to edit version of profile */}
         <Route exact path='/edit/:username'>
           <ProfileProvider>
             <EditProfilePage />
           </ProfileProvider>
+        </Route>
+
+        {/* public version of profile */}
+        <Route path='/:username'>
+          <ProfilePage />
         </Route>
 
       </Switch>

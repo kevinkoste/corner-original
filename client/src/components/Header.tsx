@@ -17,7 +17,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 			</AnimatedName>
 
 			<AnimatedTitle>
-				Profile
+				Corner
 			</AnimatedTitle>
 
 		</HeaderContainer>

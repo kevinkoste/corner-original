@@ -13,11 +13,15 @@ code {
 }
 
 @font-face {
-  font-family: 'glypha';
-  src: url('./fonts/GlyphaLTPro-Roman.woff') format('woff'),
-       url('./fonts/GlyphaLTPro-Roman.eot') format('embedded-opentype'),
-       url('./fonts/GlyphaLTPro-Roman.ttf')  format('truetype'),
-       url('./fonts/GlyphaLTPro-Roman.svg#GlyphaLTPro-Roman') format('svg');
+  font-family: 'source-serif';
+  src: url('./fonts/SourceSerifPro-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'inter';
+  src: url('./fonts/Inter-Regular-slnt=0.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
