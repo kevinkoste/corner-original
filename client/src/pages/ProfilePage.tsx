@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 // presentation
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div } from '../components/BaseComponents'
+import { Div, H1 } from '../components/BaseComponents'
 import { Header } from '../components/Header'
 
 // logic
@@ -21,49 +21,73 @@ export const ProfilePage: React.FC = () => {
   const { state, dispatch } = useAppContext()
 
   const { username } = useParams()
+  const [ profileExists, setProfileExists ] = useState<boolean>(false)
   const [ profile, setProfile ] = useState<Profile>(EmptyProfile)
 
   // on component mount, get profile data from server
   useEffect(() => {
-    GetPublicProfileData(username)
+
+    if (state.username === username) {
+      history.push(`/edit/${state.username}`)
+    } else {
+      GetPublicProfileData(username)
       .then(res => {
-        console.log('got public profile with res:', res)
-        setProfile(res.data)
+        if (res.data === false) {
+          setProfileExists(false)
+        } else {
+          console.log('got public profile with res:', res)
+          setProfile(res.data)
+          setProfileExists(true)
+        }
       })
-      .catch(err => {
-        console.log(err)
-      })
+      .catch(err => console.log(err))
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // if this is the current users profile, redirect to edit page
-  useEffect(() => {
-    if (profile.username === state.username) {
-      history.push(`/edit/${state.username}`)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state])
+  if (profileExists) {
+    return (
+      <PageContainer column width={12}>
+  
+        <Header title={profile.components.find(component => component.type === 'name')?.props.name} />
+  
+        <BodyContainer column width={mobile ? 11 : 6}>
+          { profile.components.map(component => GenerateComponent(component)) }
+        </BodyContainer>
+  
+      </PageContainer>
+    )
+  } else {
+    return (
+      <PageContainer column width={12}>
 
-	return (
-		<PageContainer column width={12}>
+        <Header title={'Profile Not Found'} />
 
-			<Header title={profile.components.find(component => component.type === 'name')?.props.name} />
+        <NotFoundContainer column width={mobile ? 11 : 6}>
+          <H1>
+            This profile doesn't exist!
+          </H1>
+        </NotFoundContainer>
 
-      <BodyContainer column width={mobile ? 11 : 6}>
-        { profile.components.map(component => GenerateComponent(component)) }
-      </BodyContainer>
+      </PageContainer>
+    )
+  }
 
-		</PageContainer>
-	)
 }
 
 const PageContainer = styled(Div)`
-	max-width: 100vw;
+  max-width: 100vw;
+  min-height: 100vh;
 	align-items: center;
 	overflow: hidden;
 	position: relative;
 `
 
 const BodyContainer = styled(Div)`
+`
+
+const NotFoundContainer = styled(Div)`
+  flex: 1;
+  justify-content: center;
 `
 

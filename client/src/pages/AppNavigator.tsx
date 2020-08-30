@@ -27,16 +27,21 @@ export const AppNavigator: React.FC = () => {
     .then(res => {
       console.log('post protect get username', res)
 
-      setLoading(false)
-      if ('username' in res.data) {
+      if (res.data.username !== false) {
         console.log('signed in with:', res.data.username)
         dispatch(setUsername(res.data.username))
         dispatch(setAuth(true))
+        setLoading(false)
       } else {
         console.log('no user signed in')
+        setLoading(false)
       }
+
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      setLoading(false)
+      console.log(err)
+    })
   
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

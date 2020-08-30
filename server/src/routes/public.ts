@@ -43,7 +43,7 @@ router.post('/login', (req, res) => {
           Key: { email: email }
         }).then(data => {
           console.log('data from invites table ater getting email', data)
-          if (data.Item !== {}) {
+          if (data.Item !== undefined && data.Item !== null) {
             // person has been invited
             res.status(200).send(true)
           } 
@@ -64,10 +64,14 @@ router.post('/login', (req, res) => {
 })
 
 
-// GET /public/profile/:username - public route to access profile information
-router.get('/profile/:username', (req, res) => {
+// GET /public/profile - public route to access profile information
+router.get('/profile', (req, res) => {
 
-  const username = req.params.username
+  if (!('username' in req.query)) {
+    res.status(200).send(false)
+  }
+
+  const username = req.query.username
 
   db.query({
     TableName: "profiles",
@@ -79,7 +83,7 @@ router.get('/profile/:username', (req, res) => {
   }).then(data => {
     console.log(data)
     if (data.Items.length < 1 || data.Items[0].username !== username) {
-      res.status(404).send('Profile not found')
+      res.status(200).send(false)
     } else {
       const profile = {
         username: data.Items[0].username,

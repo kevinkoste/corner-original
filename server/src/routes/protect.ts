@@ -86,8 +86,8 @@ router.post('/onboard/check', (req, res) => {
     Key: { email: req.body.email }
   }).then(data => {
     console.log('found in db:', data.Item)
-    if ('components' in data.Item) {
-      res.status(200).send(true)
+    if ('username' in data.Item) {
+      res.status(200).send(data.Item)
     } else {
       res.status(200).send(false)
     }
@@ -107,7 +107,7 @@ router.post('/invite/check', (req, res) => {
     Key: { email: email }
   }).then(data => {
     console.log(data)
-    if ('email' in data.Item) {
+    if (data.Item !== undefined && data.Item !== null) {
       // person has been invited
       res.status(200).send(true)
     } else {
@@ -134,7 +134,7 @@ router.post('/get-username', (req, res) => {
     if (data.Item !== undefined && data.Item !== null) {
       res.status(200).json({ username: data.Item.username })
     } else {
-      res.status(400).end('user not found')
+      res.status(200).json({ username: false })
     }
 
   }).catch(err => {

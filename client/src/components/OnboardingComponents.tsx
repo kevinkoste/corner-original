@@ -317,7 +317,7 @@ export const OnboardingDone: React.FC = () => {
 }
 
 const OnboardingScreenContainer = styled(Div)`
-	height: 90vh;
+	min-height: 75vh;
 	justify-content: center;
 `
 

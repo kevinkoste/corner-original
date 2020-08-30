@@ -7,7 +7,10 @@ import { cotter, GetCotterToken } from '../libs/cotterLib'
 export const GetPublicProfileData = (username: string): Promise<any> => {
   return axios({
     method: 'get',
-    url: `/public/profile/${username}`,
+    url: `/public/profile`,
+    params: {
+      username: username
+    }
   })
 }
 

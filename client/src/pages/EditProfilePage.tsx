@@ -8,8 +8,9 @@ import { Div, Button } from '../components/BaseComponents'
 import { Header } from '../components/Header'
 
 // logic
-import { GenerateEditComponent } from '../components/EditProfileComponents'
+import { useAppContext } from '../context/AppContext'
 import { useProfileContext, updateProfile, toggleEditing } from '../context/ProfileContext'
+import { GenerateEditComponent } from '../components/EditProfileComponents'
 import { GetPublicProfileData, PostProtectProfile } from '../libs/apiLib'
 
 
@@ -17,14 +18,13 @@ export const EditProfilePage: React.FC = () => {
 
   const mobile: boolean = useDetectMobile()
 
-  const { username } = useParams()
-
   // not yet sure which we are using...
+  const { state, dispatch } = useAppContext()
   const { profileState, profileDispatch } = useProfileContext()
 
   // on mount, supply profileState with public profile data
   useEffect(() => {
-    GetPublicProfileData(username)
+    GetPublicProfileData(state.username)
       .then(res => {
         profileDispatch(updateProfile(res.data))
       })
