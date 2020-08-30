@@ -1,7 +1,9 @@
 import React from 'react'
 import styled, { keyframes } from 'styled-components'
 
-import { Div, H1 } from './BaseComponents'
+import BurgerIcon from '../icons/burger.svg'
+
+import { Div, H1 } from '../components/BaseComponents'
 import { useDetectMobile } from '../libs/hooksLib'
 
 type HeaderProps = { title: string }
@@ -20,17 +22,25 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 				Corner
 			</AnimatedTitle>
 
+			<Burger src={BurgerIcon} />
+
 		</HeaderContainer>
 	)
 }
 
 const HeaderContainer = styled(Div)`
+	position: relative;
 	align-items: center;
-	justify-content: flex-start;
+	justify-content: stretch;
 	
-	margin-top: 20px;
+	margin-top: 15px;
 	padding-bottom: 5px;
 	border-bottom: 1px solid black;
+`
+
+const Burger = styled.img`
+	position: absolute;
+	right: 0;
 `
 
 const HeaderTitleText = styled(H1)`
@@ -40,6 +50,8 @@ const HeaderTitleText = styled(H1)`
 
 	font-size: 24px;
 `
+
+
 
 const AnimatedNameKeyframes = keyframes`
 	0% { width: 0%; height: 0%; }
@@ -51,7 +63,7 @@ const AnimatedNameKeyframes = keyframes`
 const AnimatedName = styled(HeaderTitleText)`
 	animation-name: ${AnimatedNameKeyframes};
 	animation-duration: 3s;
-	animation-delay: 1s;
+	animation-delay: 0.8s;
 	animation-timing-function: steps(30, end);
 	animation-fill-mode: both;
 `
@@ -64,7 +76,7 @@ const AnimatedTitleKeyframes = keyframes`
 const AnimatedTitle = styled(HeaderTitleText)`
 	animation-name: ${AnimatedTitleKeyframes};
 	animation-duration: 1.5s;
-	animation-delay: 4s;
+	animation-delay: 3.8s;
 	animation-timing-function: steps(30, end);
 	animation-fill-mode: both;
 `

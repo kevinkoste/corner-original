@@ -31,10 +31,11 @@ router.post('/profile', (req, res) => {
       ":y": req.body.profile.components
     }
   }).then(data => {
-    res.status(200)
+    console.log('response from db update', data)
+    res.status(200).send('successfully updated profile')
   }).catch(err => {
     console.log(err)
-    res.status(500)
+    res.status(500).end('failed to update profile')
   })
 
 })
@@ -129,13 +130,13 @@ router.post('/get-username', (req, res) => {
     Key: { email: email }
   }).then(data => {
     console.log('db response for get-username check', data)
-    if ('email' in data.Item) {
-      // profile exists
+
+    if (data.Item !== undefined && data.Item !== null) {
       res.status(200).json({ username: data.Item.username })
     } else {
-      // profile doesn't exist
-      res.status(403)
+      res.status(400).end('user not found')
     }
+
   }).catch(err => {
     console.log(err)
     res.status(500)

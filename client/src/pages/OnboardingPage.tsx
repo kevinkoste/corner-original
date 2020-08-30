@@ -5,16 +5,19 @@ import styled from 'styled-components'
 import { useDetectMobile } from '../libs/hooksLib'
 import { Div } from '../components/BaseComponents'
 import { Header } from '../components/Header'
-
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
+
+import { useAppContext, setAuth } from '../context/AppContext'
 import { GenerateOnboardingComponent } from '../components/OnboardingComponents'
 import { PostProtectOnboardCheck, PostProtectInviteCheck } from '../libs/apiLib'
+
 
 
 export const OnboardingPage: React.FC = () => {
 
 	let history = useHistory()
 	const mobile: boolean = useDetectMobile()
+	const { state, dispatch } = useAppContext()
 
 	const [activeItem, setActiveItem] = useState(1)
 
@@ -45,7 +48,7 @@ export const OnboardingPage: React.FC = () => {
 		PostProtectOnboardCheck()
 		.then(res => {
 			if (res.data) {
-				history.push(`/`)
+				history.push(`/${state.username}`)
 			} else {
 				PostProtectInviteCheck()
 				.then(res => {

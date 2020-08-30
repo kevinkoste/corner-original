@@ -35,20 +35,19 @@ router.post('/login', (req, res) => {
         }
       }).then(data => {
 
+        console.log('data from profiles tables after updating authId:', data)
+
         // then check if the user has been invited
         db.get({
           TableName: 'invites',
           Key: { email: email }
         }).then(data => {
-          console.log(data)
-          if ('email' in data.Item) {
+          console.log('data from invites table ater getting email', data)
+          if (data.Item !== {}) {
             // person has been invited
             res.status(200).send(true)
-          } else {
-            // email has not been invited
-            res.status(200).send(false)
-          }
-          
+          } 
+          res.status(200).send(false)
         }).catch(err => {
           console.log(err)
           res.status(500)

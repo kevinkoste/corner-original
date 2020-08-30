@@ -41,7 +41,8 @@ export const LoginPage: React.FC = () => {
 
 	const onLogOutClick = () => {
     cotter.logOut()
-    dispatch(setAuth(false))
+		dispatch(setAuth(false))
+		history.push('/')
 	}
 
 	
@@ -57,7 +58,7 @@ export const LoginPage: React.FC = () => {
 
 				{ state.auth &&
           <LogoutButton onClick={onLogOutClick} >
-            Join Corner
+            Log Out
           </LogoutButton>
         }
 			</BodyContainer>
@@ -81,5 +82,5 @@ const BodyContainer = styled(Div)`
 
 const LogoutButton = styled(Button)`
   margin-top: 20px;
-  align-self: flex-start;
+  /* align-self: flex-start; */
 `
