@@ -101,7 +101,7 @@ export const AppNavigator: React.FC = () => {
     )
   } else {
     return (
-      <div style={{height: '100vh', backgroundColor: 'black'}}/>
+      <div style={{height: '100vh', backgroundColor: 'white'}}/>
     )
   }
   

@@ -158,3 +158,26 @@ export const PostProtectGetUsername = (): Promise<any> => {
       console.log(err)
     })
 }
+
+export const PostProtectInviteNewEmail = (invitedEmail: string): Promise<any> => {
+  return GetCotterToken()
+    .then(res => res.token)
+    .then(token => {
+
+      const user = cotter.getLoggedInUser()
+      const senderEmail = user.identifier
+
+      return axios({
+        method: 'post',
+        url: `/protect/invite`,
+        headers: { 'authorization': `Bearer ${token}` },
+        data: {
+          invitedEmail: invitedEmail,
+          senderEmail: senderEmail
+        }
+      })
+    })
+    .catch(err => {
+      console.log(err)
+    })
+}

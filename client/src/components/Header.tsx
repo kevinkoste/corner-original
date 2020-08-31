@@ -3,12 +3,13 @@ import { useHistory } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
 
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div, H1 } from '../components/BaseComponents'
+import { Div, H1, Button, TextArea } from '../components/BaseComponents'
 import BurgerIcon from '../icons/burger.svg'
 import ExitIcon from '../icons/exit.svg'
 
 import { cotter } from '../libs/cotterLib'
 import { useAppContext, setAuth } from '../context/AppContext'
+import { PostProtectInviteNewEmail } from '../libs/apiLib'
 
 type HeaderProps = { title: string }
 export const Header: React.FC<HeaderProps> = ({ title }) => {
@@ -77,6 +78,8 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 								}} style={{color: 'white', marginTop: '20px'}}>
 								Log Out
 							</HeaderTitleText>
+
+							<InviteForm />
 
 						</React.Fragment>
 					}
@@ -159,16 +162,37 @@ const BodyContainer = styled(Div)`
 `
 
 
-// const InviteForm: React.FC = () => {
+const InviteForm: React.FC = () => {
 
+	const [ emailInput, setEmailInput ] = useState<string>('') 
 
+	const onSubmit = () => {
 
-// 	return (
-// 		<React.Fragment>
-// 			<HeaderTitleText style={{color: 'white', marginTop: '20px'}}>
-// 				Invite a friend
-// 			</HeaderTitleText>
+		PostProtectInviteNewEmail(emailInput)
+			.then(res => {
+				console.log(res)
+			})
+			.catch(err => console.log(err))
+	}
 
-// 		</React.Fragment>
-// 	)
-// }
+	return (
+		<Div column width={12}>
+			<HeaderTitleText style={{color: 'white', marginTop: '20px'}}>
+				Invite a friend
+			</HeaderTitleText>
+			<InviteTextInput 
+				onChange={(event: any) => setEmailInput(event.target.value)}
+				value={emailInput}
+			/>
+			<InviteButton onClick={onSubmit} />
+		</Div>
+	)
+}
+
+const InviteTextInput = styled(TextArea)`
+
+`
+
+const InviteButton = styled(Button)`
+
+`

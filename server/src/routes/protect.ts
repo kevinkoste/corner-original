@@ -7,7 +7,7 @@ import fs from 'fs'
 import { authMiddleware } from '../libs/middleware'
 import db from '../libs/dynamo'
 import s3 from '../libs/s3'
-
+import sg from '../libs/sg'
 
 const router = express.Router()
 router.use(authMiddleware)
@@ -143,6 +143,51 @@ router.post('/get-username', (req, res) => {
     console.log(err)
     res.status(500)
   })
+})
+
+
+// POST /protect/invite - invite a new user
+router.post('/invite', (req, res) => {
+
+  // body: {invitedEmail, senderEmail }
+
+  console.log('in protect/invite with body:', req.body)
+
+  const invitedEmail = req.body.invitedEmail
+  const senderEmail = req.body.senderEmail
+
+  // add invitedemail to invites table
+  db.put({
+    TableName: 'invites',
+    Item: { email: invitedEmail }
+  })
+  .then(data => console.log('response from db put', data))
+  .catch(err => console.log(err))
+
+  // get inviter name and send email
+  db.get({
+    TableName: 'profiles',
+    Key: { email: senderEmail }
+  }).then(data => {
+
+    const name = data.Item.components.find((component: any ) => component.type === 'name').props.name
+
+    sg.send({
+      to: `kevin@virgilcard.com`,
+      from: 'kevinkoste@gmail.com',
+      subject: `${name} invited you to join Corner!`,
+      text: 'Yay!',
+      html: '<strong>Yay!</strong>',
+    }).then(data => {
+      console.log('response from sendgrid', data)
+      res.status(200)
+    })
+
+  }).catch(err => {
+    console.log(err)
+    res.status(500)
+  })
+
 })
 
 

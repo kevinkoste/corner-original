@@ -83,6 +83,7 @@ export const Button = styled.button`
   /* removing default button styles */
   display: inline-block;
   border: none;
+  outline: none;
   padding: 0;
   margin: 0;
   text-decoration: none;

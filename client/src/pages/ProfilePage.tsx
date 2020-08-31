@@ -21,6 +21,7 @@ export const ProfilePage: React.FC = () => {
   const { state, dispatch } = useAppContext()
 
   const { username } = useParams()
+  const [ loading, setLoading ] = useState<boolean>(true)
   const [ profileExists, setProfileExists ] = useState<boolean>(false)
   const [ profile, setProfile ] = useState<Profile>(EmptyProfile)
 
@@ -34,10 +35,12 @@ export const ProfilePage: React.FC = () => {
       .then(res => {
         if (res.data === false) {
           setProfileExists(false)
+          setLoading(false)
         } else {
           console.log('got public profile with res:', res)
           setProfile(res.data)
           setProfileExists(true)
+          setLoading(false)
         }
       })
       .catch(err => console.log(err))
@@ -45,7 +48,7 @@ export const ProfilePage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (profileExists) {
+  if (!loading && profileExists) {
     return (
       <PageContainer column width={12}>
   
@@ -57,7 +60,7 @@ export const ProfilePage: React.FC = () => {
   
       </PageContainer>
     )
-  } else {
+  } else if (!loading && !profileExists) {
     return (
       <PageContainer column width={12}>
 
@@ -70,6 +73,10 @@ export const ProfilePage: React.FC = () => {
         </NotFoundContainer>
 
       </PageContainer>
+    )
+  } else {
+    return (
+      <div style={{height: '100vh', backgroundColor: 'white'}}/>
     )
   }
 

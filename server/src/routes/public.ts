@@ -46,8 +46,9 @@ router.post('/login', (req, res) => {
           if (data.Item !== undefined && data.Item !== null) {
             // person has been invited
             res.status(200).send(true)
-          } 
-          res.status(200).send(false)
+          } else {
+            res.status(200).send(false)
+          }
         }).catch(err => {
           console.log(err)
           res.status(500)
@@ -66,6 +67,8 @@ router.post('/login', (req, res) => {
 
 // GET /public/profile - public route to access profile information
 router.get('/profile', (req, res) => {
+
+  console.log('in public/profile with req')
 
   if (!('username' in req.query)) {
     res.status(200).send(false)

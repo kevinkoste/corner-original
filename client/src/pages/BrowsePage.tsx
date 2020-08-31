@@ -13,9 +13,7 @@ import { Profile } from '../models/Profile'
 
 export const BrowsePage: React.FC = () => {
 
-  let history = useHistory()
 	const mobile: boolean = useDetectMobile()
-  const { state, dispatch } = useAppContext()
 
   const [ profiles, setProfiles ] = useState<Profile[]>([])
   
@@ -23,7 +21,6 @@ export const BrowsePage: React.FC = () => {
     GetPublicAllProfiles()
     .then(res => {
       console.log(res)
-      // remove empty profiles
       setProfiles(res.data)
     })
     .catch(err => console.log(err))
@@ -36,7 +33,7 @@ export const BrowsePage: React.FC = () => {
 
       <BodyContainer column width={mobile ? 11 : 6}>
         {profiles
-          .filter(profile => (profile !== undefined && profile !== null))
+          .filter(profile => Object.keys(profile).length !== 0)
           .map((profile, index) => <ProfileRow key={index} profile={profile}/> )
         }
       </BodyContainer>
