@@ -23,6 +23,7 @@ export const BrowsePage: React.FC = () => {
     GetPublicAllProfiles()
     .then(res => {
       console.log(res)
+      // remove empty profiles
       setProfiles(res.data)
     })
     .catch(err => console.log(err))
@@ -34,7 +35,10 @@ export const BrowsePage: React.FC = () => {
       <Header title='Browse' />
 
       <BodyContainer column width={mobile ? 11 : 6}>
-        {profiles.map(( profile, index ) => <ProfileRow key={index} profile={profile}/> )}
+        {profiles
+          .filter(profile => (profile !== undefined && profile !== null))
+          .map((profile, index) => <ProfileRow key={index} profile={profile}/> )
+        }
       </BodyContainer>
 
     </PageContainer>
