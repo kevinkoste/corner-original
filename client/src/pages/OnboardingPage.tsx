@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div } from '../components/BaseComponents'
+import { Div, Button } from '../components/BaseComponents'
 import { Header } from '../components/Header'
 
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
@@ -18,25 +18,30 @@ export const OnboardingPage: React.FC = () => {
 
 	const [activeItem, setActiveItem] = useState(1)
 
-	type OnboardingItem = { id: number, type: string, props?: any }
+	type OnboardingItem = { id: number, type: string, buttons?: any, props?: any }
 	const items: OnboardingItem[] = [
     { id: 1,
 			type: 'username',
+			buttons: {forward: 'Add Name', backward: ''},
 			props: { title: 'Your Unique Username', placeholder: 'johnkauber' }
 		},
     { id: 2, 
 			type: 'name',
+			buttons: {forward: 'Add Headline', backward: 'Edit Username'},
 			props: { title: 'Your Name', placeholder: 'John Kauber' }
 		},
 		{ id: 3, 
 			type: 'headline',
+			buttons: {forward: 'Add Headshot', backward: 'Edit Name'},
 			props: { title: 'Your One Liner', placeholder: 'John Kauber is a Security Engineer and Analyst passionate about protecting critical systems from threat of attack.' }
     },
     { id: 4, 
 			type: 'headshot',
+			buttons: {forward: 'Generate Profile', backward: 'Edit Headline'},
 			props: { title: 'Your Headshot', placeholder: 'images/05449456-c9c5-46a4-a42b-bde2c7de2e32.png' }
 		},
-    { id: 5,
+		{ id: 5,
+			buttons: {forward: 'Go to Your Profile', backward: ''},
 			type: 'done'
 		}
 	]
@@ -77,15 +82,15 @@ export const OnboardingPage: React.FC = () => {
 			</BodyContainer>
 
 			<ButtonContainer row width={12}>
-				{	(activeItem > 1) && 
-					<button onClick={() => setActiveItem(activeItem - 1) }>
-						backward
-					</button>
+				{	(activeItem > 1) && (activeItem < items.length) &&
+					<BackButton onClick={() => setActiveItem(activeItem - 1) }>
+						{items[activeItem-1].buttons.backward}
+					</BackButton>
 				}
-				{	(activeItem < items.length) && 
-					<button onClick={() => setActiveItem(activeItem + 1) }>
-						forward
-					</button>
+				{ (activeItem < items.length) &&
+					<ForwardButton onClick={() => setActiveItem(activeItem + 1) }>
+						{items[activeItem-1].buttons.forward}
+					</ForwardButton>
 				}
 			</ButtonContainer>
 
@@ -104,6 +109,15 @@ const BodyContainer = styled(Div)`
 `
 
 const ButtonContainer = styled(Div)`
-	justify-content: space-between;
+	/* justify-content: space-between; */
 `
-
+const ForwardButton = styled(Button)`
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+`
+const BackButton = styled(Button)`
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+`

@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom"
 
 import { useDetectMobile } from '../libs/hooksLib'
 import { useOnboardingContext, updateUsername, updateComponent } from '../context/OnboardingContext'
-import { Div, H1, H2, TextArea, Img } from './BaseComponents'
+import { Div, H1, H2, TextArea, Img, Button } from './BaseComponents'
 import { v4 as uuidv4 } from 'uuid'
 
 import { PostProtectProfileImage, GetPublicUsernameAvailability, PostProtectProfile } from '../libs/apiLib'
@@ -309,9 +309,9 @@ export const OnboardingDone: React.FC = () => {
 			<OnboardingTitleText>
 				Done!
 			</OnboardingTitleText>
-			<button onClick={onClick}>
+			<DoneButton onClick={onClick}>
 				Go to your profile
-			</button>
+			</DoneButton>
 		</OnboardingScreenContainer>
 	)
 }
@@ -340,6 +340,12 @@ const OnboardingHeadshotUpload = styled(Img)`
 	justify-content: center;
 	align-items: center;
 ` 
+
+const DoneButton = styled(Button)`
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+`
 
 const OnboardingHeadshotUploadInput = styled.input`
 `
