@@ -95,7 +95,7 @@ export const OnboardingPage: React.FC = () => {
 				<Transition timeout={duration} in={animate}>
 					{ state => (
 						items.filter(item => item.id === activeItem).map(item => (
-							<AnimationComponent state={state} duration={duration}>
+							<AnimationComponent state={state} duration={duration} key={item.id}>
 								{GenerateOnboardingComponent(item)}
 							</AnimationComponent>
 						))

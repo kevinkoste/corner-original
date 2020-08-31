@@ -8,4 +8,5 @@ export default {
   query : (params: AWS.DynamoDB.DocumentClient.QueryInput) => client.query(params).promise(),
   update: (params: AWS.DynamoDB.DocumentClient.UpdateItemInput) => client.update(params).promise(),
   delete: (params: AWS.DynamoDB.DocumentClient.DeleteItemInput) => client.delete(params).promise(),
+  scan  : (params: AWS.DynamoDB.DocumentClient.ScanInput) => client.scan(params).promise()
 }

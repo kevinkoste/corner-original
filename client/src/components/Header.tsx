@@ -50,6 +50,11 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 
 				<BodyContainer column width={mobile ? 11 : 6}>
 
+					<HeaderTitleText onClick={() => history.push(`/browse`)}
+						style={{color: 'white', marginTop: '20px'}}>
+						Browse Profiles
+					</HeaderTitleText>
+
 					{ !state.auth && 
 						<HeaderTitleText onClick={() => history.push(`/login`)}
 							style={{color: 'white', marginTop: '20px'}}>

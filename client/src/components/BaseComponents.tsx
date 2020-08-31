@@ -4,7 +4,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 
 // minimal Div component
 type GridMapType = { [index: number]: string }
-const GridMap: GridMapType = {
+export const GridMap: GridMapType = {
   1: '8.33%',
   2: '16.66%',
   3: '25%',

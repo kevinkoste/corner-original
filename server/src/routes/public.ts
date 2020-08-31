@@ -97,6 +97,22 @@ router.get('/profile', (req, res) => {
   })
 })
 
+// GET /public/all-profiles - public route to access all profiles
+router.get('/all-profiles', (req, res) => {
+
+  db.scan({
+    TableName: 'profiles',
+    ProjectionExpression: "username, components"
+  }).then(data => {
+
+    res.status(200).send(data.Items)
+
+  }).catch(err => {
+    console.log(err)
+    res.status(500)
+  })
+})
+
 // GET /public/availability/:username - public route to access profile information
 router.get('/availability/:username', (req, res) => {
 

@@ -25,7 +25,6 @@ const useCurrentWidth = ( timeout=150 ) => {
 
     // clean up function
     return () => {
-      // remove resize listener
       window.removeEventListener('resize', resizeListener)
     }
   }, [timeout])

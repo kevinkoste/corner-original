@@ -10,7 +10,10 @@ import { ProfilePage } from './ProfilePage'
 import { EditProfilePage } from './EditProfilePage'
 import { LoginPage } from '../pages/LoginPage'
 import { OnboardingPage } from '../pages/OnboardingPage'
+import { BrowsePage } from '../pages/BrowsePage'
+
 import { PostProtectGetUsername } from '../libs/apiLib'
+import { cotter } from '../libs/cotterLib'
 
 
 export const AppNavigator: React.FC = () => {
@@ -23,26 +26,31 @@ export const AppNavigator: React.FC = () => {
   // on mount, handle auth checks
   useEffect(() => {
 
-    PostProtectGetUsername()
-    .then(res => {
-      console.log('post protect get username', res)
-
-      if (res.data.username !== false) {
-        console.log('signed in with:', res.data.username)
-        dispatch(setUsername(res.data.username))
-        dispatch(setAuth(true))
-        setLoading(false)
-      } else {
-        console.log('no user signed in')
-        setLoading(false)
-      }
-
-    })
-    .catch(err => {
-      setLoading(false)
-      console.log(err)
-    })
+    const user = cotter.getLoggedInUser()
+    
+    if (user !== null) {
+      PostProtectGetUsername()
+      .then(res => {
+        console.log('post protect get username', res)
   
+        if (res.data.username !== false) {
+          console.log('signed in with:', res.data.username)
+          dispatch(setUsername(res.data.username))
+          dispatch(setAuth(true))
+          setLoading(false)
+        } else {
+          console.log('no user signed in')
+          setLoading(false)
+        }
+  
+      })
+      .catch(err => {
+        setLoading(false)
+        console.log(err)
+      })
+    } else {
+      setLoading(false)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -64,6 +72,10 @@ export const AppNavigator: React.FC = () => {
               <OnboardingPage />
             </OnboardingProvider>
           </Route>
+
+          <Route exact path='/browse'>
+            <BrowsePage />
+          </Route>
   
           {/* if own profile, can navigate to edit version of profile */}
           <Route exact path='/edit/:username'>
@@ -82,7 +94,6 @@ export const AppNavigator: React.FC = () => {
     )
   } else {
     return (
-      // this should be an app load spinner
       <div style={{height: '100vh', backgroundColor: 'black'}}/>
     )
   }
