@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { useHistory } from "react-router-dom"
 
 import { useDetectMobile } from '../libs/hooksLib'
+import { useAppContext, setUsername } from '../context/AppContext'
 import { useOnboardingContext, updateUsername, updateComponent } from '../context/OnboardingContext'
 import { Div, H1, H2, TextArea, Img, Button } from './BaseComponents'
 import { v4 as uuidv4 } from 'uuid'
@@ -286,11 +287,12 @@ export const OnboardingHeadshot: React.FC<OnboardingHeadshotProps> = ({ id, titl
 export const OnboardingDone: React.FC = () => {
 
 	let history = useHistory()
+	const { dispatch } = useAppContext()
 
 	const { onboardingState } = useOnboardingContext()
 
-	const onClick = () => {
-		console.log('about to post profile:', onboardingState.profile)
+	const onClick = () => {		
+		dispatch(setUsername(onboardingState.profile.username))
 
 		PostProtectProfile(onboardingState.profile)
 			.then(res => {

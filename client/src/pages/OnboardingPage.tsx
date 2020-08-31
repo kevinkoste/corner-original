@@ -111,12 +111,12 @@ export const OnboardingPage: React.FC = () => {
 
 			<ButtonContainer row width={mobile ? 11 : 6}>
 				{	(activeItem > 1) && (activeItem < items.length) &&
-					<BackButton onClick={() => setActiveItem(activeItem - 1) }>
+					<BackButton onClick={onBackClick}>
 						{items[activeItem-1].buttons.backward}
 					</BackButton>
 				}
 				{ (activeItem < items.length) &&
-					<ForwardButton onClick={() => setActiveItem(activeItem + 1) }>
+					<ForwardButton onClick={onForwardClick}>
 						{items[activeItem-1].buttons.forward}
 					</ForwardButton>
 				}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Route, Switch, BrowserRouter, useHistory } from 'react-router-dom'
 
-import { useAppContext, setAuth, setUsername } from '../context/AppContext'
+import { useAppContext, setAuth, setOnboarded, setUsername } from '../context/AppContext'
 import { OnboardingProvider } from '../context/OnboardingContext'
 import { ProfileProvider } from '../context/ProfileContext'
 
@@ -11,6 +11,7 @@ import { EditProfilePage } from './EditProfilePage'
 import { LoginPage } from '../pages/LoginPage'
 import { OnboardingPage } from '../pages/OnboardingPage'
 import { BrowsePage } from '../pages/BrowsePage'
+import { NotInvitedPage } from '../pages/NotInvitedPage'
 
 import { PostProtectGetUsername } from '../libs/apiLib'
 import { cotter } from '../libs/cotterLib'
@@ -37,9 +38,11 @@ export const AppNavigator: React.FC = () => {
           console.log('signed in with:', res.data.username)
           dispatch(setUsername(res.data.username))
           dispatch(setAuth(true))
+          dispatch(setOnboarded(true))
           setLoading(false)
         } else {
           console.log('no user signed in')
+          dispatch(setAuth(true))
           setLoading(false)
         }
   
@@ -75,6 +78,10 @@ export const AppNavigator: React.FC = () => {
 
           <Route exact path='/browse'>
             <BrowsePage />
+          </Route>
+
+          <Route path='/not-invited'>
+            <NotInvitedPage />
           </Route>
   
           {/* if own profile, can navigate to edit version of profile */}
