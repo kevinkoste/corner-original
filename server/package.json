@@ -10,6 +10,7 @@
     "push": "tsc && docker build -t kevinkoste/corner . && docker push kevinkoste/corner",
     "start": "node -r dotenv/config --es-module-specifier-resolution=node dist/app.js",
     "build": "tsc",
+    "deploy": "heroku container:push web -a corner-server && heroku container:release web -a corner-server",
     "create-tables": "aws cloudformation create-stack --stack-name corner-tables --template-body file://src/resources/tables.yml",
     "create-stack": "aws cloudformation create-stack --stack-name corner --template-body file://src/resources/resources.yml --parameters ParameterKey=CornerKeyPair,ParameterValue=CornerKeyPair",
     "update-stack": "aws cloudformation update-stack --stack-name corner --template-body file://src/resources/resources.yml --parameters ParameterKey=CornerKeyPair,ParameterValue=CornerKeyPair"

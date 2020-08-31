@@ -8,8 +8,8 @@ import { Header } from '../components/Header'
 import { useDetectMobile } from '../libs/hooksLib'
 
 // logic
-import { useAppContext, setAuth } from '../context/AppContext'
-import { PostPublicLoginData } from '../libs/apiLib'
+import { useAppContext, setAuth, setOnboarded, setUsername } from '../context/AppContext'
+import { PostPublicLoginData, PostProtectOnboardCheck } from '../libs/apiLib'
 import { cotter } from '../libs/cotterLib'
 
 
@@ -28,8 +28,23 @@ export const LoginPage: React.FC = () => {
 			// send cotter signup success data to the backend
 			PostPublicLoginData(data)
 			.then(res => {
+
 				dispatch(setAuth(true))
-				history.push('/onboarding')
+
+				// check if onboarded, push to either onboarding or profile
+				PostProtectOnboardCheck()
+				.then(res => {
+					console.log('response from onboard check:', res)
+					if (res.data.onboarded) {
+						dispatch(setOnboarded(true))
+						dispatch(setUsername(res.data.profile.username))
+						history.push(`/edit/${res.data.profile.username}`)
+					} else {
+						history.push('/onboarding')
+					}
+				})
+				.catch(err => console.log(err)) 
+
 			})
 			.catch(err => console.log('post login data server error', err))
 

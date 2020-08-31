@@ -89,9 +89,14 @@ router.post('/onboard/check', (req, res) => {
   }).then(data => {
     console.log('found in db:', data.Item)
     if ('username' in data.Item) {
-      res.status(200).send(data.Item)
+      res.status(200).json({
+        onboarded: true,
+        profile: data.Item
+      })
     } else {
-      res.status(200).send(false)
+      res.status(200).json({
+        onboarded: false
+      })
     }
   }).catch(err => {
     console.log(err)
