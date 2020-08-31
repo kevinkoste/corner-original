@@ -7,7 +7,17 @@ import { cotter, GetCotterToken } from '../libs/cotterLib'
 export const GetPublicProfileData = (username: string): Promise<any> => {
   return axios({
     method: 'get',
-    url: `/public/profile/${username}`,
+    url: `/public/profile`,
+    params: {
+      username: username
+    }
+  })
+}
+
+export const GetPublicAllProfiles = (): Promise<any> => {
+  return axios({
+    method: 'get',
+    url: `/public/all-profiles`,
   })
 }
 
@@ -78,20 +88,23 @@ export const PostProtectInviteCheck = (): Promise<any> => {
 }
 
 
-export const GetProtectProfile = (username: string): Promise<any> => {
-  return GetCotterToken()
-    .then(res => res.token)
-    .then(token => {
-      return axios({
-        method: 'get',
-        url: `/protect/profile/${username}`,
-        headers: { authorization: `Bearer ${token}` },
-      })
-    })
-    .catch(err => {
-      console.log(err)
-    })
-}
+// export const GetProtectProfile = (username: string): Promise<any> => {
+//   return GetCotterToken()
+//     .then(res => {
+//       console.log('get /protect/profile with cotter response:', res)
+//       return res.token
+//     })
+//     .then(token => {
+//       return axios({
+//         method: 'get',
+//         url: `/protect/profile/${username}`,
+//         headers: { authorization: `Bearer ${token}` },
+//       })
+//     })
+//     .catch(err => {
+//       console.log(err)
+//     })
+// }
 
 export const PostProtectProfile = (profile: Profile): Promise<any> => {
   return GetCotterToken()

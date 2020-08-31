@@ -4,7 +4,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 
 // minimal Div component
 type GridMapType = { [index: number]: string }
-const GridMap: GridMapType = {
+export const GridMap: GridMapType = {
   1: '8.33%',
   2: '16.66%',
   3: '25%',
@@ -96,3 +96,16 @@ export const Button = styled.button`
   cursor: pointer;
   border-radius: 30px;
 `
+
+
+// type ImageProps = {
+//   src: string
+// }
+// export const Icon = styled.img<ImageProps>`
+//   src: ${props => pros.src};
+//   background-position: center;
+//   background-size: cover;
+//   position: relative;
+//   text-align: center;
+//   padding-bottom: ${props => GridMap[props.size]};
+// `

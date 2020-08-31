@@ -35,20 +35,19 @@ router.post('/login', (req, res) => {
         }
       }).then(data => {
 
+        console.log('data from profiles tables after updating authId:', data)
+
         // then check if the user has been invited
         db.get({
           TableName: 'invites',
           Key: { email: email }
         }).then(data => {
-          console.log(data)
-          if ('email' in data.Item) {
+          console.log('data from invites table ater getting email', data)
+          if (data.Item !== undefined && data.Item !== null) {
             // person has been invited
             res.status(200).send(true)
-          } else {
-            // email has not been invited
-            res.status(200).send(false)
-          }
-          
+          } 
+          res.status(200).send(false)
         }).catch(err => {
           console.log(err)
           res.status(500)
@@ -65,10 +64,14 @@ router.post('/login', (req, res) => {
 })
 
 
-// GET /public/profile/:username - public route to access profile information
-router.get('/profile/:username', (req, res) => {
+// GET /public/profile - public route to access profile information
+router.get('/profile', (req, res) => {
 
-  const username = req.params.username
+  if (!('username' in req.query)) {
+    res.status(200).send(false)
+  }
+
+  const username = req.query.username
 
   db.query({
     TableName: "profiles",
@@ -80,7 +83,7 @@ router.get('/profile/:username', (req, res) => {
   }).then(data => {
     console.log(data)
     if (data.Items.length < 1 || data.Items[0].username !== username) {
-      res.status(404).send('Profile not found')
+      res.status(200).send(false)
     } else {
       const profile = {
         username: data.Items[0].username,
@@ -88,6 +91,22 @@ router.get('/profile/:username', (req, res) => {
       }
       res.status(200).send(profile)
     }
+  }).catch(err => {
+    console.log(err)
+    res.status(500)
+  })
+})
+
+// GET /public/all-profiles - public route to access all profiles
+router.get('/all-profiles', (req, res) => {
+
+  db.scan({
+    TableName: 'profiles',
+    ProjectionExpression: "username, components"
+  }).then(data => {
+
+    res.status(200).send(data.Items)
+
   }).catch(err => {
     console.log(err)
     res.status(500)
