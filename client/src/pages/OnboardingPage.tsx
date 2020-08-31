@@ -52,22 +52,16 @@ export const OnboardingPage: React.FC = () => {
 	]
 	
 	useEffect(() => {
-		PostProtectOnboardCheck()
+
+		// check if the user is invited
+		PostProtectInviteCheck()
 		.then(res => {
-			console.log('response from onboard check:', res)
-			if (res.data) {
-				history.push(`/edit/${res.data.username}`)
-			} else {
-				PostProtectInviteCheck()
-				.then(res => {
-					if (!res.data) {
-						history.push('/not-invited')
-					}
-				})
-				.catch(err => console.log(err))
+			if (!res.data) {
+				history.push('/not-invited')
 			}
 		})
 		.catch(err => console.log(err))
+
 	}, [])
 
 	const onBackClick = () => {

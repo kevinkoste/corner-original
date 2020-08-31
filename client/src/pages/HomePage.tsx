@@ -5,7 +5,6 @@ import styled from 'styled-components'
 import { Div, H1, H2, Button } from '../components/BaseComponents'
 import { Header } from '../components/Header'
 
-import { media } from '../libs/styleLib'
 import { useDetectMobile } from '../libs/hooksLib'
 import { useAppContext } from '../context/AppContext'
 
@@ -19,7 +18,13 @@ export const HomePage: React.FC = () => {
 	const onClick = () => {
     history.push('/login')
 	}
-	
+  
+  useEffect(() => {
+    if (state.auth) {
+      history.push('/browse')
+    }
+  }, [])
+
   return (
     <PageContainer column width={12}>
 
