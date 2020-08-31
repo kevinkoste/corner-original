@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { Div, H1, H2, Button } from '../components/BaseComponents'
 import { Header } from '../components/Header'
 
+import { media } from '../libs/styleLib'
 import { useDetectMobile } from '../libs/hooksLib'
 import { useAppContext } from '../context/AppContext'
 
@@ -33,11 +34,9 @@ export const HomePage: React.FC = () => {
         Corner is a platform to meet young people with big ideas. It’s part website builder, part professional network, and part portfolio site.
         </SubtitleText>
 
-        { !state.auth &&
-          <LoginButton onClick={onClick} >
-            Join Corner
-          </LoginButton>
-        }
+        <LoginButton onClick={onClick} >
+          Join Corner
+        </LoginButton>
 
       </BodyContainer>
 
@@ -47,15 +46,17 @@ export const HomePage: React.FC = () => {
 
 const PageContainer = styled(Div)`
   max-width: 100vw;
-  min-height: 100vh;
+  height: ${window.innerHeight+"px"};
 	align-items: center;
 	overflow: hidden;
   position: relative;
 `
 
 const BodyContainer = styled(Div)`
-  align-items: center;
+  align-items: left;
   margin: auto;
+  text-align: left;
+  max-width: 580px;
 `
 
 const TitleText = styled(H1)`
