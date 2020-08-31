@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 
 // presentation
@@ -36,7 +35,7 @@ export const EditProfilePage: React.FC = () => {
 
 
   // on save profile, post new profile data to server
-  const onClick = () => {
+  const onSave = () => {
     if (profileState.editing) {
       PostProtectProfile(profileState.profile)
       .then(res => {
@@ -49,6 +48,10 @@ export const EditProfilePage: React.FC = () => {
     profileDispatch(toggleEditing())
   }
 
+  const onAddComponent = () => {
+    profileState.profile.components.push()
+  }
+
 	return (
 		<PageContainer column width={12}>
 
@@ -56,11 +59,12 @@ export const EditProfilePage: React.FC = () => {
 
       <BodyContainer column width={mobile ? 11 : 6}>
         {profileState.profile.components.map(component => GenerateEditComponent(component))}
+
       </BodyContainer>
 
       {/* insert add component option! */}
 
-      <EditButton onClick={onClick} >
+      <EditButton onClick={onSave} >
         {profileState.editing ? 'Finish Editing' : 'Edit Corner'}
       </EditButton>
 
@@ -85,3 +89,4 @@ const EditButton = styled(Button)`
   bottom: 10px;
   right: 10px;
 `
+

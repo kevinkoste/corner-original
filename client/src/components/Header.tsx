@@ -64,10 +64,12 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 
 					{	state.auth &&
 						<React.Fragment>
+
 							<HeaderTitleText onClick={() => history.push(`/edit/${state.username}`)}
 								style={{color: 'white', marginTop: '20px'}}>
 								My Profile
 							</HeaderTitleText>
+
 							<HeaderTitleText onClick={() => {
 									cotter.logOut()
 									dispatch(setAuth(false))
@@ -75,6 +77,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 								}} style={{color: 'white', marginTop: '20px'}}>
 								Log Out
 							</HeaderTitleText>
+
 						</React.Fragment>
 					}
 
@@ -154,3 +157,18 @@ const BurgerMenu = styled.div`
 
 const BodyContainer = styled(Div)`
 `
+
+
+// const InviteForm: React.FC = () => {
+
+
+
+// 	return (
+// 		<React.Fragment>
+// 			<HeaderTitleText style={{color: 'white', marginTop: '20px'}}>
+// 				Invite a friend
+// 			</HeaderTitleText>
+
+// 		</React.Fragment>
+// 	)
+// }

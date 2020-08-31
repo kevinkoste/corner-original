@@ -40,9 +40,11 @@ router.post('/profile', (req, res) => {
 
 })
 
-// POST /protect/upload-image/:username - uploads a new image for a profile
+// POST /protect/upload-image - uploads a new image for a profile
 // also need to try to delete profiles prev photo on new upload
 router.post('/upload-image/:username', (req, res) => {
+
+  // body: {username: username, formData: formData}
 
   const username = req.params.username
 

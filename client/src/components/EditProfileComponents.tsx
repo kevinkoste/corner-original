@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 
 // presentation/types
-import { Div, H1, H2, Img, TextArea } from './BaseComponents'
+import { Div, H1, H2, Img, TextArea } from '../components/BaseComponents'
 import {
 	Component,
 	HeadlineComponent,
@@ -13,7 +13,7 @@ import {
 
 // logic
 import { useProfileContext, updateComponent } from '../context/ProfileContext'
-import axios from '../libs/axiosLib'
+import { PostProtectProfileImage } from '../libs/apiLib'
 
 
 export const Headline: React.FC<HeadlineComponent> = ({ id, props }) => {
@@ -92,10 +92,7 @@ export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 		setUploading(true)
 		const formData = new FormData()
 		formData.append('file', event.target.files[0])
-		axios
-			.post(`/profile/upload-image`, formData, {
-				headers: { 'Content-Type': 'multipart/form-data' }
-			})
+		PostProtectProfileImage(profileState.profile.username, formData)
 			.then(res => {
 				profileDispatch(updateComponent({
 					id: id,

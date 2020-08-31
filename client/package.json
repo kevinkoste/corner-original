@@ -5,6 +5,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "ci-build": "CI= react-scripts build",
+    "deploy": "react-scripts build && aws s3 sync ./build/ s3://xyzcom --delete",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -50,5 +52,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "engines": {
+    "node": "12.x"
   }
 }

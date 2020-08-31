@@ -51,7 +51,7 @@ export const PostProtectOnboardCheck = (): Promise<any> => {
       return axios({
         method: 'post',
         url: `/protect/onboard/check`,
-        headers: { authorization: `Bearer ${token}` },
+        headers: { 'authorization': `Bearer ${token}` },
         data: {
           email: email,
           authId: authId
@@ -75,7 +75,7 @@ export const PostProtectInviteCheck = (): Promise<any> => {
       return axios({
         method: 'post',
         url: `/protect/invite/check`,
-        headers: { authorization: `Bearer ${token}` },
+        headers: { 'authorization': `Bearer ${token}` },
         data: {
           email: email,
           authId: authId
@@ -86,25 +86,6 @@ export const PostProtectInviteCheck = (): Promise<any> => {
       console.log(err)
     })
 }
-
-
-// export const GetProtectProfile = (username: string): Promise<any> => {
-//   return GetCotterToken()
-//     .then(res => {
-//       console.log('get /protect/profile with cotter response:', res)
-//       return res.token
-//     })
-//     .then(token => {
-//       return axios({
-//         method: 'get',
-//         url: `/protect/profile/${username}`,
-//         headers: { authorization: `Bearer ${token}` },
-//       })
-//     })
-//     .catch(err => {
-//       console.log(err)
-//     })
-// }
 
 export const PostProtectProfile = (profile: Profile): Promise<any> => {
   return GetCotterToken()
@@ -124,7 +105,7 @@ export const PostProtectProfile = (profile: Profile): Promise<any> => {
       return axios({
         method: 'post',
         url: `/protect/profile`,
-        headers: { authorization: `Bearer ${token}` },
+        headers: { 'authorization': `Bearer ${token}` },
         data: {
           email: email,
           authId: authId,
@@ -167,7 +148,7 @@ export const PostProtectGetUsername = (): Promise<any> => {
       return axios({
         method: 'post',
         url: `/protect/get-username`,
-        headers: { authorization: `Bearer ${token}` },
+        headers: { 'authorization': `Bearer ${token}` },
         data: {
           email: email
         }

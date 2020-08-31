@@ -6,40 +6,7 @@ Parameters:
     Type: String
     Description: A human-readable name for the service.
 
-Resources:
-  ProfilesTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: profiles
-      BillingMode: PAY_PER_REQUEST
-      AttributeDefinitions:
-        - AttributeName: email
-          AttributeType: S
-        - AttributeName: username
-          AttributeType: S
-      KeySchema:
-        - AttributeName: email
-          KeyType: HASH
-      GlobalSecondaryIndexes: 
-        - IndexName: username-index
-          KeySchema: 
-            - AttributeName: username
-              KeyType: HASH
-          Projection:
-            ProjectionType: ALL
-
-  InvitesTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: invites
-      BillingMode: PAY_PER_REQUEST
-      AttributeDefinitions:
-        - AttributeName: email
-          AttributeType: S
-      KeySchema:
-        - AttributeName: email
-          KeyType: HASH
-              
+Resources:    
 
   # Core VPC resources: VPC, Subnets
   VPC:

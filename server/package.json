@@ -6,10 +6,11 @@
   "type": "module",
   "main": "dist/app.js",
   "scripts": {
-    "dev": "docker rm --force corner && docker build -t kevinkoste/corner . && docker run --publish 8000:8000 --name corner kevinkoste/corner:latest",
-    "push": "docker build -t kevinkoste/corner . && docker push kevinkoste/corner",
+    "dev": "docker rm -f corner || true && docker rmi -f kevinkoste/corner || true && tsc && docker build -t kevinkoste/corner . && docker run --publish 8000:8000 --name corner kevinkoste/corner:latest",
+    "push": "tsc && docker build -t kevinkoste/corner . && docker push kevinkoste/corner",
     "start": "node -r dotenv/config --es-module-specifier-resolution=node dist/app.js",
     "build": "tsc",
+    "create-tables": "aws cloudformation create-stack --stack-name corner-tables --template-body file://src/resources/tables.yml",
     "create-stack": "aws cloudformation create-stack --stack-name corner --template-body file://src/resources/resources.yml --parameters ParameterKey=CornerKeyPair,ParameterValue=CornerKeyPair",
     "update-stack": "aws cloudformation update-stack --stack-name corner --template-body file://src/resources/resources.yml --parameters ParameterKey=CornerKeyPair,ParameterValue=CornerKeyPair"
   },
