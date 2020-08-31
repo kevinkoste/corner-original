@@ -24,7 +24,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 
 	if (!showingBurger) {
 		return (
-			<HeaderContainer row width={mobile ? 11 : 6}>
+			<HeaderContainer row width={mobile ? 11 : 10}>
 
 				<AnimatedName>
 					{title}
@@ -42,14 +42,14 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 		return (
 			<BurgerMenu>
 
-				<HeaderContainer row width={mobile ? 11 : 6} style={{borderBottom: '1px solid white'}}>
+				<HeaderContainer row width={mobile ? 11 : 10} style={{borderBottom: '1px solid white'}}>
 					<HeaderTitleText style={{color: 'white'}}>
 						Search Profiles...
 					</HeaderTitleText>
 					<BurgerButton onClick={onClick} src={ExitIcon} />
 				</HeaderContainer>
 
-				<BodyContainer column width={mobile ? 11 : 6}>
+				<BodyContainer column width={mobile ? 11 : 10}>
 
 					<HeaderTitleText onClick={() => history.push(`/browse`)}
 						style={{color: 'white', marginTop: '20px'}}>
