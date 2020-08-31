@@ -332,8 +332,21 @@ const OnboardingTextArea = styled(TextArea)`
 	font-family: 'glypha';
 	font-size: 30px;
 	margin-top: 20px;
-
-	color: lightgray;
+	::-webkit-input-placeholder { /* Chrome */
+  color: lightgray;
+	}
+	:-ms-input-placeholder { /* IE 10+ */
+  color: lightgray;
+	}
+	::-moz-placeholder { /* Firefox 19+ */
+		color: lightgray;
+		opacity: 1;
+	}
+	:-moz-placeholder { /* Firefox 4 - 18 */
+		color: lightgray;
+		opacity: 1;
+	}
+	color: black;
 `
 
 const OnboardingHeadshotUpload = styled(Img)`

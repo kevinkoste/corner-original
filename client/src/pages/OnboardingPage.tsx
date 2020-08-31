@@ -109,7 +109,7 @@ export const OnboardingPage: React.FC = () => {
 				
 			</BodyContainer>
 
-			<ButtonContainer row width={mobile ? 11 : 6}>
+			<ButtonContainer row width={mobile ? 11 : 10}>
 				{	(activeItem > 1) && (activeItem < items.length) &&
 					<BackButton onClick={onBackClick}>
 						{items[activeItem-1].buttons.backward}
@@ -128,7 +128,7 @@ export const OnboardingPage: React.FC = () => {
 
 const PageContainer = styled(Div)`
 	max-width: 100vw;
-	min-height: 80vh;
+	height: ${window.innerHeight+"px"};
 	align-items: center;
 	overflow: hidden;
 	position: relative;
@@ -140,16 +140,17 @@ const BodyContainer = styled(Div)`
 
 const ButtonContainer = styled(Div)`
 	/* justify-content: space-between; */
+	position: relative;
 `
 const ForwardButton = styled(Button)`
   position: absolute;
   bottom: 10px;
-  right: 10px;
+  right: 0px;
 `
 const BackButton = styled(Button)`
   position: absolute;
   bottom: 10px;
-  left: 10px;
+  left: 0px;
 `
 
 
