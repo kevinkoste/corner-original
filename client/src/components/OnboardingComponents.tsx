@@ -439,17 +439,30 @@ export const OnboardingDone: React.FC = () => {
 	return (
 		<OnboardingScreenContainer column width={12}>
 			<OnboardingTitleText>
-				Done!
+				Welcome to Corner. <br/> We're Glad You're Here.
 			</OnboardingTitleText>
-			<DoneButton onClick={onClick}>
-				Go to your profile
-			</DoneButton>
+			<ButtonWrapper row width={12}>
+				<DoneButton onClick={onClick}>
+					Go to your profile
+				</DoneButton>
+			</ButtonWrapper>
 		</OnboardingScreenContainer>
 	)
 }
 
 const OnboardingScreenContainer = styled(Div)`
 	justify-content: center;
+`
+
+const ButtonWrapper = styled(Div)`
+	margin-top: 60px;
+	display: flex;
+	position: relative;
+	justify-content: space-between;
+	max-width: 350px;
+	@media (max-width: 768px) {
+		margin: 0;
+	}
 `
 
 const OnboardingTitleText = styled(H1)`
