@@ -52,7 +52,6 @@ const PageContainer = styled(Div)`
 const BodyContainer = styled(Div)`
   align-items: center;
   padding-top: 51px;
-
 `
 
 
