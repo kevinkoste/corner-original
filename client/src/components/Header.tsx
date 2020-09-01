@@ -58,20 +58,29 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 
 				<BodyContainer column width={mobile ? 11 : 10}>
 
-					<HeaderTitleText onClick={() => history.push(`/browse`)}
+					<HeaderTitleText onClick={() => {
+						history.push(`/browse`)
+						onClick()
+					}}
 						style={{color: 'white', marginTop: '20px'}}>
 						Browse Profiles
 					</HeaderTitleText>
 
 					{ !state.onboarded && !state.auth &&
-						<HeaderTitleText onClick={() => history.push(`/login`)}
+						<HeaderTitleText onClick={() => {
+							history.push(`/login`)
+							onClick()
+						}}
 							style={{color: 'white', marginTop: '20px'}}>
 							Join Corner
 						</HeaderTitleText>
 					}
 
 					{ !state.onboarded && state.auth &&
-						<HeaderTitleText onClick={() => history.push(`/onboarding`)}
+						<HeaderTitleText onClick={() => {
+							history.push(`/onboarding`)
+							onClick()
+					}}
 							style={{color: 'white', marginTop: '20px'}}>
 							Make Your Profile
 						</HeaderTitleText>
@@ -80,7 +89,10 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 					{	state.onboarded && state.auth &&
 						<React.Fragment>
 
-							<HeaderTitleText onClick={() => history.push(`/edit/${state.username}`)}
+							<HeaderTitleText onClick={() => {
+								history.push(`/edit/${state.username}`)
+								onClick()
+							}}
 								style={{color: 'white', marginTop: '20px'}}>
 								My Profile
 							</HeaderTitleText>
@@ -89,6 +101,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 									cotter.logOut()
 									dispatch(setAuth(false))
 									history.push('/')
+									onClick()
 								}} style={{color: 'white', marginTop: '20px'}}>
 								Log Out
 							</HeaderTitleText>
