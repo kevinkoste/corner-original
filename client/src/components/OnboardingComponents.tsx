@@ -13,11 +13,11 @@ import { PostProtectProfileImage, GetPublicUsernameAvailability, PostProtectProf
 import { NameComponent, HeadlineComponent, HeadshotComponent } from '../models/Profile'
 
 // USERNAME //
-type OnboardingUsernameProps = { id: number, title: string, placeholder: string }
-export const OnboardingUsername: React.FC<OnboardingUsernameProps> = ({ id, title, placeholder }) => {
+type OnboardingUsernameProps = { id: number, title: string, placeholder: string, onForwardClick: any }
+export const OnboardingUsername: React.FC<OnboardingUsernameProps> = ({ id, title, placeholder, onForwardClick}) => {
 
 	const { onboardingState, onboardingDispatch } = useOnboardingContext()
-	const [ username, setUsername ] = useState<string>(placeholder)
+	const [ username, setUsername ] = useState<string>('')
 	const [ available, setAvailable ] = useState<boolean>(true)
 
 	useEffect(() => {
@@ -45,13 +45,6 @@ export const OnboardingUsername: React.FC<OnboardingUsernameProps> = ({ id, titl
 		// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username])
 
-	// clear the placeholder on initial click
-	const onClick = () => {
-		if (username === placeholder) {
-			setUsername("")
-		}
-	}
-
 	// dispatch the updated text to OnboardingContext state
 	const onBlur = () => {
 		onboardingDispatch(updateUsername(username))
@@ -60,6 +53,14 @@ export const OnboardingUsername: React.FC<OnboardingUsernameProps> = ({ id, titl
 	const onChange = (event: any) => {
 		setUsername(event.target.value)
 	}
+	
+	// enter key advances form
+	const onKeyDown = (event: any) => {
+		if (event.key === 'Enter') {
+			event.preventDefault();
+      onForwardClick()
+    }
+	}
 
 	return (
 		<OnboardingScreenContainer column width={12}>
@@ -67,9 +68,11 @@ export const OnboardingUsername: React.FC<OnboardingUsernameProps> = ({ id, titl
 				{title}
 			</OnboardingTitleText>
 			<OnboardingTextArea
-				onClick={onClick}
+				autoFocus
 				onChange={onChange}
 				onBlur={onBlur}
+				onKeyDown={onKeyDown}
+				placeholder={placeholder}
 				value={username}
 			/>
 			{(!available) &&
@@ -82,8 +85,8 @@ export const OnboardingUsername: React.FC<OnboardingUsernameProps> = ({ id, titl
 }
 
 // NAME //
-type OnboardingNameProps = { title: string, placeholder: string }
-export const OnboardingName: React.FC<OnboardingNameProps> = ({ title, placeholder }) => {
+type OnboardingNameProps = { title: string, placeholder: string, onForwardClick: any }
+export const OnboardingName: React.FC<OnboardingNameProps> = ({ title, placeholder, onForwardClick }) => {
 
 	const { onboardingState, onboardingDispatch } = useOnboardingContext()
 	// component.props.name is basically our "textInput"
@@ -91,7 +94,7 @@ export const OnboardingName: React.FC<OnboardingNameProps> = ({ title, placehold
 		id: uuidv4().toString(),
 		type: 'name',
 		props: {
-			name: placeholder
+			name: ''
 		}
 	})
 
@@ -108,13 +111,6 @@ export const OnboardingName: React.FC<OnboardingNameProps> = ({ title, placehold
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	// clear the placeholder on initial click
-	const onClick = () => {
-		if (component.props.name === placeholder) {
-			setComponent({...component, props: {...component.props, name: "" } })
-		}
-	}
-
 	// dispatch the updated text to OnboardingContext state
 	const onBlur = () => {
 		console.log('dispatching new name component:', component)
@@ -126,24 +122,35 @@ export const OnboardingName: React.FC<OnboardingNameProps> = ({ title, placehold
 		setComponent({...component, props: {...component.props, name: event.target.value } })
 	}
 
+	// enter key advances form
+	const onKeyDown = (event: any) => {
+		if (event.key === 'Enter') {
+			event.preventDefault();
+			onForwardClick()
+		}
+	}
+
 	return (
 		<OnboardingScreenContainer column width={12}>
 			<OnboardingTitleText>
 				{title}
 			</OnboardingTitleText>
 			<OnboardingTextArea
-				onClick={onClick}
+				autoFocus
 				onChange={onChange}
 				onBlur={onBlur}
+				onKeyDown={onKeyDown}
+				placeholder={placeholder}
 				value={component.props.name}
+				style={{textTransform:'capitalize'}}
 			/>
 		</OnboardingScreenContainer>
 	)
 }
 
 // HEADLINE //
-type OnboardingHeadlineProps = { title: string, placeholder: string }
-export const OnboardingHeadline: React.FC<OnboardingHeadlineProps> = ({ title, placeholder }) => {
+type OnboardingHeadlineProps = { title: string, placeholder: string, onForwardClick: any }
+export const OnboardingHeadline: React.FC<OnboardingHeadlineProps> = ({ title, placeholder, onForwardClick}) => {
 
 	const { onboardingState, onboardingDispatch } = useOnboardingContext()
 
@@ -152,7 +159,7 @@ export const OnboardingHeadline: React.FC<OnboardingHeadlineProps> = ({ title, p
 		id: uuidv4().toString(),
 		type: 'headline',
 		props: {
-			headline: placeholder
+			headline: ''
 		}
 	})
 
@@ -169,13 +176,6 @@ export const OnboardingHeadline: React.FC<OnboardingHeadlineProps> = ({ title, p
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	// clear the placeholder on initial click
-	const onClick = () => {
-		if (component.props.headline === placeholder) {
-			setComponent({...component, props: {...component.props, headline: "" } })
-		}
-	}
-
 	// dispatch the updated text to OnboardingContext state
 	const onBlur = () => {
 		onboardingDispatch(updateComponent(component))
@@ -186,6 +186,14 @@ export const OnboardingHeadline: React.FC<OnboardingHeadlineProps> = ({ title, p
 		setComponent({...component, props: {...component.props, headline: event.target.value } })
 	}
 
+	// enter key advances form
+	const onKeyDown = (event: any) => {
+		if (event.key === 'Enter') {
+			event.preventDefault();
+      onForwardClick()
+    }
+	}
+
 
 	return (
 		<OnboardingScreenContainer column width={12}>
@@ -193,9 +201,11 @@ export const OnboardingHeadline: React.FC<OnboardingHeadlineProps> = ({ title, p
 				{title}
 			</OnboardingTitleText>
 			<OnboardingTextArea
-				onClick={onClick}
+				autoFocus
 				onChange={onChange}
 				onBlur={onBlur}
+				onKeyDown={onKeyDown}
+				placeholder={placeholder}
 				value={component.props.headline}
 			/>
 		</OnboardingScreenContainer>
@@ -273,10 +283,15 @@ export const OnboardingHeadshot: React.FC<OnboardingHeadshotProps> = ({ id, titl
 			</OnboardingTitleText>
 
 			<OnboardingHeadshotUpload size={12} src={component.props?.image}>
-				<OnboardingHeadshotUploadInput
-					type='file'
-					onChange={handleFileUpload}
-				/>
+				<ProfileImageUploadTopWrapper>
+					<ProfileImageUploadWrapper>
+						Choose Photo
+						<ProfileImageUploadInput
+							type='file'
+							onChange={handleFileUpload}
+						/>
+					</ProfileImageUploadWrapper>
+				</ProfileImageUploadTopWrapper>
 			</OnboardingHeadshotUpload>
 
 		</OnboardingScreenContainer>
@@ -319,7 +334,6 @@ export const OnboardingDone: React.FC = () => {
 }
 
 const OnboardingScreenContainer = styled(Div)`
-	min-height: 75vh;
 	justify-content: center;
 `
 
@@ -331,12 +345,12 @@ const OnboardingTitleText = styled(H1)`
 const OnboardingTextArea = styled(TextArea)`
 	font-family: 'glypha';
 	font-size: 30px;
-	margin-top: 20px;
+	margin-top: 10px;
 	::-webkit-input-placeholder { /* Chrome */
-  color: lightgray;
+  	color: lightgray;
 	}
 	:-ms-input-placeholder { /* IE 10+ */
-  color: lightgray;
+  	color: lightgray;
 	}
 	::-moz-placeholder { /* Firefox 19+ */
 		color: lightgray;
@@ -351,7 +365,6 @@ const OnboardingTextArea = styled(TextArea)`
 
 const OnboardingHeadshotUpload = styled(Img)`
 	margin-top: 20px;
-	filter: blur(2px);
 	justify-content: center;
 	align-items: center;
 ` 
@@ -362,7 +375,37 @@ const DoneButton = styled(Button)`
   right: 10px;
 `
 
-const OnboardingHeadshotUploadInput = styled.input`
+const ProfileImageUploadInput = styled.input`
+	display: none;
+	width: unset;
+`
+
+const ProfileImageUploadTopWrapper = styled.div`
+	position: absolute;
+	top: 50%;
+	left: 50%;
+  transform: translate(0%,-50%);
+`
+
+const ProfileImageUploadWrapper = styled.label`
+	position: relative;
+	left: -50%;
+	text-align: center;
+	width: unset;
+
+	border: none;
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+
+  font-family: 'inter';
+  font-size: 16px;
+
+  background-color: black;
+  color: white;
+  padding: 10px 20px 12px 20px;
+  cursor: pointer;
+  border-radius: 30px;
 `
 
 
@@ -379,10 +422,10 @@ const Components: ComponentIndex  = {
 	headshot: OnboardingHeadshot,
 	done: OnboardingDone
 }
-export const GenerateOnboardingComponent = (component: any) => {
+export const GenerateOnboardingComponent = (component: any, onForwardClick: any) => {
   // component exists
   if (typeof Components[component.type] !== 'undefined') {
-		return React.createElement(Components[component.type], {...component?.props, id: component.id, key: component.id} )
+		return React.createElement(Components[component.type], {...component?.props, id: component.id, key: component.id, onForwardClick: onForwardClick} )
 	}
 	// component does not exist
   return <React.Fragment key={component.id} />

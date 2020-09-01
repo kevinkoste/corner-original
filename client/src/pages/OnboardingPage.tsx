@@ -89,32 +89,32 @@ export const OnboardingPage: React.FC = () => {
 
       <Header title='Onboarding' />
 
-			<BodyContainer row width={mobile ? 11 : 6}>
+			<BodyContainer column width={mobile ? 11 : 6}>
 
-				<Transition timeout={duration} in={animate}>
+				<Transition row timeout={duration} in={animate}>
 					{ state => (
 						items.filter(item => item.id === activeItem).map(item => (
 							<AnimationComponent state={state} duration={duration} key={item.id}>
-								{GenerateOnboardingComponent(item)}
+								{GenerateOnboardingComponent(item, onForwardClick)}
 							</AnimationComponent>
 						))
 					)}
 				</Transition>
+
+				<ButtonContainer row width={12}>
+					{	(activeItem > 1) && (activeItem < items.length) &&
+						<BackButton onClick={onBackClick}>
+							{items[activeItem-1].buttons.backward}
+						</BackButton>
+					}
+					{ (activeItem < items.length) &&
+						<ForwardButton onClick={onForwardClick}>
+							{items[activeItem-1].buttons.forward}
+						</ForwardButton>
+					}
+				</ButtonContainer>
 				
 			</BodyContainer>
-
-			<ButtonContainer row width={mobile ? 11 : 10}>
-				{	(activeItem > 1) && (activeItem < items.length) &&
-					<BackButton onClick={onBackClick}>
-						{items[activeItem-1].buttons.backward}
-					</BackButton>
-				}
-				{ (activeItem < items.length) &&
-					<ForwardButton onClick={onForwardClick}>
-						{items[activeItem-1].buttons.forward}
-					</ForwardButton>
-				}
-			</ButtonContainer>
 
     </PageContainer>
   )
@@ -124,27 +124,40 @@ const PageContainer = styled(Div)`
 	max-width: 100vw;
 	height: ${window.innerHeight+"px"};
 	align-items: center;
-	overflow: hidden;
+	/* overflow: hidden; */
 	position: relative;
 `
 
 const BodyContainer = styled(Div)`
 	flex: 1;
+	justify-content: center;
 `
 
 const ButtonContainer = styled(Div)`
 	/* justify-content: space-between; */
+	margin-top: 60px;
 	position: relative;
+	display: flex;
+	justify-content: space-between;
+	@media (max-width: 768px) {
+		margin: 0;
+	}
 `
 const ForwardButton = styled(Button)`
-  position: absolute;
-  bottom: 10px;
-  right: 0px;
+  position: relative;
+	@media (max-width: 768px) {
+		position: absolute;
+		bottom: 10px;
+		right: 0px;
+	}
 `
 const BackButton = styled(Button)`
-  position: absolute;
-  bottom: 10px;
-  left: 0px;
+	position: relative;
+	@media (max-width: 768px) {
+		position: absolute;
+		bottom: 10px;
+		left: 0px;
+	}
 `
 
 
@@ -153,6 +166,10 @@ const AnimationComponent = styled.div<AnimationComponentProps>`
 	width: 100%;
 	transition: ${({ duration }) => duration}ms;
 	
+	@media (max-width: 768px) {
+		margin: auto;
+	}
+
 	opacity: ${({ state }) => {
     switch (state) {
       case 'exited':
