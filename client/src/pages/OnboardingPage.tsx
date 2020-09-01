@@ -130,6 +130,7 @@ const PageContainer = styled(Div)`
 const BodyContainer = styled(Div)`
 	flex: 1;
 	justify-content: center;
+	padding-top: 51px;
 `
 
 const ButtonContainer = styled(Div)`
