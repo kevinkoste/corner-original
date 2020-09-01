@@ -137,27 +137,27 @@ export const PostProtectProfileImage = (username: string, formData: FormData): P
     })
 }
 
-export const PostProtectGetUsername = (): Promise<any> => {
-  return GetCotterToken()
-    .then(res => res.token)
-    .then(token => {
+// export const PostProtectGetUsername = (): Promise<any> => {
+//   return GetCotterToken()
+//     .then(res => res.token)
+//     .then(token => {
 
-      const user = cotter.getLoggedInUser()
-      const email = user.identifier
+//       const user = cotter.getLoggedInUser()
+//       const email = user.identifier
 
-      return axios({
-        method: 'post',
-        url: `/protect/get-username`,
-        headers: { 'authorization': `Bearer ${token}` },
-        data: {
-          email: email
-        }
-      })
-    })
-    .catch(err => {
-      console.log(err)
-    })
-}
+//       return axios({
+//         method: 'post',
+//         url: `/protect/get-username`,
+//         headers: { 'authorization': `Bearer ${token}` },
+//         data: {
+//           email: email
+//         }
+//       })
+//     })
+//     .catch(err => {
+//       console.log(err)
+//     })
+// }
 
 export const PostProtectInviteNewEmail = (invitedEmail: string): Promise<any> => {
   return GetCotterToken()

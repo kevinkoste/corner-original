@@ -13,7 +13,7 @@ import { OnboardingPage } from '../pages/OnboardingPage'
 import { BrowsePage } from '../pages/BrowsePage'
 import { NotInvitedPage } from '../pages/NotInvitedPage'
 
-import { PostProtectGetUsername } from '../libs/apiLib'
+import { PostProtectOnboardCheck } from '../libs/apiLib'
 import { cotter } from '../libs/cotterLib'
 
 
@@ -30,13 +30,13 @@ export const AppNavigator: React.FC = () => {
     const user = cotter.getLoggedInUser()
     
     if (user !== null) {
-      PostProtectGetUsername()
+      PostProtectOnboardCheck()
       .then(res => {
         console.log('post protect get username', res)
   
-        if (res.data.username !== false) {
-          console.log('signed in with:', res.data.username)
-          dispatch(setUsername(res.data.username))
+        if (res.data.onboarded !== false) {
+          console.log('signed in with:', res.data.profile.username)
+          dispatch(setUsername(res.data.profile.username))
           dispatch(setAuth(true))
           dispatch(setOnboarded(true))
           setLoading(false)
