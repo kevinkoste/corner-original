@@ -186,11 +186,11 @@ router.post('/invite', (req, res) => {
         const name = data.Item.components.find((component: any ) => component.type === 'name').props.name
     
         sg.send({
-          to: `kevin@virgilcard.com`,
+          to: invitedEmail,
           from: 'kevinkoste@gmail.com',
-          subject: `${name} invited you to join Corner!`,
-          text: 'Yay!',
-          html: '<strong>Yay!</strong>',
+          subject: `${name} invited you to join Corner`,
+          text: 'Grab your own Corner of the Internet',
+          html: `Your friend ${name} has invited you to join Corner, a place for young people with big ideas on the internet. <br/> <br/> Create your account by visiting <a href="https://corner.so">corner.so</a>.`,
         }).then(data => {
           console.log('response from sendgrid', data)
           res.status(200)
