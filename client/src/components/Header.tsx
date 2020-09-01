@@ -41,7 +41,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 		return (
 			<BurgerMenu>
 
-				<HeaderContainer row width={mobile ? 11 : 10} style={{borderBottom: '1px solid white'}}>
+				<HeaderContainer row width={mobile ? 11 : 10} style={{borderBottom: '1px solid white', backgroundColor: 'black'}}>
 					<HeaderTitleText style={{color: 'white'}}>
 						Search Profiles...
 					</HeaderTitleText>
@@ -94,8 +94,10 @@ const HeaderContainer = styled(Div)`
 	position: fixed;
 	align-items: center;
 	justify-content: stretch;
+	background-color: white;
+	z-index: 1;
 	
-	margin-top: 15px;
+	padding-top: 15px;
 	padding-bottom: 5px;
 	border-bottom: 1px solid black;
 `
@@ -147,7 +149,7 @@ const BurgerMenu = styled.div`
 	flex-direction: column;
 	align-items: center;
 
-	position: absolute;
+	position: fixed;
 	z-index: 1;
 	top: 0;
 	left: 0;

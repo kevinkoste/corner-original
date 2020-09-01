@@ -412,9 +412,12 @@ const OnboardingHeadshotUpload = styled(Img)`
 ` 
 
 const DoneButton = styled(Button)`
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
+  position: relative;
+	@media (max-width: 768px) {
+		position: absolute;
+		bottom: 10px;
+		right: 0px;
+	}
 `
 
 const ProfileImageUploadInput = styled.input`

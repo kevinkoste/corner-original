@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import { H1, H2, Img } from './BaseComponents'
 import { Component, HeadlineComponent, BioComponent, HeadshotComponent, ArticleComponent } from '../models/Profile'
+import { useDetectMobile } from '../libs/hooksLib'
 
 
 export const Headline: React.FC<HeadlineComponent> = ({ id, props }) => {
@@ -22,8 +23,9 @@ export const Bio: React.FC<BioComponent> = ({ id, props }) => {
 }
 
 export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
+	const mobile: boolean = useDetectMobile()
 	return (
-		<ProfileImage size={12} src={props.image} />
+		<ProfileImage size={mobile ? 12 : 8} src={props.image} />
 	)
 }
 
