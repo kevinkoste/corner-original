@@ -19,7 +19,7 @@ export const OnboardingPage: React.FC = () => {
 	const mobile: boolean = useDetectMobile()
 	const { state, dispatch } = useAppContext()
 
-	const duration: number = 500
+	const duration: number = 400
 	const [ animate, setAnimate ] = useState(false)
 	const [ activeItem, setActiveItem ] = useState(1)
 
@@ -133,11 +133,11 @@ const BodyContainer = styled(Div)`
 `
 
 const ButtonContainer = styled(Div)`
-	/* justify-content: space-between; */
 	margin-top: 60px;
-	position: relative;
 	display: flex;
+	position: relative;
 	justify-content: space-between;
+	max-width: 350px;
 	@media (max-width: 768px) {
 		margin: 0;
 	}
@@ -152,6 +152,9 @@ const ForwardButton = styled(Button)`
 `
 const BackButton = styled(Button)`
 	position: relative;
+	background-color: white;
+	color: black;
+	border: 1px solid #000000;
 	@media (max-width: 768px) {
 		position: absolute;
 		bottom: 10px;
@@ -178,7 +181,7 @@ const AnimationComponent = styled.div<AnimationComponentProps>`
     }
   }};
 
-	transform: ${({ state }) => {
+	/* transform: ${({ state }) => {
     switch (state) {
       case 'entering':
         return 'translateX(-100vw)'
@@ -189,5 +192,5 @@ const AnimationComponent = styled.div<AnimationComponentProps>`
       case 'exited':
         return 'translateX(0px)'
     }
-  }};
+  }}; */
 `

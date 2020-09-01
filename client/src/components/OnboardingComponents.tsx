@@ -216,6 +216,7 @@ export const OnboardingHeadline: React.FC<OnboardingHeadlineProps> = ({ title, p
 type OnboardingHeadshotProps = { id: number, title: string, placeholder: string }
 export const OnboardingHeadshot: React.FC<OnboardingHeadshotProps> = ({ id, title, placeholder }) => {
 
+	let mobile = useDetectMobile()
 	const { onboardingState, onboardingDispatch } = useOnboardingContext()
 
 	// local state to render spinner while uploading image
@@ -282,7 +283,7 @@ export const OnboardingHeadshot: React.FC<OnboardingHeadshotProps> = ({ id, titl
 				{title}
 			</OnboardingTitleText>
 
-			<OnboardingHeadshotUpload size={12} src={component.props?.image}>
+			<OnboardingHeadshotUpload size={mobile? 12 : 6} src={component.props?.image}>
 				<ProfileImageUploadTopWrapper>
 					<ProfileImageUploadWrapper>
 						Choose Photo
@@ -367,6 +368,8 @@ const OnboardingHeadshotUpload = styled(Img)`
 	margin-top: 20px;
 	justify-content: center;
 	align-items: center;
+	/* max-height: 600px;
+	max-width: 600px; */
 ` 
 
 const DoneButton = styled(Button)`

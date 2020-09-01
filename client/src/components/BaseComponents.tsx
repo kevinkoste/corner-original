@@ -60,9 +60,12 @@ export const Img = styled.div<ImageProps>`
   background-image: ${props => `url(${process.env.REACT_APP_S3_BUCKET + props.src})`};
   background-position: center;
   background-size: cover;
+  background-repeat:no-repeat;
   position: relative;
   text-align: center;
+  background-color: white;
   padding-bottom: ${props => GridMap[props.size]};
+  width: ${props => GridMap[props.size]};
 `
 
 // resizeable textarea using external lib
