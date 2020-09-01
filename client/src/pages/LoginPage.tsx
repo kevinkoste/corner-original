@@ -53,13 +53,6 @@ export const LoginPage: React.FC = () => {
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
-
-	const onLogOutClick = () => {
-    cotter.logOut()
-		dispatch(setAuth(false))
-		history.push('/')
-	}
-
 	
 	return (
 		<PageContainer column width={12}>

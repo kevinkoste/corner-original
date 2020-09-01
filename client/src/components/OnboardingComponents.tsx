@@ -324,7 +324,34 @@ export const OnboardingDone: React.FC = () => {
 	const onClick = () => {		
 		dispatch(setUsername(onboardingState.profile.username))
 
-		PostProtectProfile(onboardingState.profile)
+		// here we will rearrange the profile object and add empty components.
+		const components = [...onboardingState.profile.components]
+
+		// get indices of headshot and headline
+		const indexHeadshot = components.map(comp => comp.type).indexOf('headshot')
+		const indexHeadline = components.map(comp => comp.type).indexOf('headline')
+
+		// swap them
+		const tmp = components[indexHeadline]
+		components[indexHeadline] = components[indexHeadshot]
+		components[indexHeadshot] = tmp
+
+		// add the empty bio component
+		components.push({
+			id: uuidv4().toString(),
+			type: 'bio',
+			props: {
+				bio: ''
+			}
+		})
+
+		// assemble profile
+		const profile = {
+			username: onboardingState.profile.username,
+			components: components
+		}
+
+		PostProtectProfile(profile)
 			.then(res => {
 				console.log('PostProtectProfile response:', res)
 				console.log('trying to push to history')
