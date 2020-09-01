@@ -92,7 +92,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 }
 
 const HeaderContainer = styled(Div)`
-	position: relative;
+	position: fixed;
 	align-items: center;
 	justify-content: stretch;
 	
