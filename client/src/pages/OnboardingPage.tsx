@@ -41,7 +41,7 @@ export const OnboardingPage: React.FC = () => {
     { id: 4, 
 			type: 'headshot',
 			buttons: {forward: 'Generate Profile', backward: 'Edit Headline'},
-			props: { title: 'Your Headshot', placeholder: 'images/05449456-c9c5-46a4-a42b-bde2c7de2e32.png' }
+			props: { title: 'Your Headshot', placeholder: 'images/pg.jpg' }
 		},
 		{ id: 5,
 			buttons: {forward: 'Go to Your Profile', backward: ''},
