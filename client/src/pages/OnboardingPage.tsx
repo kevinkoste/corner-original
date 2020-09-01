@@ -1,23 +1,21 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { useDetectMobile } from '../libs/hooksLib'
 import { Div, Button } from '../components/BaseComponents'
 import { Header } from '../components/Header'
-import { Transition, CSSTransition, TransitionGroup } from 'react-transition-group'
+import { Transition } from 'react-transition-group'
 
 import { useAppContext } from '../context/AppContext'
 import { GenerateOnboardingComponent } from '../components/OnboardingComponents'
 import { PostProtectOnboardCheck, PostProtectInviteCheck } from '../libs/apiLib'
 
 
-
 export const OnboardingPage: React.FC = () => {
 
 	let history = useHistory()
 	const mobile: boolean = useDetectMobile()
-	const { state, dispatch } = useAppContext()
 
 	const duration: number = 400
 	const [ animate, setAnimate ] = useState(false)

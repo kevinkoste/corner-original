@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { v4 as uuidv4 } from 'uuid'
 
 // presentation/types
+import ClipLoader from "react-spinners/ClipLoader"
 import { Div, H1, H2, Img, TextArea, Button } from '../components/BaseComponents'
 import {
 	Component,
@@ -42,33 +42,32 @@ export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 			})
 	}
 	
-	if (uploading) {
-		return (
-			<Div column width={12} style={{height:'300px', backgroundColor:'black'}}>
-				<H1>
-					This is the spinner
-				</H1>
-			</Div>
-		)
-	} else {
-		return (
-			<ProfileImage size={12} src={props.image}>
+	return (
+		<ProfileImage size={12} src={props.image}>
 
-				{ (profileState.editing) &&
-					<ProfileImageUploadTopWrapper>
-						<ProfileImageUploadWrapper>
-							Choose Photo
-							<ProfileImageUploadInput
-								type='file'
-								onChange={handleFileUpload}
+			{ (profileState.editing) &&
+				<ProfileImageUploadTopWrapper>
+						{	uploading &&
+							<ClipLoader
+								css={'position: relative; left: -50%; text-align: center;'}
+								loading={uploading}
+								color={'#000000'}
 							/>
-						</ProfileImageUploadWrapper>
-					</ProfileImageUploadTopWrapper>
-				}
+						}
+						{ !uploading &&
+							<ProfileImageUploadWrapper>
+								Choose Photo
+								<ProfileImageUploadInput
+									type='file'
+									onChange={handleFileUpload}
+								/>
+							</ProfileImageUploadWrapper>
+						}
+				</ProfileImageUploadTopWrapper>
+			}
 
-			</ProfileImage>
-		)
-	}
+		</ProfileImage>
+	)
 }
 
 
@@ -273,7 +272,7 @@ const ProfileImageUploadTopWrapper = styled.div`
 	position: absolute;
 	top: 50%;
 	left: 50%;
-  transform: translate(0%,-50%);
+  transform: translate(0,-50%);
 `
 
 const ProfileImageUploadWrapper = styled.label`

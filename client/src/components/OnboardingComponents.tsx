@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useHistory } from "react-router-dom"
+import { v4 as uuidv4 } from 'uuid'
+import ClipLoader from "react-spinners/ClipLoader"
 
 import { useDetectMobile } from '../libs/hooksLib'
 import { useAppContext, setUsername } from '../context/AppContext'
 import { useOnboardingContext, updateUsername, updateComponent } from '../context/OnboardingContext'
 import { Div, H1, H2, TextArea, Img, Button } from './BaseComponents'
-import { v4 as uuidv4 } from 'uuid'
 
 import { PostProtectProfileImage, GetPublicUsernameAvailability, PostProtectProfile } from '../libs/apiLib'
-
 import { NameComponent, HeadlineComponent, HeadshotComponent } from '../models/Profile'
 
 // USERNAME //
@@ -57,7 +57,8 @@ export const OnboardingUsername: React.FC<OnboardingUsernameProps> = ({ id, titl
 	// enter key advances form
 	const onKeyDown = (event: any) => {
 		if (event.key === 'Enter') {
-			event.preventDefault();
+			event.preventDefault()
+			onboardingDispatch(updateUsername(username))
       onForwardClick()
     }
 	}
@@ -125,7 +126,8 @@ export const OnboardingName: React.FC<OnboardingNameProps> = ({ title, placehold
 	// enter key advances form
 	const onKeyDown = (event: any) => {
 		if (event.key === 'Enter') {
-			event.preventDefault();
+			event.preventDefault()
+			onboardingDispatch(updateComponent(component))
 			onForwardClick()
 		}
 	}
@@ -189,7 +191,8 @@ export const OnboardingHeadline: React.FC<OnboardingHeadlineProps> = ({ title, p
 	// enter key advances form
 	const onKeyDown = (event: any) => {
 		if (event.key === 'Enter') {
-			event.preventDefault();
+			event.preventDefault()
+			onboardingDispatch(updateComponent(component))
       onForwardClick()
     }
 	}
@@ -285,13 +288,24 @@ export const OnboardingHeadshot: React.FC<OnboardingHeadshotProps> = ({ id, titl
 
 			<OnboardingHeadshotUpload size={mobile? 12 : 6} src={component.props?.image}>
 				<ProfileImageUploadTopWrapper>
-					<ProfileImageUploadWrapper>
-						Choose Photo
-						<ProfileImageUploadInput
-							type='file'
-							onChange={handleFileUpload}
+
+					{	uploading &&
+						<ClipLoader
+							css={'position: relative; left: -50%; text-align: center;'}
+							loading={uploading}
+							color={'#000000'}
 						/>
-					</ProfileImageUploadWrapper>
+					}
+					{ !uploading &&
+						<ProfileImageUploadWrapper>
+							Choose Photo
+							<ProfileImageUploadInput
+								type='file'
+								onChange={handleFileUpload}
+							/>
+						</ProfileImageUploadWrapper>
+					}
+
 				</ProfileImageUploadTopWrapper>
 			</OnboardingHeadshotUpload>
 
@@ -368,8 +382,6 @@ const OnboardingHeadshotUpload = styled(Img)`
 	margin-top: 20px;
 	justify-content: center;
 	align-items: center;
-	/* max-height: 600px;
-	max-width: 600px; */
 ` 
 
 const DoneButton = styled(Button)`

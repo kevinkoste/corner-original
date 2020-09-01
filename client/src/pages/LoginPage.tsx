@@ -70,12 +70,6 @@ export const LoginPage: React.FC = () => {
 				{ !state.auth &&
 					<div id="cotter-form-container" style={{ width: '100%', height: 300 }} />
 				}
-
-				{ state.auth &&
-          <LogoutButton onClick={onLogOutClick} >
-            Log Out
-          </LogoutButton>
-        }
 			</BodyContainer>
 
 		</PageContainer>
