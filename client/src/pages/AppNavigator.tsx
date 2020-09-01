@@ -84,7 +84,7 @@ export const AppNavigator: React.FC = () => {
             <NotInvitedPage />
           </Route>
   
-          {/* if own profile, can navigate to edit version of profile */}
+          {/* if own profile, navigate to edit version of profile */}
           <Route exact path='/edit/:username'>
             <ProfileProvider>
               <EditProfilePage />
