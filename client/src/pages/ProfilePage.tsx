@@ -55,7 +55,7 @@ export const ProfilePage: React.FC = () => {
         <Header title={profile.components.find(component => component.type === 'name')?.props.name} />
   
         <BodyContainer column width={mobile ? 11 : 6}>
-          { profile.components.map(component => GenerateComponent(component)) }
+          { profile.components.map(component => GenerateComponent(component, profile)) }
         </BodyContainer>
   
       </PageContainer>
