@@ -141,7 +141,7 @@ const HeaderTitleText = styled(H1)`
 const AnimatedNameKeyframes = keyframes`
 	0% { width: 0%; height: 0%; }
 	0.01% { width: 0%; height: 100%; }
-	50% { width: 50%; height: 100%; }
+	50% { width: 80%; height: 100%; }
 	99.99% { width: 0%; height: 100%; }
 	100% { width: 0%; height: 0%; }
 `
@@ -156,7 +156,7 @@ const AnimatedName = styled(HeaderTitleText)`
 const AnimatedTitleKeyframes = keyframes`
 	0% { width: 0%; height: 0%; }
 	0.01% { width: 0%; height: 100%; }
-	100% { width: 50%; height: 100%; }
+	100% { width: 80%; height: 100%; }
 `
 const AnimatedTitle = styled(HeaderTitleText)`
 	animation-name: ${AnimatedTitleKeyframes};
