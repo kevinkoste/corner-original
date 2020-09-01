@@ -20,6 +20,7 @@ export const OnboardingPage: React.FC = () => {
 	const duration: number = 400
 	const [ animate, setAnimate ] = useState(false)
 	const [ activeItem, setActiveItem ] = useState(1)
+	const [ showButton, setShowButton ] = useState(false)
 
 	type OnboardingItem = { id: number, type: string, buttons?: any, props?: any }
 	const items: OnboardingItem[] = [
@@ -76,6 +77,7 @@ export const OnboardingPage: React.FC = () => {
 		setAnimate(true)
 		setTimeout(() => {
 			setActiveItem(activeItem + 1)
+			setShowButton(false)
     }, duration-250)
     setTimeout(() => {
       setAnimate(false)
@@ -93,7 +95,7 @@ export const OnboardingPage: React.FC = () => {
 					{ state => (
 						items.filter(item => item.id === activeItem).map(item => (
 							<AnimationComponent state={state} duration={duration} key={item.id}>
-								{GenerateOnboardingComponent(item, onForwardClick)}
+								{GenerateOnboardingComponent(item, onForwardClick, setShowButton)}
 							</AnimationComponent>
 						))
 					)}
@@ -105,7 +107,7 @@ export const OnboardingPage: React.FC = () => {
 							{items[activeItem-1].buttons.backward}
 						</BackButton>
 					}
-					{ (activeItem < items.length) &&
+					{ (activeItem < items.length) && showButton &&
 						<ForwardButton onClick={onForwardClick}>
 							{items[activeItem-1].buttons.forward}
 						</ForwardButton>
@@ -180,16 +182,4 @@ const AnimationComponent = styled.div<AnimationComponentProps>`
     }
   }};
 
-	/* transform: ${({ state }) => {
-    switch (state) {
-      case 'entering':
-        return 'translateX(-100vw)'
-      case 'entered':
-        return 'translateX(0px)'
-      case 'exiting':
-        return 'translateX(100vw)'
-      case 'exited':
-        return 'translateX(0px)'
-    }
-  }}; */
 `

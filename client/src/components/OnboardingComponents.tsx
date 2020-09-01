@@ -13,17 +13,21 @@ import { PostProtectProfileImage, GetPublicUsernameAvailability, PostProtectProf
 import { NameComponent, HeadlineComponent, HeadshotComponent } from '../models/Profile'
 
 // USERNAME //
-type OnboardingUsernameProps = { id: number, title: string, placeholder: string, onForwardClick: any }
-export const OnboardingUsername: React.FC<OnboardingUsernameProps> = ({ id, title, placeholder, onForwardClick}) => {
+type OnboardingUsernameProps = { id: number, title: string, placeholder: string, onForwardClick: any, setShowButton: any }
+export const OnboardingUsername: React.FC<OnboardingUsernameProps> = ({ id, title, placeholder, onForwardClick, setShowButton}) => {
 
 	const { onboardingState, onboardingDispatch } = useOnboardingContext()
 	const [ username, setUsername ] = useState<string>('')
+	const [ started, setStarted ] = useState<boolean>(false)
+	const [ valid, setValid ] = useState<boolean>(false)
 	const [ available, setAvailable ] = useState<boolean>(true)
 
 	useEffect(() => {
 		// if returning to component, populate input
 		const username = onboardingState.profile.username
 		if (username !== "") {
+			setValid(true)
+			setShowButton(true)
 			setUsername(username)
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -35,30 +39,50 @@ export const OnboardingUsername: React.FC<OnboardingUsernameProps> = ({ id, titl
 			if (username !== "" && username !== placeholder) {
 				GetPublicUsernameAvailability(username)
 				.then(res => {
+					// we do all of our validation here
 					setAvailable(res.data)
+					if (res.data === false) {
+						setShowButton(false)
+					} else if (username === "") {
+						setValid(false)
+						setShowButton(false)
+					} else {
+						setValid(true)
+						setShowButton(true)
+					}
 				})
 				.catch(err => console.log(err))
 			}
-		}, 750)
+		}, 200)
 		return () => clearTimeout(delayDebounceFn)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username])
 
 	// dispatch the updated text to OnboardingContext state
 	const onBlur = () => {
-		onboardingDispatch(updateUsername(username))
+		if (valid && available) {
+			onboardingDispatch(updateUsername(username))
+    }
 	}
 
 	const onChange = (event: any) => {
-		setUsername(event.target.value)
+		setStarted(true)
+		setShowButton(false)
+		const filteredText = event.target.value.replace(/[^a-zA-Z0-9]/g, '')
+		setUsername(filteredText)
+		if (filteredText !== "") {
+			setValid(true)
+		} else {
+			setValid(false)
+		}
 	}
 	
 	// enter key advances form
 	const onKeyDown = (event: any) => {
-		if (event.key === 'Enter') {
+		if (event.key === 'Enter' && valid && available) {
 			event.preventDefault()
 			onboardingDispatch(updateUsername(username))
-      onForwardClick()
+			onForwardClick()
     }
 	}
 
@@ -77,7 +101,12 @@ export const OnboardingUsername: React.FC<OnboardingUsernameProps> = ({ id, titl
 			/>
 			{(!available) &&
 				<H2>
-					That username is taken, loser!
+					That username is taken
+				</H2>
+			}
+			{(started && !valid) &&
+				<H2>
+					Please enter a username
 				</H2>
 			}
 		</OnboardingScreenContainer>
@@ -85,10 +114,12 @@ export const OnboardingUsername: React.FC<OnboardingUsernameProps> = ({ id, titl
 }
 
 // NAME //
-type OnboardingNameProps = { title: string, placeholder: string, onForwardClick: any }
-export const OnboardingName: React.FC<OnboardingNameProps> = ({ title, placeholder, onForwardClick }) => {
+type OnboardingNameProps = { title: string, placeholder: string, onForwardClick: any, setShowButton: any }
+export const OnboardingName: React.FC<OnboardingNameProps> = ({ title, placeholder, onForwardClick, setShowButton }) => {
 
 	const { onboardingState, onboardingDispatch } = useOnboardingContext()
+	const [ started, setStarted ] = useState<boolean>(false)
+	const [ valid, setValid ] = useState<boolean>(false)
 	// component.props.name is basically our "textInput"
 	const [ component, setComponent ] = useState<NameComponent>({
 		id: uuidv4().toString(),
@@ -102,6 +133,8 @@ export const OnboardingName: React.FC<OnboardingNameProps> = ({ title, placehold
 	useEffect(() => {
 		const foundComponent = onboardingState.profile.components.find(component => component.type === 'name')
 		if (foundComponent) {
+			setValid(true)
+			setShowButton(true)
 			// @ts-ignore
 			const name = foundComponent.props.name
 			if (name !== "") {
@@ -118,7 +151,19 @@ export const OnboardingName: React.FC<OnboardingNameProps> = ({ title, placehold
 
 	// updates textinput (text that is displayed) and component
 	const onChange = (event: any) => {
-		setComponent({...component, props: {...component.props, name: event.target.value } })
+		setStarted(true)
+
+		const filteredText: string = event.target.value.replace(/[^a-zA-Z0-9\s]/g, '')
+		setComponent({...component, props: {...component.props, name: filteredText } })
+
+		if (filteredText.split(' ').length > 1) {
+			setValid(true)
+			setShowButton(true)
+		} else {
+			setValid(false)
+			setShowButton(false)
+		}
+		
 	}
 
 	// enter key advances form
@@ -144,15 +189,22 @@ export const OnboardingName: React.FC<OnboardingNameProps> = ({ title, placehold
 				value={component.props.name}
 				style={{textTransform:'capitalize'}}
 			/>
+			{(started && !valid) &&
+				<H2>
+					Please enter your first and last name
+				</H2>
+			}
 		</OnboardingScreenContainer>
 	)
 }
 
 // HEADLINE //
-type OnboardingHeadlineProps = { title: string, placeholder: string, onForwardClick: any }
-export const OnboardingHeadline: React.FC<OnboardingHeadlineProps> = ({ title, placeholder, onForwardClick}) => {
+type OnboardingHeadlineProps = { title: string, placeholder: string, onForwardClick: any, setShowButton: any }
+export const OnboardingHeadline: React.FC<OnboardingHeadlineProps> = ({ title, placeholder, onForwardClick, setShowButton}) => {
 
 	const { onboardingState, onboardingDispatch } = useOnboardingContext()
+	const [ started, setStarted ] = useState<boolean>(false)
+	const [ valid, setValid ] = useState<boolean>(false)
 
 	// component.props.headline is basically our "textInput"
 	const [ component, setComponent ] = useState<HeadlineComponent>({
@@ -167,6 +219,8 @@ export const OnboardingHeadline: React.FC<OnboardingHeadlineProps> = ({ title, p
 	useEffect(() => {
 		const foundComponent = onboardingState.profile.components.find(component => component.type === 'headline')
 		if (foundComponent) {
+			setValid(true)
+			setShowButton(true)
 			// @ts-ignore
 			const headline = foundComponent.props.headline
 			if (headline !== "") {
@@ -183,7 +237,19 @@ export const OnboardingHeadline: React.FC<OnboardingHeadlineProps> = ({ title, p
 
 	// updates textinput (text that is displayed) and component
 	const onChange = (event: any) => {
-		setComponent({...component, props: {...component.props, headline: event.target.value } })
+		setStarted(true)
+
+		const filteredText: string = event.target.value
+		setComponent({...component, props: {...component.props, headline: filteredText } })
+
+		if (filteredText !== "") {
+			setValid(true)
+			setShowButton(true)
+		} else {
+			setValid(false)
+			setShowButton(false)
+		}
+		
 	}
 
 	// enter key advances form
@@ -209,16 +275,22 @@ export const OnboardingHeadline: React.FC<OnboardingHeadlineProps> = ({ title, p
 				placeholder={placeholder}
 				value={component.props.headline}
 			/>
+			{(started && !valid) &&
+				<H2>
+					Please enter your one-liner
+				</H2>
+			}
 		</OnboardingScreenContainer>
 	)
 }
 
 // HEADSHOT //
-type OnboardingHeadshotProps = { id: number, title: string, placeholder: string }
-export const OnboardingHeadshot: React.FC<OnboardingHeadshotProps> = ({ id, title, placeholder }) => {
+type OnboardingHeadshotProps = { id: number, title: string, placeholder: string, setShowButton: any }
+export const OnboardingHeadshot: React.FC<OnboardingHeadshotProps> = ({ id, title, placeholder, setShowButton }) => {
 
 	let mobile = useDetectMobile()
 	const { onboardingState, onboardingDispatch } = useOnboardingContext()
+	const [ valid, setValid ] = useState<boolean>(false)
 
 	// local state to render spinner while uploading image
 	const [ uploading, setUploading ] = useState<boolean>(false)
@@ -235,6 +307,8 @@ export const OnboardingHeadshot: React.FC<OnboardingHeadshotProps> = ({ id, titl
 	useEffect(() => {
 		const foundComponent = onboardingState.profile.components.find(component => component.type === 'headshot')
 		if (foundComponent) {
+			setValid(true)
+			setShowButton(true)
 			// @ts-ignore
 			const image = foundComponent.props.image
 			if (image !== "") {
@@ -271,6 +345,7 @@ export const OnboardingHeadshot: React.FC<OnboardingHeadshotProps> = ({ id, titl
 
 				// handle display states
 				setUploading(false)
+				setShowButton(true)
 
 			}).catch(err => {
 				setUploading(false)
@@ -465,10 +540,16 @@ const Components: ComponentIndex  = {
 	headshot: OnboardingHeadshot,
 	done: OnboardingDone
 }
-export const GenerateOnboardingComponent = (component: any, onForwardClick: any) => {
+export const GenerateOnboardingComponent = (component: any, onForwardClick: any, setShowButton: any) => {
   // component exists
   if (typeof Components[component.type] !== 'undefined') {
-		return React.createElement(Components[component.type], {...component?.props, id: component.id, key: component.id, onForwardClick: onForwardClick} )
+		return React.createElement(Components[component.type], {
+			...component?.props,
+			id: component.id,
+			key: component.id,
+			onForwardClick: onForwardClick,
+			setShowButton: setShowButton
+		})
 	}
 	// component does not exist
   return <React.Fragment key={component.id} />
