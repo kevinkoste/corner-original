@@ -124,7 +124,6 @@ const PageContainer = styled(Div)`
 	max-width: 100vw;
 	height: ${window.innerHeight+"px"};
 	align-items: center;
-	/* overflow: hidden; */
 	position: relative;
 `
 

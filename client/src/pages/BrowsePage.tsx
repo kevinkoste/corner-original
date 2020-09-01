@@ -44,10 +44,9 @@ export const BrowsePage: React.FC = () => {
 
 const PageContainer = styled(Div)`
   max-width: 100vw;
-  min-height: 100vh;
+	min-height: ${window.innerHeight+"px"};
 	align-items: center;
-	overflow: hidden;
-  position: relative;
+	position: relative;
 `
 
 const BodyContainer = styled(Div)`
@@ -89,11 +88,12 @@ const ProfileImage = styled.div<ImageProps>`
   background-image: ${props => `url(${process.env.REACT_APP_S3_BUCKET + props.src})`};
   background-position: center;
   background-size: cover;
-  width: 75px;
-  height: 75px;
+  width: 60px;
+  height: 60px;
 `
 
 const ProfileName = styled(H1)`
-  font-size: 20px;
+  font-family: 'inter';
+  font-size: 16px;
   margin-left: 10px;
 `

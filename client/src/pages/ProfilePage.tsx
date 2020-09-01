@@ -84,9 +84,8 @@ export const ProfilePage: React.FC = () => {
 
 const PageContainer = styled(Div)`
   max-width: 100vw;
-  min-height: 100vh;
+	height: ${window.innerHeight+"px"};
 	align-items: center;
-	overflow: hidden;
 	position: relative;
 `
 

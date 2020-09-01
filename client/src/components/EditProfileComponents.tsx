@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { v4 as uuidv4 } from 'uuid'
 
 // presentation/types
-import { Div, H1, H2, Img, TextArea } from '../components/BaseComponents'
+import { Div, H1, H2, Img, TextArea, Button } from '../components/BaseComponents'
 import {
 	Component,
 	HeadlineComponent,
@@ -12,81 +13,15 @@ import {
 } from '../models/Profile'
 
 // logic
-import { useProfileContext, updateComponent } from '../context/ProfileContext'
+import { useProfileContext, setEditing, updateComponent, deleteComponent } from '../context/ProfileContext'
 import { PostProtectProfileImage } from '../libs/apiLib'
 
-
-export const Headline: React.FC<HeadlineComponent> = ({ id, props }) => {
-
-	const { profileState, profileDispatch } = useProfileContext()
-
-	const [textInput, setTextInput] = useState<string>(props.headline)
-
-	const handleClickAway = () => {
-		profileDispatch(updateComponent({
-			id: id,
-			type: 'headline',
-			props: {
-				headline: textInput
-			}
-		}))
-	}
-
-	if (!profileState.editing) {
-		return (
-			<HeadlineText>
-				{textInput}
-			</HeadlineText>
-		)
-	} else {
-		return (
-			<HeadlineTextArea
-				onBlur={handleClickAway}
-				onChange={(event: any) => setTextInput(event.target.value)}
-				value={textInput}
-			/>
-		)
-	}
-}
-
-export const Bio: React.FC<BioComponent> = ({ id, props }) => {
-
-  const { profileState, profileDispatch } = useProfileContext()
-
-	const [textInput, setTextInput] = useState<string>(props.bio)
-
-	const handleClickAway = () => {
-		profileDispatch(updateComponent({
-			id: id,
-			type: 'headline',
-			props: {
-				bio: textInput
-			}
-		}))
-	}
-	
-	if (!profileState.editing) {
-		return (
-			<BioText>
-				{textInput}
-			</BioText>
-		)
-	} else {
-		return (
-			<BioTextArea
-				onBlur={handleClickAway}
-				onChange={(event: any) => setTextInput(event.target.value)}
-				value={textInput}
-			/>
-		)
-	}
-}
 
 export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 
   const { profileState, profileDispatch } = useProfileContext()
 
-	const [uploading, setUploading] = useState(false)
+	const [ uploading, setUploading ] = useState(false)
 
 	const handleFileUpload = (event: any) => {
 		setUploading(true)
@@ -136,6 +71,134 @@ export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 	}
 }
 
+
+export const Headline: React.FC<HeadlineComponent> = ({ id, props }) => {
+
+	const { profileState, profileDispatch } = useProfileContext()
+
+	const [ textInput, setTextInput ] = useState<string>(props.headline)
+
+	const placeholder = 'John Kauber is a Security Engineer and Analyst passionate about protecting critical systems from threat of attack.'
+
+	const handleClickAway = () => {
+		profileDispatch(updateComponent({
+			id: id,
+			type: 'headline',
+			props: {
+				headline: textInput
+			}
+		}))
+	}
+
+	const onAddClick = () => {
+		profileDispatch(setEditing(true))
+	}
+
+
+	if (!profileState.editing && textInput === "") {
+		// not editing, component is not populated
+		return (
+			<AddComponentContainer column width={12} style={{position: 'relative'}}>
+
+				<H1 style={{color: 'lightgray'}}>
+					{placeholder}
+				</H1>
+
+				<AddButton onClick={onAddClick}>
+					Add a headline
+				</AddButton>
+
+			</AddComponentContainer>
+		)
+	} else if (profileState.editing) {
+		return (
+			<HeadlineTextArea
+				placeholder={placeholder}
+				onBlur={handleClickAway}
+				onChange={(event: any) => setTextInput(event.target.value)}
+				value={textInput}
+			/>
+		)
+	} else {
+		return (
+			<HeadlineText>
+				{textInput}
+			</HeadlineText>
+		)
+	}
+}
+
+export const Bio: React.FC<BioComponent> = ({ id, props }) => {
+
+  const { profileState, profileDispatch } = useProfileContext()
+
+	const [ textInput, setTextInput ] = useState<string>(props.bio)
+
+	const placeholder = "He’s currently a security engineer at BigCo, where he’s helping to build a system wide penetration testing platform to keep BigCo’s systems safe. A big advocate for the EFF, part-time white hat hacker, and proud member of the Information Systems Security Association, John also founded the young hacker coalition (YHC) in 2018. \n\n John loves to travel internationally, and is rarely found abroad without a camera in his hand. You can find him in San Francisco, California."
+
+	const handleClickAway = () => {
+		profileDispatch(updateComponent({
+			id: id,
+			type: 'bio',
+			props: {
+				bio: textInput
+			}
+		}))
+	}
+
+	const onAddClick = () => {
+		profileDispatch(setEditing(true))
+	}
+
+
+	if (!profileState.editing && textInput === "") {
+		return (
+			<AddComponentContainer column width={12}>
+
+				<H1 style={{color: 'lightgray'}}>
+					About {profileState.profile.components.find(comp => comp.type === 'name')?.props.name.split(' ')[0]}
+				</H1>
+
+				<Div column width={12} style={{position: 'relative'}}>
+					<H2 style={{color: 'lightgray'}}>
+						{placeholder}
+					</H2>
+
+					<AddButton onClick={onAddClick}>
+						Add a bio
+					</AddButton>
+				</Div>
+
+			</AddComponentContainer>
+		)
+	} else if (profileState.editing) {
+		return (
+			<Div column width={12} style={{marginTop: '20px'}}>
+				<H1 style={{color: (textInput === "" ? 'lightgray': 'black')}}>
+					About {profileState.profile.components.find(comp => comp.type === 'name')?.props.name.split(' ')[0]}
+				</H1>
+				<BioTextArea
+					placeholder={placeholder}
+					onBlur={handleClickAway}
+					onChange={(event: any) => setTextInput(event.target.value)}
+					value={textInput}
+				/>
+			</Div>
+		)
+	} else {
+		return (
+			<Div column width={12} style={{marginTop: '20px'}}>
+				<H1>
+					About {profileState.profile.components.find(comp => comp.type === 'name')?.props.name.split(' ')[0]}
+				</H1>
+				<BioText>
+					{textInput}
+				</BioText>
+			</Div>
+		)
+	}
+}
+
 export const Article: React.FC<ArticleComponent> = ({ id, props }) => {
 
 	return (
@@ -154,24 +217,47 @@ const HeadlineText = styled(H1)`
 const HeadlineTextArea = styled(TextArea)`
 	font-size: 30px;
 	margin-top: 20px;
-
-	outline: 1px solid red;
-	outline-style: dashed;
-  outline-offset: 5px;
+	::-webkit-input-placeholder { /* Chrome */
+  	color: lightgray;
+	}
+	:-ms-input-placeholder { /* IE 10+ */
+  	color: lightgray;
+	}
+	::-moz-placeholder { /* Firefox 19+ */
+		color: lightgray;
+		opacity: 1;
+	}
+	:-moz-placeholder { /* Firefox 4 - 18 */
+		color: lightgray;
+		opacity: 1;
+	}
 `
 
 const BioText = styled(H2)`
-	margin-top: 20px;
+	margin-top: 10px;
+	white-space: pre-wrap;
 `
 
 const BioTextArea = styled(TextArea)`
-	font-family: helvetica;
-	font-size: 14px;
-	margin-top: 20px;
+	font-family: 'inter';
+  font-size: 16px;
+	line-height: 24px;
+	margin-top: 10px;
 
-	outline: 1px solid red;
-	outline-style: dashed;
-  outline-offset: 5px;
+	::-webkit-input-placeholder { /* Chrome */
+  	color: lightgray;
+	}
+	:-ms-input-placeholder { /* IE 10+ */
+  	color: lightgray;
+	}
+	::-moz-placeholder { /* Firefox 19+ */
+		color: lightgray;
+		opacity: 1;
+	}
+	:-moz-placeholder { /* Firefox 4 - 18 */
+		color: lightgray;
+		opacity: 1;
+	}
 `
 
 const ProfileImage = styled(Img)`
@@ -212,6 +298,16 @@ const ProfileImageUploadWrapper = styled.label`
 `
 
 
+const AddComponentContainer = styled(Div)`
+  margin-top: 20px;
+`
+
+const AddButton = styled(Button)`
+	position: absolute;
+	top: 50%;
+	left: 50%;
+  transform: translate(-50%,-50%);
+`
 
 
 // GenerateComponent takes JSON {id, component, props},
@@ -227,11 +323,13 @@ const Components: ComponentIndex  = {
   article: Article
 }
 
+
 export const GenerateEditComponent = (component: Component) => {
   // component exists
-  if (typeof Components[component.type] !== 'undefined') {		
+  if (typeof Components[component.type] !== 'undefined') {	
 		return React.createElement(Components[component.type], {...component, key:component.id} )
+	} else {
+		// component does not exist
+		return <React.Fragment key={component.id} />
 	}
-	// component does not exist
-  return <React.Fragment key={component.id} />
 }

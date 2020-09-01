@@ -161,33 +161,49 @@ router.post('/invite', (req, res) => {
   const invitedEmail = req.body.invitedEmail
   const senderEmail = req.body.senderEmail
 
-  // add invitedemail to invites table
-  db.put({
-    TableName: 'invites',
-    Item: { email: invitedEmail }
-  })
-  .then(data => console.log('response from db put', data))
-  .catch(err => console.log(err))
-
-  // get inviter name and send email
+  // check if email in invites table
   db.get({
-    TableName: 'profiles',
-    Key: { email: senderEmail }
+    TableName: 'invites',
+    Key: { email: invitedEmail }
   }).then(data => {
-
-    const name = data.Item.components.find((component: any ) => component.type === 'name').props.name
-
-    sg.send({
-      to: `kevin@virgilcard.com`,
-      from: 'kevinkoste@gmail.com',
-      subject: `${name} invited you to join Corner!`,
-      text: 'Yay!',
-      html: '<strong>Yay!</strong>',
-    }).then(data => {
-      console.log('response from sendgrid', data)
-      res.status(200)
-    })
-
+    if (data.Item !== undefined && data.Item !== null) {
+      // email has already been invited, dont send invite
+    } else {
+      // email has not been invited, do things
+      db.put({
+        TableName: 'invites',
+        Item: { email: invitedEmail }
+      })
+      .then(data => console.log('response from db put', data))
+      .catch(err => console.log(err))
+    
+      // get inviter name and send email
+      db.get({
+        TableName: 'profiles',
+        Key: { email: senderEmail }
+      }).then(data => {
+    
+        const name = data.Item.components.find((component: any ) => component.type === 'name').props.name
+    
+        sg.send({
+          to: `kevin@virgilcard.com`,
+          from: 'kevinkoste@gmail.com',
+          subject: `${name} invited you to join Corner!`,
+          text: 'Yay!',
+          html: '<strong>Yay!</strong>',
+        }).then(data => {
+          console.log('response from sendgrid', data)
+          res.status(200)
+        }).catch(err => {
+          console.log('sendgrid error', err)
+          res.status(500)
+        })
+    
+      }).catch(err => {
+        console.log(err)
+        res.status(500)
+      })
+    }
   }).catch(err => {
     console.log(err)
     res.status(500)

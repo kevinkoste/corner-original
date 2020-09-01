@@ -177,22 +177,31 @@ const InviteForm: React.FC = () => {
 
 	return (
 		<Div column width={12}>
+
 			<HeaderTitleText style={{color: 'white', marginTop: '20px'}}>
 				Invite a friend
 			</HeaderTitleText>
-			<InviteTextInput 
-				onChange={(event: any) => setEmailInput(event.target.value)}
-				value={emailInput}
-			/>
-			<InviteButton onClick={onSubmit} />
+
+			<Div row width={12}>
+				<InviteTextInput 
+					placeholder={'yourfriend@gmail.com'}
+					onChange={(event: any) => setEmailInput(event.target.value)}
+					value={emailInput}
+				/>
+				<InviteButton onClick={onSubmit} />
+			</Div>
+
 		</Div>
 	)
 }
 
 const InviteTextInput = styled(TextArea)`
+	background-color: black;
+	color: white;
+	font-size: 16px;
 
 `
 
 const InviteButton = styled(Button)`
-
+	background-color: white;
 `

@@ -24,15 +24,17 @@ const ProfileContext = createContext<ProfileContextType>({
 
 // Action constants
 const UPDATE_PROFILE = "UPDATE_PROFILE"
-const TOGGLE_EDITING = "TOGGLE_EDITING"
+const SET_EDITING = "SET_EDITING"
 const UPDATE_COMPONENT = "UPDATE_COMPONENT"
+const DELETE_COMPONENT = "DELETE_COMPONENT"
 
 
 // Valid action types
 type Action =
  | { type: "UPDATE_PROFILE", profile: Profile }
- | { type: "TOGGLE_EDITING" }
+ | { type: "SET_EDITING", editing: boolean }
  | { type: "UPDATE_COMPONENT", component: any }
+ | { type: "DELETE_COMPONENT", id: string }
 
 
 
@@ -41,12 +43,16 @@ export const updateProfile = (profile: Profile): Action => {
   return { type: UPDATE_PROFILE, profile: profile}
 }
 
-export const toggleEditing = (): Action => {
-  return { type: TOGGLE_EDITING }
+export const setEditing = (editing: boolean): Action => {
+  return { type: SET_EDITING, editing: editing }
 }
 
 export const updateComponent = (component: any): Action => {
   return { type: UPDATE_COMPONENT, component: component}
+}
+
+export const deleteComponent = (id: string): Action => {
+  return { type: DELETE_COMPONENT, id: id}
 }
 
 
@@ -60,10 +66,10 @@ const ProfileReducer = (state: StateType, action: Action) => {
         profile: action.profile
       }
 
-    case TOGGLE_EDITING:
+    case SET_EDITING:
       return {
         ...state,
-        editing: !state.editing
+        editing: action.editing
       }
 
 
@@ -87,6 +93,16 @@ const ProfileReducer = (state: StateType, action: Action) => {
           }
         }
       }
+
+    case DELETE_COMPONENT:
+      return {
+        ...state,
+        profile: {
+          ...state.profile,
+          components: state.profile.components.filter(component => component.id !== action.id )
+        }
+      }
+
 
     default:
       return state

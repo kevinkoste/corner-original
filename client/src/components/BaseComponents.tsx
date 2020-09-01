@@ -21,7 +21,7 @@ export const GridMap: GridMapType = {
 type DivProps = {
   column?: boolean,
   row?: boolean,
-  width: number,
+  width: number
 }
 export const Div = styled.div<DivProps>`
   display: flex;
@@ -74,7 +74,7 @@ export const TextArea = styled(TextareaAutosize)`
 	resize: none;
 	padding: 0px;
   text-align: left;
-  
+  white-space: pre-wrap;
   font-family: 'source-serif';
   font-size: 30px;
 `

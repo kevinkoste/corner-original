@@ -8,7 +8,7 @@ import { Header } from '../components/Header'
 
 // logic
 import { useAppContext } from '../context/AppContext'
-import { useProfileContext, updateProfile, toggleEditing } from '../context/ProfileContext'
+import { useProfileContext, updateProfile, setEditing, updateComponent } from '../context/ProfileContext'
 import { GenerateEditComponent } from '../components/EditProfileComponents'
 import { GetPublicProfileData, PostProtectProfile } from '../libs/apiLib'
 
@@ -45,11 +45,7 @@ export const EditProfilePage: React.FC = () => {
         console.log(err)
       })
     }
-    profileDispatch(toggleEditing())
-  }
-
-  const onAddComponent = () => {
-    profileState.profile.components.push()
+    profileDispatch(setEditing(!profileState.editing))
   }
 
 	return (
@@ -58,11 +54,11 @@ export const EditProfilePage: React.FC = () => {
       <Header title={profileState.profile.components.find(component => component.type === 'name')?.props.name} />
 
       <BodyContainer column width={mobile ? 11 : 6}>
+
         {profileState.profile.components.map(component => GenerateEditComponent(component))}
 
       </BodyContainer>
 
-      {/* insert add component option! */}
 
       <EditButton onClick={onSave} >
         {profileState.editing ? 'Finish Editing' : 'Edit Corner'}
@@ -72,21 +68,19 @@ export const EditProfilePage: React.FC = () => {
 	)
 }
 
+
 const PageContainer = styled(Div)`
   max-width: 100vw;
-  min-height: 100vh;
+	height: ${window.innerHeight+"px"};
 	align-items: center;
-	overflow: hidden;
-  position: relative;
-  
+	position: relative;
 `
 
 const BodyContainer = styled(Div)`
 `
 
 const EditButton = styled(Button)`
-  position: absolute;
+  position: fixed;
   bottom: 10px;
   right: 10px;
 `
-
