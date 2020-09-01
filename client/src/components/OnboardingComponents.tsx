@@ -97,6 +97,7 @@ export const OnboardingUsername: React.FC<OnboardingUsernameProps> = ({ id, titl
 				onBlur={onBlur}
 				onKeyDown={onKeyDown}
 				placeholder={placeholder}
+				autoCapitalize={'none'}
 				value={username}
 			/>
 			{(!available) &&
