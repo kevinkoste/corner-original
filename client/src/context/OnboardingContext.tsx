@@ -45,8 +45,7 @@ const OnboardingReducer = (state: StateType, action: Action) => {
   switch (action.type) {
 
     case UPDATE_COMPONENT:
-      if (state.profile.components.find(component => component.id === action.component.id) === undefined) {
-        // the component doesn't exist, add it
+      if (state.profile.components.find(component => component.type === action.component.type) === undefined) {
         return {
           ...state,
           profile: {
@@ -55,12 +54,11 @@ const OnboardingReducer = (state: StateType, action: Action) => {
           }
         }
       } else {
-        // component exists, update it!
         return {
           ...state,
           profile: {
             ...state.profile,
-            components: state.profile.components.map(component => (component.id === action.component.id) ? action.component : component )
+            components: state.profile.components.map(component => (component.type === action.component.type) ? action.component : component )
           }
         }
       }

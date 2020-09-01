@@ -35,7 +35,6 @@ export const OnboardingUsername: React.FC<OnboardingUsernameProps> = ({ id, titl
 			if (username !== "" && username !== placeholder) {
 				GetPublicUsernameAvailability(username)
 				.then(res => {
-					console.log(res)
 					setAvailable(res.data)
 				})
 				.catch(err => console.log(err))
@@ -114,7 +113,6 @@ export const OnboardingName: React.FC<OnboardingNameProps> = ({ title, placehold
 
 	// dispatch the updated text to OnboardingContext state
 	const onBlur = () => {
-		console.log('dispatching new name component:', component)
 		onboardingDispatch(updateComponent(component))
 	}
 

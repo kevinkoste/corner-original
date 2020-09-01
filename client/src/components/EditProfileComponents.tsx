@@ -159,7 +159,7 @@ export const Bio: React.FC<BioComponent> = ({ id, props }) => {
 				</H1>
 
 				<Div column width={12} style={{position: 'relative'}}>
-					<H2 style={{color: 'lightgray'}}>
+					<H2 style={{color: 'lightgray', lineHeight: '24px'}}>
 						{placeholder}
 					</H2>
 
@@ -233,6 +233,9 @@ const HeadlineTextArea = styled(TextArea)`
 `
 
 const BioText = styled(H2)`
+	font-family: 'inter';
+  font-size: 16px;
+	line-height: 24px;
 	margin-top: 10px;
 	white-space: pre-wrap;
 `
