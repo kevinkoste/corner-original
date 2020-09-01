@@ -62,6 +62,7 @@ const BodyContainer = styled(Div)`
   margin: auto;
   text-align: left;
   max-width: 580px;
+  padding-top: 51px;
 `
 
 const TitleText = styled(H1)`

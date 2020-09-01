@@ -93,6 +93,7 @@ const PageContainer = styled(Div)`
 const BodyContainer = styled(Div)`
   align-items: center;
   margin: auto;
+	padding-top: 51px;
 `
 
 const LogoutButton = styled(Button)`
