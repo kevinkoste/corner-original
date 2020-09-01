@@ -21,7 +21,6 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 
 	const onClick = () => setShowingBurger(!showingBurger)
 
-
 	if (!showingBurger) {
 		return (
 			<HeaderContainer row width={mobile ? 11 : 10}>
@@ -119,7 +118,7 @@ const AnimatedNameKeyframes = keyframes`
 const AnimatedName = styled(HeaderTitleText)`
 	animation-name: ${AnimatedNameKeyframes};
 	animation-duration: 3s;
-	animation-delay: 0.8s;
+	animation-delay: 0.5s;
 	animation-timing-function: steps(30, end);
 	animation-fill-mode: both;
 `
@@ -132,7 +131,7 @@ const AnimatedTitleKeyframes = keyframes`
 const AnimatedTitle = styled(HeaderTitleText)`
 	animation-name: ${AnimatedTitleKeyframes};
 	animation-duration: 1.5s;
-	animation-delay: 3.8s;
+	animation-delay: 3.5s;
 	animation-timing-function: steps(30, end);
 	animation-fill-mode: both;
 `
@@ -159,6 +158,7 @@ const BurgerMenu = styled.div`
 `
 
 const BodyContainer = styled(Div)`
+	padding-top: 51px;
 `
 
 
