@@ -20,6 +20,14 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 	const mobile: boolean = useDetectMobile()
 
 	const onClick = () => setShowingBurger(!showingBurger)
+	const takeHome = () => {
+		if (state.auth) {
+			history.push('/browse')
+		}
+		else {
+			history.push('/')
+		}
+	}
 
 	if (!showingBurger) {
 		return (
@@ -29,7 +37,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 					{title}
 				</AnimatedName>
 
-				<AnimatedTitle>
+				<AnimatedTitle onClick={takeHome}>
 					Corner
 				</AnimatedTitle>
 
