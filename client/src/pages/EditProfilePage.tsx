@@ -59,10 +59,11 @@ export const EditProfilePage: React.FC = () => {
 
       </BodyContainer>
 
-
-      <EditButton onClick={onSave} >
-        {profileState.editing ? 'Finish Editing' : 'Edit Corner'}
-      </EditButton>
+      <ButtonContainer row width={12}>
+        <EditButton onClick={onSave} >
+          {profileState.editing ? 'Finish Editing' : 'Edit Corner'}
+        </EditButton>
+      </ButtonContainer>
 
 		</PageContainer>
 	)
@@ -83,5 +84,19 @@ const BodyContainer = styled(Div)`
 const EditButton = styled(Button)`
   position: fixed;
   bottom: 10px;
-  right: 10px;
+  right: 8.34vw;
+  @media (max-width: 768px) {
+		right: 4.17vw;
+	}
+`
+
+const ButtonContainer = styled(Div)`
+	margin-top: 60px;
+	display: flex;
+	position: relative;
+	justify-content: space-between;
+	max-width: 350px;
+	@media (max-width: 768px) {
+		margin: 0;
+	}
 `

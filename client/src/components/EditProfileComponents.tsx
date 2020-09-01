@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 // presentation/types
 import ClipLoader from "react-spinners/ClipLoader"
+import { useDetectMobile } from '../libs/hooksLib'
 import { Div, H1, H2, Img, TextArea, Button } from '../components/BaseComponents'
 import {
 	Component,
@@ -18,6 +19,8 @@ import { PostProtectProfileImage } from '../libs/apiLib'
 
 
 export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
+
+	const mobile: boolean = useDetectMobile()
 
   const { profileState, profileDispatch } = useProfileContext()
 
@@ -43,7 +46,7 @@ export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 	}
 	
 	return (
-		<ProfileImage size={12} src={props.image}>
+		<ProfileImage size={mobile? 12 : 8} src={props.image}>
 
 			{ (profileState.editing) &&
 				<ProfileImageUploadTopWrapper>

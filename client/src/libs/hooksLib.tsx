@@ -32,7 +32,7 @@ const useCurrentWidth = ( timeout=150 ) => {
   return width
 }
 
-export const useDetectMobile = ( breakpoint=960 ) => {
+export const useDetectMobile = ( breakpoint=768 ) => {
 
   const [mobile, setMobile] = useState(true)
 
