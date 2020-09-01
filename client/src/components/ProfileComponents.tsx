@@ -31,7 +31,7 @@ export const Bio: React.FC<BioProps> = ({ id, props, profile }) => {
 export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 	const mobile: boolean = useDetectMobile()
 	return (
-		<ProfileImage size={mobile ? 12 : 8} src={props.image} />
+		<ProfileImage size={mobile ? 12 : 6} style={{marginTop:''}} src={props.image} />
 	)
 }
 
@@ -55,6 +55,10 @@ const BioText = styled(H2)`
 const ProfileImage = styled(Img)`
 	margin-top: 20px;
 ` 
+
+const ComponentContainer = styled(Div)`
+	margin-top: 20px;
+`
 
 
 // GenerateComponent takes JSON {id, component, props},
@@ -82,7 +86,3 @@ export const GenerateComponent = (component: Component, profile: any) => {
 	// component does not exist
   return <React.Fragment key={component.id} />
 }
-
-const ComponentContainer = styled(Div)`
-	margin-top: 20px;
-`

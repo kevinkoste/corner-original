@@ -33,7 +33,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 		return (
 			<HeaderContainer row width={mobile ? 11 : 10}>
 
-				<AnimatedName>
+				<AnimatedName onClick={takeHome}>
 					{title}
 				</AnimatedName>
 
@@ -63,14 +63,14 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 						Browse Profiles
 					</HeaderTitleText>
 
-					{ !state.auth && 
+					{ !state.onboarded && 
 						<HeaderTitleText onClick={() => history.push(`/login`)}
 							style={{color: 'white', marginTop: '20px'}}>
 							Join Corner
 						</HeaderTitleText>
 					}
 
-					{	state.auth &&
+					{	state.onboarded && state.auth &&
 						<React.Fragment>
 
 							<HeaderTitleText onClick={() => history.push(`/edit/${state.username}`)}
@@ -101,7 +101,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 const HeaderContainer = styled(Div)`
 	position: fixed;
 	align-items: center;
-	justify-content: stretch;
+	/* justify-content: stretch; */
 	background-color: white;
 	z-index: 1;
 	
@@ -121,7 +121,7 @@ const HeaderTitleText = styled(H1)`
 const AnimatedNameKeyframes = keyframes`
 	0% { width: 0%; height: 0%; }
 	0.01% { width: 0%; height: 100%; }
-	50% { width: 100%; height: 100%; }
+	50% { width: 50%; height: 100%; }
 	99.99% { width: 0%; height: 100%; }
 	100% { width: 0%; height: 0%; }
 `
@@ -136,7 +136,7 @@ const AnimatedName = styled(HeaderTitleText)`
 const AnimatedTitleKeyframes = keyframes`
 	0% { width: 0%; height: 0%; }
 	0.01% { width: 0%; height: 100%; }
-	100% { width: 100%; height: 100%; }
+	100% { width: 50%; height: 100%; }
 `
 const AnimatedTitle = styled(HeaderTitleText)`
 	animation-name: ${AnimatedTitleKeyframes};

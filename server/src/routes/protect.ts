@@ -187,7 +187,7 @@ router.post('/invite', (req, res) => {
     
         sg.send({
           to: invitedEmail,
-          from: 'kevinkoste@gmail.com',
+          from: 'hello@corner.so',
           subject: `${name} invited you to join Corner`,
           text: 'Grab your own Corner of the Internet',
           html: `Your friend ${name} has invited you to join Corner, a place for young people with big ideas on the internet. <br/> <br/> Create your account by visiting <a href="https://corner.so">corner.so</a>.`,

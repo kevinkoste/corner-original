@@ -46,7 +46,7 @@ export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 	}
 	
 	return (
-		<ProfileImage size={mobile? 12 : 8} src={props.image}>
+		<ProfileImage size={mobile? 12 : 6} src={props.image}>
 
 			{ (profileState.editing) &&
 				<ProfileImageUploadTopWrapper>
