@@ -63,10 +63,17 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 						Browse Profiles
 					</HeaderTitleText>
 
-					{ !state.onboarded && 
+					{ !state.onboarded && !state.auth &&
 						<HeaderTitleText onClick={() => history.push(`/login`)}
 							style={{color: 'white', marginTop: '20px'}}>
 							Join Corner
+						</HeaderTitleText>
+					}
+
+					{ !state.onboarded && state.auth &&
+						<HeaderTitleText onClick={() => history.push(`/onboarding`)}
+							style={{color: 'white', marginTop: '20px'}}>
+							Make Your Profile
 						</HeaderTitleText>
 					}
 
