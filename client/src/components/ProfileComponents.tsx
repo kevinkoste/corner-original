@@ -17,7 +17,7 @@ export const Headline: React.FC<HeadlineComponent> = ({ id, props }) => {
 type BioProps = { id: string, type: string, props: any, profile: Profile }
 export const Bio: React.FC<BioProps> = ({ id, props, profile }) => {
 	console.log("`" + props.bio + "`")
-	if (props.bio = null) {
+	if (props.bio !== '') {
 		return (
 				<ComponentContainer column width={12}>
 					<H1>
@@ -31,7 +31,7 @@ export const Bio: React.FC<BioProps> = ({ id, props, profile }) => {
 	} 
 	else {
 		return (
-			<p></p>
+			<span></span>
 		)
 	}
 }
@@ -66,6 +66,7 @@ const ProfileImage = styled(Img)`
 
 const ComponentContainer = styled(Div)`
 	margin-top: 20px;
+	margin-bottom: 80px;
 `
 
 

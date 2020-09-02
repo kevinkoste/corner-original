@@ -54,7 +54,7 @@ export const ProfilePage: React.FC = () => {
   
         <Header title={profile.components.find(component => component.type === 'name')?.props.name} />
   
-        <BodyContainer width={mobile ? 11 : 6}>
+        <BodyContainer column width={mobile ? 11 : 6}>
 
           <CenteredContainer column width={12}>
             { profile.components
@@ -62,11 +62,13 @@ export const ProfilePage: React.FC = () => {
               .map(comp => GenerateComponent(comp, profile))
             }
           </CenteredContainer>
-
+          
+          <Div column width={12}>
           { profile.components
             .filter(comp => comp.type !== 'headshot' && comp.type !== 'headline' )
             .map(comp => GenerateComponent(comp, profile))
           }
+          </Div>
 
 
         </BodyContainer>
