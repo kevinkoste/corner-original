@@ -1,7 +1,7 @@
 import Cotter from 'cotter'
 
 export const cotter = new Cotter({
-  ApiKeyID: '193d4beb-caf1-4fd6-a170-9606af6eb8e6',
+  ApiKeyID: 'b3466be6-6304-4f81-99ac-a52f99f36f3e',
   Type: "EMAIL",
   // ContainerID: "cotter-container-signup",
   // RedirectURL: "https://yourwebsite.com/account/create",
