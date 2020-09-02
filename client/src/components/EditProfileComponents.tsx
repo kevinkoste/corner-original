@@ -234,38 +234,39 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 		profileDispatch(setEditing(true))
 	}
 
-
 	if (!profileState.editing && experiences.length === 0) {
 		return (
-			<Div column width={12} style={{marginTop: '20px'}}>
+			<Div column width={12} style={{marginTop: '60px'}}>
 
 				<H1 style={{color: 'lightgray'}}>
 					Experiences
 				</H1>
 
-				{ placeholder.map(exp => 
-					<ExperienceRow column width={12}>
-						<H2 style={{color: 'lightgray'}}>
-							{exp.title} at {exp.company} // {exp.date}
-						</H2>
-					</ExperienceRow>
-				)}
+				<Div column width={12} style={{position: 'relative'}}>
+					{ placeholder.map((exp, idx) => 
+						<ExperienceRow column width={12} key={idx}>
+							<H2 style={{color: 'lightgray'}}>
+								{exp.title} at {exp.company} // {exp.date}
+							</H2>
+						</ExperienceRow>
+					)}
 
-				<AddButton onClick={onAddClick}>
-					Add a bio
-				</AddButton>
+					<AddButton onClick={onAddClick}>
+						Add experiences
+					</AddButton>
+				</Div>
 
 			</Div>
 		)
 	} else if (profileState.editing) {
 		return (
-			<Div column width={12} style={{marginTop: '20px'}}>
+			<Div column width={12} style={{marginTop: '60px'}}>
 				<H1>
 					Experiences
 				</H1>
 
-				{ experiences.map(exp => 
-					<ExperienceRow column width={12}>
+				{ experiences.map((exp, idx) => 
+					<ExperienceRow column width={12} key={idx}>
 						<H2>
 							{exp.title} at {exp.company} // {exp.date}
 						</H2>
@@ -276,13 +277,13 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 		)
 	} else {
 		return (
-			<Div column width={12} style={{marginTop: '20px'}}>
+			<Div column width={12} style={{marginTop: '60px'}}>
 				<H1>
 					Experiences
 				</H1>
 
-				{ experiences.map(exp => 
-					<ExperienceRow column width={12}>
+				{ experiences.map((exp, idx) => 
+					<ExperienceRow column width={12} key={idx}>
 						<H2>
 							{exp.title} at {exp.company} // {exp.date}
 						</H2>
