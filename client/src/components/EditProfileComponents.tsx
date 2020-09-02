@@ -130,7 +130,7 @@ export const Bio: React.FC<BioComponent> = ({ id, props }) => {
 
 	const [ textInput, setTextInput ] = useState<string>(props.bio)
 
-	const placeholder = "He’s currently a security engineer at BigCo, where he’s helping to build a system wide penetration testing platform to keep BigCo’s systems safe. A big advocate for the EFF, part-time white hat hacker, and proud member of the Information Systems Security Association, John also founded the young hacker coalition (YHC) in 2018. \n\n John loves to travel internationally, and is rarely found abroad without a camera in his hand. You can find him in San Francisco, California."
+	const placeholder = "He’s currently a security engineer at BigCo, where he’s helping to build a system wide penetration testing platform to keep BigCo’s systems safe. A big advocate for the EFF, part-time white hat hacker, and proud member of the Information Systems Security Association, John also founded the young hacker coalition (YHC) in 2018. John loves to travel internationally, and is rarely found abroad without a camera in his hand. You can find him in San Francisco, California."
 
 	const handleClickAway = () => {
 		profileDispatch(updateComponent({

@@ -62,11 +62,13 @@ export const ProfilePage: React.FC = () => {
               .map(comp => GenerateComponent(comp, profile))
             }
           </CenteredContainer>
-
+          
+          <Div column width={12}>
           { profile.components
             .filter(comp => comp.type !== 'headshot' && comp.type !== 'headline' )
             .map(comp => GenerateComponent(comp, profile))
           }
+          </Div>
 
 
         </BodyContainer>
@@ -87,7 +89,7 @@ export const ProfilePage: React.FC = () => {
 
         <Header title={'Profile Not Found'} />
 
-        <NotFoundContainer column width={mobile ? 11 : 6}>
+        <NotFoundContainer width={mobile ? 11 : 6}>
           <H1>
             This profile doesn't exist!
           </H1>
@@ -116,12 +118,11 @@ const PageContainer = styled(Div)`
   max-width: 100vw;
 	align-items: center;
   position: relative;
+  min-height: ${window.innerHeight+"px"};
 `
 
 const BodyContainer = styled(Div)`
-	min-height: ${window.innerHeight+"px"};
   padding-top: 51px;
-  margin-bottom: 60px;
 `
 
 const CenteredContainer = styled(Div)`
