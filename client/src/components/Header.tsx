@@ -238,12 +238,15 @@ const InviteTextInput = styled(TextArea)`
 `
 
 const InviteButton = styled(Button)`
-	/* position: absolute;
-	right: 0; */
+
 	background-color: black;
 	color: white;
 	font-size: 16px;
 	font-family: 'inter';
   line-height: 24px;
 	padding: 0;
+	@media (max-width: 768px) {
+		position: absolute;
+		right: 0;
+	}
 `
