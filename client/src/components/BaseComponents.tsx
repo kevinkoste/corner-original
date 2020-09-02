@@ -61,6 +61,7 @@ export const Img = styled.div<ImageProps>`
   background-position: center;
   background-size: cover;
   background-repeat:no-repeat;
+  image-orientation: from-image;
   position: relative;
   text-align: center;
   background-color: white;

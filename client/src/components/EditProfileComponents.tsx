@@ -5,13 +5,7 @@ import styled from 'styled-components'
 import ClipLoader from "react-spinners/ClipLoader"
 import { useDetectMobile } from '../libs/hooksLib'
 import { Div, H1, H2, Img, TextArea, Button } from '../components/BaseComponents'
-import {
-	Component,
-	HeadlineComponent,
-	BioComponent,
-	HeadshotComponent,
-	ArticleComponent
-} from '../models/Profile'
+import { Component,	HeadlineComponent,	BioComponent,	HeadshotComponent,	ArticleComponent } from '../models/Profile'
 
 // logic
 import { useProfileContext, setEditing, updateComponent, deleteComponent } from '../context/ProfileContext'
@@ -100,7 +94,7 @@ export const Headline: React.FC<HeadlineComponent> = ({ id, props }) => {
 	if (!profileState.editing && textInput === "") {
 		// not editing, component is not populated
 		return (
-			<AddComponentContainer column width={12} style={{position: 'relative'}}>
+			<Div column width={12} style={{marginTop: '20px', position: 'relative'}}>
 
 				<H1 style={{color: 'lightgray'}}>
 					{placeholder}
@@ -110,7 +104,7 @@ export const Headline: React.FC<HeadlineComponent> = ({ id, props }) => {
 					Add a headline
 				</AddButton>
 
-			</AddComponentContainer>
+			</Div>
 		)
 	} else if (profileState.editing) {
 		return (
@@ -155,7 +149,7 @@ export const Bio: React.FC<BioComponent> = ({ id, props }) => {
 
 	if (!profileState.editing && textInput === "") {
 		return (
-			<AddComponentContainer column width={12}>
+			<Div column width={12} style={{marginTop: '20px'}}>
 
 				<H1 style={{color: 'lightgray'}}>
 					About {profileState.profile.components.find(comp => comp.type === 'name')?.props.name.split(' ')[0]}
@@ -171,7 +165,7 @@ export const Bio: React.FC<BioComponent> = ({ id, props }) => {
 					</AddButton>
 				</Div>
 
-			</AddComponentContainer>
+			</Div>
 		)
 	} else if (profileState.editing) {
 		return (
@@ -302,10 +296,6 @@ const ProfileImageUploadWrapper = styled.label`
   border-radius: 30px;
 `
 
-
-const AddComponentContainer = styled(Div)`
-  margin-top: 20px;
-`
 
 const AddButton = styled(Button)`
 	position: absolute;

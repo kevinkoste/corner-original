@@ -3,9 +3,9 @@ import { useHistory } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
 
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div, H1, Button, TextArea } from '../components/BaseComponents'
+import { Div, H1, H2, Button, TextArea } from '../components/BaseComponents'
 import BurgerIcon from '../icons/burger.svg'
-import ExitIcon from '../icons/exit.svg'
+import ExitIcon from '../icons/exit.png'
 
 import { cotter } from '../libs/cotterLib'
 import { useAppContext, setAuth } from '../context/AppContext'
@@ -53,7 +53,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 					<HeaderTitleText style={{color: 'white'}}>
 						Search Profiles...
 					</HeaderTitleText>
-					<BurgerButton onClick={onClick} src={ExitIcon} />
+					<ExitButton onClick={onClick} src={ExitIcon} />
 				</HeaderContainer>
 
 				<BodyContainer column width={mobile ? 11 : 10}>
@@ -170,6 +170,16 @@ const BurgerButton = styled.img`
 	position: absolute;
 	z-index: 2;
 	right: 0;
+	height: 30px;
+	width: 30px;
+`
+
+const ExitButton = styled.img`
+	position: absolute;
+	z-index: 2;
+	right: 0;
+	height: 25px;
+	width: 25px;
 `
 
 const BurgerMenu = styled.div`
@@ -194,9 +204,11 @@ const BodyContainer = styled(Div)`
 
 const InviteForm: React.FC = () => {
 
+	const [ sent, setSent ] = useState<boolean>(false)
 	const [ emailInput, setEmailInput ] = useState<string>('') 
 
 	const onSubmit = () => {
+		setSent(true)
 
 		PostProtectInviteNewEmail(emailInput)
 			.then(res => {
@@ -212,17 +224,30 @@ const InviteForm: React.FC = () => {
 				Invite a friend
 			</HeaderTitleText>
 
-			<Div row width={12} style={{position: 'relative', maxWidth: '400px'}}>
-				<InviteTextInput 
-					placeholder={'yourfriend@gmail.com'}
-					onChange={(event: any) => setEmailInput(event.target.value)}
-					value={emailInput}
-					autoCapitalize="none"
-				/>
-				<InviteButton onClick={onSubmit}>
-					Invite &#62;
-				</InviteButton>
-			</Div>
+			{ !sent &&
+				<Div row width={12} style={{position: 'relative', maxWidth: '400px'}}>
+					<InviteTextInput 
+						placeholder={'yourfriend@gmail.com'}
+						onChange={(event: any) => setEmailInput(event.target.value)}
+						value={emailInput}
+						autoCapitalize="none"
+					/>
+					<InviteButton onClick={onSubmit}>
+						Invite &#62;
+					</InviteButton>
+				</Div>
+			}
+
+			{ sent &&
+				<Div row width={12} style={{position: 'relative', maxWidth: '400px'}}>
+
+					<InvitedText>
+						{emailInput} has been invited!
+					</InvitedText>
+
+				</Div>
+			}
+
 
 		</Div>
 	)
@@ -235,6 +260,14 @@ const InviteTextInput = styled(TextArea)`
 	font-family: 'inter';
   line-height: 24px;
 	text-transform: lowercase;
+`
+
+const InvitedText = styled(H2)`
+	color: white;
+	font-size: 16px;
+	font-family: 'inter';
+	line-height: 24px;
+	text-align: center;
 `
 
 const InviteButton = styled(Button)`

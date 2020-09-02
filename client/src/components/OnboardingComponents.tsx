@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useHistory } from "react-router-dom"
 import { v4 as uuidv4 } from 'uuid'
-import ClipLoader from "react-spinners/ClipLoader"
 
+import ClipLoader from "react-spinners/ClipLoader"
 import { useDetectMobile } from '../libs/hooksLib'
 import { useAppContext, setUsername } from '../context/AppContext'
 import { useOnboardingContext, updateUsername, updateComponent } from '../context/OnboardingContext'

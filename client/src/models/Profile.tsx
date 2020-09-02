@@ -9,33 +9,7 @@ export const EmptyProfile: Profile = {
   components: []
 }
 
-// COMPONENT PROPS TYPES //
-// export type NameProps = {
-//   name: string
-// }
-
-// export type HeadlineProps = {
-//   headline: string
-// }
-
-// export type BioProps = {
-//   bio: string
-// }
-
-// export type HeadshotProps = {
-//   image: string
-// }
-
-// export type ArticleProps = {
-//   source: string,
-//   title: string,
-//   subtitle: string,
-//   date: string,
-//   link: string
-// }
-
 // COMPONENT TYPES //
-
 export type Component = {
   id: string,
   type: 'name' | 'headline' | 'bio' | 'headshot' | 'article',
@@ -71,6 +45,19 @@ export type HeadshotComponent = {
   type: 'headshot',
   props: {
     image: string
+  }
+}
+
+export type Experience = {
+  title: string,
+  company: string,
+  date: string
+}
+export type ExperiencesComponent = {
+  id: string,
+  type: 'experiences',
+  props: {
+    experiences: string,
   }
 }
 

@@ -52,6 +52,7 @@ const PageContainer = styled(Div)`
 const BodyContainer = styled(Div)`
   align-items: center;
   padding-top: 51px;
+  padding-bottom: 60px;
 `
 
 
@@ -91,12 +92,16 @@ const ProfileImage = styled.div<ImageProps>`
   background-image: ${props => `url(${process.env.REACT_APP_S3_BUCKET + props.src})`};
   background-position: center;
   background-size: cover;
-  width: 60px;
-  height: 60px;
+  min-width: 60px;
+  min-height: 60px;
 `
 
 const ProfileName = styled(H1)`
   font-family: 'inter';
   font-size: 16px;
   margin-left: 10px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
