@@ -5,7 +5,7 @@ import styled, { keyframes } from 'styled-components'
 import { useDetectMobile } from '../libs/hooksLib'
 import { Div, H1, H2, Button, TextArea } from '../components/BaseComponents'
 import BurgerIcon from '../icons/burger.svg'
-import ExitIcon from '../icons/exit.svg'
+import ExitIcon from '../icons/exit.png'
 
 import { cotter } from '../libs/cotterLib'
 import { useAppContext, setAuth } from '../context/AppContext'
@@ -53,7 +53,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 					<HeaderTitleText style={{color: 'white'}}>
 						Search Profiles...
 					</HeaderTitleText>
-					<BurgerButton onClick={onClick} src={ExitIcon} />
+					<ExitButton onClick={onClick} src={ExitIcon} />
 				</HeaderContainer>
 
 				<BodyContainer column width={mobile ? 11 : 10}>
@@ -170,6 +170,16 @@ const BurgerButton = styled.img`
 	position: absolute;
 	z-index: 2;
 	right: 0;
+	height: 30px;
+	width: 30px;
+`
+
+const ExitButton = styled.img`
+	position: absolute;
+	z-index: 2;
+	right: 0;
+	height: 25px;
+	width: 25px;
 `
 
 const BurgerMenu = styled.div`
