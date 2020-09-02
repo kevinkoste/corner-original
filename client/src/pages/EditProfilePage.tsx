@@ -51,11 +51,21 @@ export const EditProfilePage: React.FC = () => {
 	return (
 		<PageContainer column width={12}>
 
-      <Header title={profileState.profile.components.find(component => component.type === 'name')?.props.name} />
+      <Header title={profileState.profile.components.find(comp => comp.type === 'name')?.props.name} />
 
       <BodyContainer column width={mobile ? 11 : 6}>
 
-        {profileState.profile.components.map(component => GenerateEditComponent(component))}
+        <CenteredContainer column width={12}>
+          { profileState.profile.components
+            .filter(comp => comp.type === 'headshot' || comp.type === 'headline' )
+            .map(comp => GenerateEditComponent(comp))
+          }
+        </CenteredContainer>
+
+        { profileState.profile.components
+          .filter(comp => comp.type !== 'headshot' && comp.type !== 'headline' )
+          .map(comp => GenerateEditComponent(comp))
+        }
 
       </BodyContainer>
 
@@ -80,6 +90,11 @@ const PageContainer = styled(Div)`
 const BodyContainer = styled(Div)`
   padding-top: 51px;
   padding-bottom: 60px;
+`
+
+const CenteredContainer = styled(Div)`
+  justify-content: center;
+  height: ${(window.innerHeight - 51)+"px"};
 `
 
 const EditButton = styled(Button)`
