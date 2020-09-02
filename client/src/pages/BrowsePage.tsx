@@ -62,6 +62,7 @@ const ProfileRow: React.FC<ProfileRowProps> = ({ profile }) => {
 
   const name = profile.components.find(component => component.type === 'name')?.props?.name
   const image = profile.components.find(component => component.type === 'headshot')?.props?.image
+  const headline = profile.components.find(component => component.type === 'headline')?.props?.headline
 
   const onClick = () => {
     history.push(`/${profile.username}`)
@@ -72,7 +73,8 @@ const ProfileRow: React.FC<ProfileRowProps> = ({ profile }) => {
       <ProfileImage size={3} src={image}/>
 
       <ProfileName>
-        {name}
+        <u>{name}</u><br/>
+        "{headline}"
       </ProfileName>
 
     </RowContainer>
@@ -80,7 +82,7 @@ const ProfileRow: React.FC<ProfileRowProps> = ({ profile }) => {
 }
 
 const RowContainer = styled(Div)`
-  align-items: center;
+  align-items: top;
   margin-top: 20px;
 `
 
