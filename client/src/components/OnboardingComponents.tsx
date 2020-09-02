@@ -98,6 +98,7 @@ export const OnboardingUsername: React.FC<OnboardingUsernameProps> = ({ id, titl
 				onKeyDown={onKeyDown}
 				placeholder={placeholder}
 				autoCapitalize="none"
+				style={{textTransform: 'lowercase'}}
 				value={username}
 			/>
 			{(!available) &&

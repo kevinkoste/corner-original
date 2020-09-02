@@ -234,7 +234,7 @@ const InviteTextInput = styled(TextArea)`
 	font-size: 16px;
 	font-family: 'inter';
   line-height: 24px;
-
+	text-transform: lowercase;
 `
 
 const InviteButton = styled(Button)`
