@@ -108,7 +108,7 @@ const BodyContainer = styled(Div)`
 
 const CenteredContainer = styled(Div)`
   justify-content: center;
-  height: ${(window.innerHeight - 51)+"px"};
+  min-height: ${(window.innerHeight - 51)+"px"};
 `
 
 const NotFoundContainer = styled(Div)`

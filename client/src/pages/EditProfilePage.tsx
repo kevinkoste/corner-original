@@ -82,7 +82,7 @@ export const EditProfilePage: React.FC = () => {
 
 const PageContainer = styled(Div)`
   max-width: 100vw;
-	height: ${window.innerHeight+"px"};
+	min-height: ${window.innerHeight+"px"};
 	align-items: center;
 	position: relative;
 `
