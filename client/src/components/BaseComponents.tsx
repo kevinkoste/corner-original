@@ -25,7 +25,7 @@ type DivProps = {
 }
 export const Div = styled.div<DivProps>`
   display: flex;
-  flex-direction: ${props => props.column ? 'column' : props.row ? 'row' : 'column'};
+  flex-direction: ${props => props.column ? 'column' : props.row ? 'row' : 'unset'};
   width: ${props => GridMap[props.width]};
 `
 

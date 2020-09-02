@@ -29,8 +29,6 @@ export const loggerMiddleware = (req: express.Request, res: express.Response, ne
 export const authMiddleware = (req: express.Request, res: express.Response, next: any) => {
 
   console.log('in authMiddleware')
-  console.log('request body:', req.body)
-  console.log('request headers:', req.headers)
 
   if (!('authorization' in req.headers)) {
     res.status(401).end('Authorization header missing')
@@ -40,7 +38,7 @@ export const authMiddleware = (req: express.Request, res: express.Response, next
 
   CotterNode.CotterValidateJWT(accessToken)
   .then(valid => {
-    console.log('just got validate response:', valid)
+    console.log('auth validated:', valid)
     if (!valid) throw Error('Invalid access token')
     next()
   })

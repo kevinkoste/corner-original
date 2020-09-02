@@ -22,6 +22,10 @@ export const LoginPage: React.FC = () => {
 	
 	useEffect(() => {
 
+		if (state.auth && state.onboarded) {
+			history.push(`/edit/${state.username}`)
+		}
+
 		cotter.signInWithLink().showEmailForm()
 		.then(data => {
 

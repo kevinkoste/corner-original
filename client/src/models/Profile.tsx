@@ -57,7 +57,7 @@ export type ExperiencesComponent = {
   id: string,
   type: 'experiences',
   props: {
-    experiences: string,
+    experiences: Experience[],
   }
 }
 
