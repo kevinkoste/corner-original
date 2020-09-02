@@ -97,14 +97,14 @@ export const ProfilePage: React.FC = () => {
 
 const PageContainer = styled(Div)`
   max-width: 100vw;
-	height: ${window.innerHeight+"px"};
 	align-items: center;
-	position: relative;
+  position: relative;
 `
 
 const BodyContainer = styled(Div)`
+	min-height: ${window.innerHeight+"px"};
   padding-top: 51px;
-  padding-bottom: 60px;
+  margin-bottom: 60px;
 `
 
 const CenteredContainer = styled(Div)`
