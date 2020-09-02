@@ -127,29 +127,6 @@ router.post('/invite/check', (req, res) => {
   })
 })
 
-// // POST /protect/get-username - checks if email has been invited
-// router.post('/get-username', (req, res) => {
-
-//   const email = req.body.email
-
-//   db.get({
-//     TableName: 'profiles',
-//     Key: { email: email }
-//   }).then(data => {
-//     console.log('db response for get-username check', data)
-
-//     if (data.Item !== undefined && data.Item !== null) {
-//       res.status(200).json({ username: data.Item.username })
-//     } else {
-//       res.status(200).json({ username: false })
-//     }
-
-//   }).catch(err => {
-//     console.log(err)
-//     res.status(500)
-//   })
-// })
-
 
 // POST /protect/invite - invite a new user
 router.post('/invite', (req, res) => {

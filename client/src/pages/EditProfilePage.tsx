@@ -79,6 +79,7 @@ const PageContainer = styled(Div)`
 
 const BodyContainer = styled(Div)`
   padding-top: 51px;
+  padding-bottom: 60px;
 `
 
 const EditButton = styled(Button)`
