@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 // presentation
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div, H1 } from '../components/BaseComponents'
+import { Div, H1, Button } from '../components/BaseComponents'
 import { Header } from '../components/Header'
 
 // logic
@@ -70,6 +70,14 @@ export const ProfilePage: React.FC = () => {
 
 
         </BodyContainer>
+
+        { !state.auth &&
+          <ButtonContainer row width={12}>
+            <EditButton onClick={() => history.push('/login')} >
+              Join Corner
+            </EditButton>
+          </ButtonContainer>
+        }
   
       </PageContainer>
     )
@@ -84,6 +92,15 @@ export const ProfilePage: React.FC = () => {
             This profile doesn't exist!
           </H1>
         </NotFoundContainer>
+
+        { !state.auth &&
+          <ButtonContainer row width={12}>
+            <EditButton onClick={() => history.push('/login')} >
+              Join Corner
+            </EditButton>
+          </ButtonContainer>
+        }
+
 
       </PageContainer>
     )
@@ -117,3 +134,22 @@ const NotFoundContainer = styled(Div)`
   justify-content: center;
 `
 
+const ButtonContainer = styled(Div)`
+	margin-top: 60px;
+	display: flex;
+	position: relative;
+	justify-content: space-between;
+	max-width: 350px;
+	@media (max-width: 768px) {
+		margin: 0;
+	}
+`
+
+const EditButton = styled(Button)`
+  position: fixed;
+  bottom: 10px;
+  right: 8.34vw;
+  @media (max-width: 768px) {
+		right: 4.17vw;
+	}
+`
