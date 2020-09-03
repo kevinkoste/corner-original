@@ -96,9 +96,7 @@ const ProfileImage = styled.div<ImageProps>`
   min-height: 60px;
 `
 
-const ProfileName = styled(H1)`
-  font-family: 'inter';
-  font-size: 16px;
+const ProfileName = styled(H2)`
   margin-left: 10px;
 
   white-space: nowrap;

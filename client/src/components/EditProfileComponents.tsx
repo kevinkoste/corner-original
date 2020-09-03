@@ -41,7 +41,7 @@ export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 	}
 	
 	return (
-		<ProfileImage size={mobile? 12 : 6} src={props.image}>
+		<ProfileImage size={mobile? 12 : 10} src={props.image}>
 
 			{ (profileState.editing) &&
 				<ProfileImageUploadTopWrapper>
@@ -150,7 +150,7 @@ export const Bio: React.FC<BioComponent> = ({ id, props }) => {
 
 	if (!profileState.editing && textInput === "") {
 		return (
-			<Div column width={12} style={{marginTop: '20px'}}>
+			<ComponentContainer column>
 
 				<H1 style={{color: 'lightgray'}}>
 					About {profileState.profile.components.find(comp => comp.type === 'name')?.props.name.split(' ')[0]}
@@ -166,11 +166,11 @@ export const Bio: React.FC<BioComponent> = ({ id, props }) => {
 					</AddButton>
 				</Div>
 
-			</Div>
+			</ComponentContainer>
 		)
 	} else if (profileState.editing) {
 		return (
-			<Div column width={12} style={{marginTop: '20px'}}>
+			<ComponentContainer column>
 				<H1 style={{color: (textInput === "" ? 'lightgray': 'black')}}>
 					About {profileState.profile.components.find(comp => comp.type === 'name')?.props.name.split(' ')[0]}
 				</H1>
@@ -180,18 +180,18 @@ export const Bio: React.FC<BioComponent> = ({ id, props }) => {
 					onChange={(event: any) => setTextInput(event.target.value)}
 					value={textInput}
 				/>
-			</Div>
+			</ComponentContainer>
 		)
 	} else {
 		return (
-			<Div column width={12} style={{marginTop: '20px'}}>
+			<ComponentContainer column>
 				<H1>
 					About {profileState.profile.components.find(comp => comp.type === 'name')?.props.name.split(' ')[0]}
 				</H1>
 				<BioText>
 					{textInput}
 				</BioText>
-			</Div>
+			</ComponentContainer>
 		)
 	}
 }
@@ -461,7 +461,7 @@ const HeadlineText = styled(H1)`
 `
 
 const HeadlineTextArea = styled(TextArea)`
-	font-size: 30px;
+	font-size: 36px;
 	margin-top: 20px;
 	::-webkit-input-placeholder { /* Chrome */
   	color: lightgray;
@@ -477,19 +477,27 @@ const HeadlineTextArea = styled(TextArea)`
 		color: lightgray;
 		opacity: 1;
 	}
+	@media (max-width: 768px) {
+		font-size: 30px;
+	}
+`
+
+const ComponentContainer = styled(Div)`
+	margin-top: 40px;
+	margin-bottom: 80px;
+	@media (max-width) {
+		margin-top: 20px;
+	}
 `
 
 const BioText = styled(H2)`
-	font-family: 'inter';
-  font-size: 16px;
-	line-height: 24px;
 	margin-top: 10px;
 	white-space: pre-wrap;
 `
 
 const BioTextArea = styled(TextArea)`
 	font-family: 'inter';
-  font-size: 16px;
+  font-size: 18px;
 	line-height: 24px;
 	margin-top: 10px;
 
@@ -506,6 +514,9 @@ const BioTextArea = styled(TextArea)`
 	:-moz-placeholder { /* Firefox 4 - 18 */
 		color: lightgray;
 		opacity: 1;
+	}
+	@media (max-width: 768px) {
+		font-size: 16px;
 	}
 `
 

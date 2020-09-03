@@ -8,9 +8,9 @@ import { useDetectMobile } from '../libs/hooksLib'
 
 export const Headline: React.FC<HeadlineComponent> = ({ id, props }) => {
 	return (
-		<HeadlineText>
-			{props.headline}
-		</HeadlineText>
+			<HeadlineText>
+				{props.headline}
+			</HeadlineText>
 	)
 }
 
@@ -39,7 +39,7 @@ export const Bio: React.FC<BioProps> = ({ id, props, profile }) => {
 export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 	const mobile: boolean = useDetectMobile()
 	return (
-		<ProfileImage size={mobile ? 12 : 6} style={{marginTop:''}} src={props.image} />
+			<ProfileImage size={mobile ? 12 : 10} style={{marginTop:''}} src={props.image} />
 	)
 }
 
@@ -62,11 +62,15 @@ const BioText = styled(H2)`
 
 const ProfileImage = styled(Img)`
 	margin-top: 20px;
+	flex-direction: column;
 ` 
 
 const ComponentContainer = styled(Div)`
-	margin-top: 20px;
+	margin-top: 40px;
 	margin-bottom: 80px;
+	@media (max-width) {
+		margin-top: 20px;
+	}
 `
 
 

@@ -53,19 +53,36 @@ export const EditProfilePage: React.FC = () => {
 
       <Header title={profileState.profile.components.find(comp => comp.type === 'name')?.props.name} />
 
-      <BodyContainer column width={mobile ? 11 : 6}>
+      <BodyContainer column width={mobile ? 11 : 8}>
 
         <CenteredContainer column width={12}>
-          { profileState.profile.components
-            .filter(comp => comp.type === 'headshot' || comp.type === 'headline' )
+          <FrontPageWrapper>
+            { profileState.profile.components
+              .filter(comp => comp.type === 'headshot' )
+              .map(comp => GenerateEditComponent(comp))
+            }
+          </FrontPageWrapper>
+          <FrontPageWrapper>
+            { profileState.profile.components
+              .filter(comp => comp.type === 'headline' )
+              .map(comp => GenerateEditComponent(comp))
+            }
+            { !mobile && profileState.profile.components
+              .filter(comp => comp.type === 'bio' )
+              .map(comp => GenerateEditComponent(comp))
+            }
+          </FrontPageWrapper>
+        </CenteredContainer>
+        <Div column width={12}>
+          { mobile && profileState.profile.components
+            .filter(comp => comp.type !== 'headshot' && comp.type !== 'headline' )
             .map(comp => GenerateEditComponent(comp))
           }
-        </CenteredContainer>
-
-        { profileState.profile.components
-          .filter(comp => comp.type !== 'headshot' && comp.type !== 'headline' )
-          .map(comp => GenerateEditComponent(comp))
-        }
+          { !mobile && profileState.profile.components
+            .filter(comp => comp.type !== 'headshot' && comp.type !== 'headline' && comp.type !== 'bio' )
+            .map(comp => GenerateEditComponent(comp))
+          }
+        </Div>
 
       </BodyContainer>
 
@@ -84,17 +101,30 @@ const PageContainer = styled(Div)`
   max-width: 100vw;
 	align-items: center;
   position: relative;
+  min-height: ${window.innerHeight+"px"};
 `
 
 const BodyContainer = styled(Div)`
-	min-height: ${window.innerHeight+"px"};
   padding-top: 51px;
-  margin-bottom: 60px;
 `
 
 const CenteredContainer = styled(Div)`
   justify-content: center;
-  height: ${(window.innerHeight - 51)+"px"};
+  flex-direction: row;
+  min-height: ${(window.innerHeight - 51)+"px"};
+  @media (max-width: 768px) {
+    flex-direction: column;
+	}
+`
+
+const FrontPageWrapper = styled(Div)`
+	width: 50%;
+	flex-direction: column;
+	justify-content: center;
+	display: flex;
+	@media (max-width: 768px) {
+		width: unset;
+	}
 `
 
 const EditButton = styled(Button)`
@@ -107,7 +137,6 @@ const EditButton = styled(Button)`
 `
 
 const ButtonContainer = styled(Div)`
-	margin-top: 60px;
 	display: flex;
 	position: relative;
 	justify-content: space-between;
