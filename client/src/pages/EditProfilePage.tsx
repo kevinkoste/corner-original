@@ -121,6 +121,10 @@ export const EditProfilePage: React.FC = () => {
         </EditButton>
       </ButtonContainer>
 
+      { mobile &&
+        <Div style={{height:'60px'}}/>
+      }
+
 		</PageContainer>
 	)
 }
