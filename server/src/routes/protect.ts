@@ -8,6 +8,7 @@ import { authMiddleware } from '../libs/middleware'
 import db from '../libs/dynamo'
 import s3 from '../libs/s3'
 import sg from '../libs/sg'
+import { fetchSubstack, fetchMedium } from '../libs/integrations'
 
 const router = express.Router()
 router.use(authMiddleware)
@@ -73,6 +74,50 @@ router.post('/upload-image/:username', (req, res) => {
     .catch(err => {
       console.log(err)
       res.status(500)
+    })
+  })
+})
+
+router.post('/add-substack', (req, res) => {
+  const substackName = req.body.substackName
+  const email = req.body.email
+
+  fetchSubstack(substackName).then(substack => {
+    db.update({
+      TableName: 'profiles',
+      Key: { email: email },
+      UpdateExpression: "set substack = :s",
+      ExpressionAttributeValues: {
+        ":s": substack
+      }
+    }).then(response => {
+      console.log('response from db update: ', response)
+      res.status(200).send('successfully added substack')
+    }).catch(err => {
+      console.log(err)
+      res.status(500).end('failed to add substack')
+    })
+  })
+})
+
+router.post('/add-medium', (req, res) => {
+  const mediumName = req.body.mediumName
+  const email = req.body.email
+
+  fetchMedium(mediumName).then(medium => {
+    db.update({
+      TableName: 'profiles',
+      Key: { email: email },
+      UpdateExpression: "set medium = :m",
+      ExpressionAttributeValues: {
+        ":m": medium
+      }
+    }).then(response => {
+      console.log('response from db update: ', response)
+      res.status(200).send('successfully added medium')
+    }).catch(err => {
+      console.log(err)
+      res.status(500).end('failed to add medium')
     })
   })
 })

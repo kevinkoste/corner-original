@@ -181,3 +181,41 @@ export const PostProtectInviteNewEmail = (invitedEmail: string): Promise<any> =>
       console.log(err)
     })
 }
+
+export const AddMedium = (email: string, mediumName: string): Promise<any> => {
+  return GetCotterToken()
+    .then(res => res.token)
+    .then(token => {
+      return axios({
+        method: 'post',
+        url: '/protect/add-medium',
+        headers: { 'authorization': `Bearer ${token}` },
+        data: {
+          email: email,
+          mediumName: mediumName
+        }
+      })
+    })
+    .catch(err => {
+      console.log(err)
+    })
+}
+
+export const AddSubstack = (email: string, substackName: string): Promise<any> => {
+  return GetCotterToken()
+    .then(res => res.token)
+    .then(token => {
+      return axios({
+        method: 'post',
+        url: '/protect/add-substack',
+        headers: { 'authorization': `Bearer ${token}` },
+        data: {
+          email: email,
+          substackName: substackName
+        }
+      })
+    })
+    .catch(err => {
+      console.log(err)
+    })
+}
