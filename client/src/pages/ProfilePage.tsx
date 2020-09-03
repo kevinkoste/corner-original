@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 // presentation
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div, H1 } from '../components/BaseComponents'
+import { Div, H1, Button } from '../components/BaseComponents'
 import { Header } from '../components/Header'
 
 // logic
@@ -62,14 +62,24 @@ export const ProfilePage: React.FC = () => {
               .map(comp => GenerateComponent(comp, profile))
             }
           </CenteredContainer>
-
+          
+          <Div column width={12}>
           { profile.components
             .filter(comp => comp.type !== 'headshot' && comp.type !== 'headline' )
             .map(comp => GenerateComponent(comp, profile))
           }
+          </Div>
 
 
         </BodyContainer>
+
+        { !state.auth &&
+          <ButtonContainer row width={12}>
+            <EditButton onClick={() => history.push('/login')} >
+              Join Corner
+            </EditButton>
+          </ButtonContainer>
+        }
   
       </PageContainer>
     )
@@ -79,11 +89,20 @@ export const ProfilePage: React.FC = () => {
 
         <Header title={'Profile Not Found'} />
 
-        <NotFoundContainer column width={mobile ? 11 : 6}>
+        <NotFoundContainer width={mobile ? 11 : 6}>
           <H1>
             This profile doesn't exist!
           </H1>
         </NotFoundContainer>
+
+        { !state.auth &&
+          <ButtonContainer row width={12}>
+            <EditButton onClick={() => history.push('/login')} >
+              Join Corner
+            </EditButton>
+          </ButtonContainer>
+        }
+
 
       </PageContainer>
     )
@@ -97,14 +116,13 @@ export const ProfilePage: React.FC = () => {
 
 const PageContainer = styled(Div)`
   max-width: 100vw;
-	height: ${window.innerHeight+"px"};
 	align-items: center;
-	position: relative;
+  position: relative;
+  min-height: ${window.innerHeight+"px"};
 `
 
 const BodyContainer = styled(Div)`
   padding-top: 51px;
-  padding-bottom: 60px;
 `
 
 const CenteredContainer = styled(Div)`
@@ -117,3 +135,21 @@ const NotFoundContainer = styled(Div)`
   justify-content: center;
 `
 
+const ButtonContainer = styled(Div)`
+	display: flex;
+	position: relative;
+	justify-content: space-between;
+	max-width: 350px;
+	@media (max-width: 768px) {
+		margin: 0;
+	}
+`
+
+const EditButton = styled(Button)`
+  position: fixed;
+  bottom: 10px;
+  right: 8.34vw;
+  @media (max-width: 768px) {
+		right: 4.17vw;
+	}
+`

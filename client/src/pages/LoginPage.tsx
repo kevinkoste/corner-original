@@ -22,6 +22,10 @@ export const LoginPage: React.FC = () => {
 	
 	useEffect(() => {
 
+		if (state.auth && state.onboarded) {
+			history.push(`/edit/${state.username}`)
+		}
+
 		cotter.signInWithLink().showEmailForm()
 		.then(data => {
 
@@ -60,9 +64,12 @@ export const LoginPage: React.FC = () => {
 			<Header title='Login' />
 
 			<BodyContainer column width={mobile ? 11 : 6}>
+
 				{ !state.auth &&
 					<div id="cotter-form-container" style={{ width: '100%', height: 200 }} />
 				}
+
+
 			</BodyContainer>
 
 		</PageContainer>
@@ -81,10 +88,4 @@ const BodyContainer = styled(Div)`
   align-items: center;
   margin: auto;
 	padding-top: 51px;
-	padding-bottom: 60px;
-`
-
-const LogoutButton = styled(Button)`
-  margin-top: 20px;
-  /* align-self: flex-start; */
 `

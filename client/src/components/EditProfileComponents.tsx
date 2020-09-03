@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import ClipLoader from "react-spinners/ClipLoader"
 import { useDetectMobile } from '../libs/hooksLib'
 import { Div, H1, H2, Img, TextArea, Button } from '../components/BaseComponents'
-import { Component,	HeadlineComponent,	BioComponent,	HeadshotComponent,	ArticleComponent } from '../models/Profile'
+import { Component,	HeadlineComponent,	BioComponent,	HeadshotComponent, ExperiencesComponent,ArticleComponent } from '../models/Profile'
 
 // logic
 import { useProfileContext, setEditing, updateComponent, deleteComponent } from '../context/ProfileContext'
@@ -130,7 +130,7 @@ export const Bio: React.FC<BioComponent> = ({ id, props }) => {
 
 	const [ textInput, setTextInput ] = useState<string>(props.bio)
 
-	const placeholder = "He’s currently a security engineer at BigCo, where he’s helping to build a system wide penetration testing platform to keep BigCo’s systems safe. A big advocate for the EFF, part-time white hat hacker, and proud member of the Information Systems Security Association, John also founded the young hacker coalition (YHC) in 2018. \n\n John loves to travel internationally, and is rarely found abroad without a camera in his hand. You can find him in San Francisco, California."
+	const placeholder = "He’s currently a security engineer at BigCo, where he’s helping to build a system wide penetration testing platform to keep BigCo’s systems safe. A big advocate for the EFF, part-time white hat hacker, and proud member of the Information Systems Security Association, John also founded the young hacker coalition (YHC) in 2018. John loves to travel internationally, and is rarely found abroad without a camera in his hand. You can find him in San Francisco, California."
 
 	const handleClickAway = () => {
 		profileDispatch(updateComponent({
@@ -194,6 +194,111 @@ export const Bio: React.FC<BioComponent> = ({ id, props }) => {
 		)
 	}
 }
+
+
+export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
+
+  const { profileState, profileDispatch } = useProfileContext()
+
+	const [ experiences, setExperiences ] = useState(props.experiences)
+
+	const placeholder = [
+		{
+			title: 'Security Engineer',
+			company: 'BigCo',
+			date: 'June 2020 - present'
+		},
+		{
+			title: 'Sofware Engineer',
+			company: 'SmallCo',
+			date: 'Jan 2019 - June 2020'
+		},
+		{
+			title: 'Software Engineering Intern',
+			company: 'MidCo',
+			date: '2018'
+		}
+	]
+
+	const handleClickAway = () => {
+		profileDispatch(updateComponent({
+			id: id,
+			type: 'experiences',
+			props: {
+				experiences: experiences
+			}
+		}))
+	}
+
+	const onAddClick = () => {
+		profileDispatch(setEditing(true))
+	}
+
+	if (!profileState.editing && experiences.length === 0) {
+		return (
+			<Div column width={12} style={{marginTop: '60px'}}>
+
+				<H1 style={{color: 'lightgray'}}>
+					Experiences
+				</H1>
+
+				<Div column width={12} style={{position: 'relative'}}>
+					{ placeholder.map((exp, idx) => 
+						<ExperienceRow column width={12} key={idx}>
+							<H2 style={{color: 'lightgray'}}>
+								{exp.title} at {exp.company} // {exp.date}
+							</H2>
+						</ExperienceRow>
+					)}
+
+					<AddButton onClick={onAddClick}>
+						Add experiences
+					</AddButton>
+				</Div>
+
+			</Div>
+		)
+	} else if (profileState.editing) {
+		return (
+			<Div column width={12} style={{marginTop: '60px'}}>
+				<H1>
+					Experiences
+				</H1>
+
+				{ experiences.map((exp, idx) => 
+					<ExperienceRow column width={12} key={idx}>
+						<H2>
+							{exp.title} at {exp.company} // {exp.date}
+						</H2>
+					</ExperienceRow>
+				)}
+
+			</Div>
+		)
+	} else {
+		return (
+			<Div column width={12} style={{marginTop: '60px'}}>
+				<H1>
+					Experiences
+				</H1>
+
+				{ experiences.map((exp, idx) => 
+					<ExperienceRow column width={12} key={idx}>
+						<H2>
+							{exp.title} at {exp.company} // {exp.date}
+						</H2>
+					</ExperienceRow>
+				)}
+
+			</Div>
+		)
+	}
+}
+
+const ExperienceRow = styled(Div)`
+`
+
+const ExperienceInput = styled
 
 export const Article: React.FC<ArticleComponent> = ({ id, props }) => {
 
@@ -314,7 +419,8 @@ type ComponentIndex = {
 const Components: ComponentIndex  = {
 	headline: Headline,
   bio: Bio,
-  headshot: Headshot,
+	headshot: Headshot,
+	experiences: Experiences,
   article: Article
 }
 

@@ -28,17 +28,25 @@ export const fetchMedium = (mediumName: string) => {
   });
 }
 
+
+type Rss = {
+  name: string,
+  title: string,
+  description: string,
+  posts: any[]
+}
+
 const parseRss = (name: string, rss: any) => {
   console.log(rss)
-  let parsedRss = {
+  const parsedRss: Rss = {
     name: name,
     title: rss.feed.title,
     description: rss.feed.description,
     posts: []
   }
-  rss.items.forEach(post => {
+  rss.items.forEach((post: any) => {
     parsedRss.posts.push({
-      tite: post.title,
+      title: post.title,
       timestamp: post.pubDate,
       subtitle: post.description,
       link: post.link
