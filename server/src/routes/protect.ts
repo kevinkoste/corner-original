@@ -77,6 +77,29 @@ router.post('/upload-image/:username', (req, res) => {
   })
 })
 
+// // POST /protect/employer - gets employer data from url
+// router.post('/employer', (req, res) => {
+
+//   // body: { url: url }
+
+
+//   s3.upload({
+//     Bucket: process.env.AWS_S3_BUCKET,
+//     Key: `images/${imageId}.${type.ext}`,
+//     ACL: 'public-read',
+//     Body: buffer,
+//   })
+//   .then(data => {
+//     console.log('response from s3', data)
+//     res.status(200).json({
+//       image: data.Key
+//     })
+//   })
+//   .catch(err => {
+//     console.log(err)
+//     res.status(500)
+// })
+
 
 // ONBOARDING/INVITED ROUTES //
 
