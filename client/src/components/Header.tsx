@@ -134,14 +134,19 @@ const HeaderTitleText = styled(H1)`
 	overflow: hidden;
 	white-space: nowrap;
 	margin: unset;
-
 	font-size: 24px;
 `
 
 const AnimatedNameKeyframes = keyframes`
 	0% { width: 0%; height: 0%; }
 	0.01% { width: 0%; height: 100%; }
-	50% { width: 80%; height: 100%; }
+	50% { 
+		width: 50%; 
+		height: 100%; 
+		@media (max-width: 768px) {
+			width: 80%;
+		}
+	}
 	99.99% { width: 0%; height: 100%; }
 	100% { width: 0%; height: 0%; }
 `
@@ -156,7 +161,13 @@ const AnimatedName = styled(HeaderTitleText)`
 const AnimatedTitleKeyframes = keyframes`
 	0% { width: 0%; height: 0%; }
 	0.01% { width: 0%; height: 100%; }
-	100% { width: 80%; height: 100%; }
+	100% { 
+		width: 50%; 
+		height: 100%;
+		@media (max-width: 768px) {
+			width: 80%;
+		} 
+	}
 `
 const AnimatedTitle = styled(HeaderTitleText)`
 	animation-name: ${AnimatedTitleKeyframes};
@@ -256,17 +267,17 @@ const InviteForm: React.FC = () => {
 const InviteTextInput = styled(TextArea)`
 	background-color: black;
 	color: white;
-	font-size: 16px;
+	font-size: 18px;
 	font-family: 'inter';
   line-height: 24px;
 	text-transform: lowercase;
+	@media (max-width: 768px) {
+		font-size: 16px;
+	}
 `
 
 const InvitedText = styled(H2)`
 	color: white;
-	font-size: 16px;
-	font-family: 'inter';
-	line-height: 24px;
 	text-align: center;
 `
 
@@ -274,12 +285,13 @@ const InviteButton = styled(Button)`
 
 	background-color: black;
 	color: white;
-	font-size: 16px;
+	font-size: 18px;
 	font-family: 'inter';
   line-height: 24px;
 	padding: 0;
 	@media (max-width: 768px) {
 		position: absolute;
 		right: 0;
+		font-size: 16px;
 	}
 `

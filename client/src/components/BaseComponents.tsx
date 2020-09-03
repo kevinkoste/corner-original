@@ -32,23 +32,26 @@ export const Div = styled.div<DivProps>`
 // text defaults
 export const H1 = styled.h1`
   font-family: 'source-serif';
-  font-size: 30px;
+  font-size: 36px;
 	text-align: left;
   font-weight: unset;
-
   margin: unset;
   padding: 0px;
+  @media (max-width: 768px) {
+    font-size: 30px;
+  }
 `
 export const H2 = styled.h2`
   font-family: 'inter';
-  font-size: 16px;
+  font-size: 18px;
   line-height: 24px;
-
 	text-align: left;
   font-weight: unset;
-
   margin: unset;
   padding: 0px;
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 `
 
 // default image using background-image
@@ -108,13 +111,17 @@ export const Button = styled.button`
   text-decoration: none;
 
   font-family: 'inter';
-  font-size: 16px;
+  font-size: 18px;
 
   background-color: black;
   color: white;
   padding: 10px 20px 12px 20px;
   cursor: pointer;
   border-radius: 30px;
+  
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 `
 
 

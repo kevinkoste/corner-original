@@ -66,8 +66,11 @@ const ProfileImage = styled(Img)`
 ` 
 
 const ComponentContainer = styled(Div)`
-	margin-top: 20px;
+	margin-top: 40px;
 	margin-bottom: 80px;
+	@media (max-width) {
+		margin-top: 20px;
+	}
 `
 
 
