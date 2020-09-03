@@ -136,7 +136,6 @@ const NotFoundContainer = styled(Div)`
 `
 
 const ButtonContainer = styled(Div)`
-	margin-top: 60px;
 	display: flex;
 	position: relative;
 	justify-content: space-between;
