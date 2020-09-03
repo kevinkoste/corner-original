@@ -4,7 +4,7 @@ import styled from 'styled-components'
 // presentation/types
 import ClipLoader from "react-spinners/ClipLoader"
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div, H1, H2, Img, TextArea, Button } from '../components/BaseComponents'
+import { Div, H1, H2, Img, ExternalImg, TextArea, Button } from '../components/BaseComponents'
 import { Component,	HeadlineComponent,	BioComponent,	HeadshotComponent, ExperiencesComponent,ArticleComponent } from '../models/Profile'
 
 // logic
@@ -204,18 +204,21 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 
 	const placeholder = [
 		{
+			domain: 'google.com',
 			title: 'Security Engineer',
-			company: 'BigCo',
+			company: 'Google',
 			date: 'June 2020 - present'
 		},
 		{
+			domain: 'retool.com',
 			title: 'Sofware Engineer',
-			company: 'SmallCo',
+			company: 'Retool',
 			date: 'Jan 2019 - June 2020'
 		},
 		{
+			domain: 'stripe.com',
 			title: 'Software Engineering Intern',
-			company: 'MidCo',
+			company: 'Stripe',
 			date: '2018'
 		}
 	]
@@ -244,13 +247,14 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 
 				<Div column width={12} style={{position: 'relative'}}>
 					{ placeholder.map((exp, idx) => 
-						<ExperienceRow column width={12} key={idx}>
-							<H2 style={{color: 'lightgray'}}>
-								{exp.title} at {exp.company} // {exp.date}
-							</H2>
-						</ExperienceRow>
+						<ExperienceRow
+							key={idx}
+							domain={exp.domain}
+							title={exp.title}
+							company={exp.company}
+							date={exp.date}
+						/>
 					)}
-
 					<AddButton onClick={onAddClick}>
 						Add experiences
 					</AddButton>
@@ -266,11 +270,13 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 				</H1>
 
 				{ experiences.map((exp, idx) => 
-					<ExperienceRow column width={12} key={idx}>
-						<H2>
-							{exp.title} at {exp.company} // {exp.date}
-						</H2>
-					</ExperienceRow>
+					<ExperienceRow
+						key={idx}
+						domain={exp.domain}
+						title={exp.title}
+						company={exp.company}
+						date={exp.date}
+					/>
 				)}
 
 			</Div>
@@ -283,11 +289,13 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 				</H1>
 
 				{ experiences.map((exp, idx) => 
-					<ExperienceRow column width={12} key={idx}>
-						<H2>
-							{exp.title} at {exp.company} // {exp.date}
-						</H2>
-					</ExperienceRow>
+					<ExperienceRow
+						key={idx}
+						domain={exp.domain}
+						title={exp.title}
+						company={exp.company}
+						date={exp.date}
+					/>
 				)}
 
 			</Div>
@@ -295,10 +303,33 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 	}
 }
 
-const ExperienceRow = styled(Div)`
-`
 
-const ExperienceInput = styled
+type ExperienceRowProps = { domain: string, title: string, company: string, date: string }
+export const ExperienceRow: React.FC<ExperienceRowProps> = ({ domain, title, company, date }) => {
+
+	return (
+		<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
+
+			<ExternalImg
+				src={`//logo.clearbit.com/${domain}`}
+				style={{ minWidth:'51px', minHeight:'51px', backgroundSize:'auto' }}
+			/>
+
+			<Div column width={12} style={{ marginLeft:'10px' }}>
+				<H2>
+					{title} at {company}
+				</H2>
+				<H2>
+					{date}
+				</H2>
+			</Div>
+
+		</Div>
+	)
+}
+
+
+
 
 export const Article: React.FC<ArticleComponent> = ({ id, props }) => {
 

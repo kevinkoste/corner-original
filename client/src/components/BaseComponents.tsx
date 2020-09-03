@@ -21,12 +21,12 @@ export const GridMap: GridMapType = {
 type DivProps = {
   column?: boolean,
   row?: boolean,
-  width: number
+  width?: number
 }
 export const Div = styled.div<DivProps>`
   display: flex;
   flex-direction: ${props => props.column ? 'column' : props.row ? 'row' : 'unset'};
-  width: ${props => GridMap[props.width]};
+  width: ${props => props.width ? GridMap[props.width] : 'unset'};
 `
 
 // text defaults
@@ -54,7 +54,7 @@ export const H2 = styled.h2`
 // default image using background-image
 type ImageProps = {
   src: string
-  size: number,
+  size?: number,
 }
 export const Img = styled.div<ImageProps>`
   background-image: ${props => `url(${process.env.REACT_APP_S3_BUCKET + props.src})`};
@@ -66,9 +66,23 @@ export const Img = styled.div<ImageProps>`
   text-align: center;
   background-color: white;
   max-height: 0px;
-  padding-bottom: ${props => GridMap[props.size]};
-  width: ${props => GridMap[props.size]};
+  padding-bottom: ${props => props.size ? GridMap[props.size] : 'unset'};
+  width: ${props => props.size ? GridMap[props.size] : 'unset'};
 `
+
+export const ExternalImg = styled.div<ImageProps>`
+  background-image: ${props => `url(${props.src})`};
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  image-orientation: from-image;
+  position: relative;
+  text-align: center;
+  background-color: white;
+  padding-bottom: ${props => props.size ? GridMap[props.size] : 'unset'};
+  width: ${props => props.size ? GridMap[props.size] : 'unset'};
+`
+
 
 // resizeable textarea using external lib
 export const TextArea = styled(TextareaAutosize)`
