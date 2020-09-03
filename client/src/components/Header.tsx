@@ -145,7 +145,7 @@ const AnimatedNameKeyframes = keyframes`
 		width: 50%; 
 		height: 100%; 
 		@media (max-width: 768px) {
-			width: 80%;
+			width: 100%;
 		}
 	}
 	99.99% { width: 0%; height: 100%; }
@@ -166,7 +166,7 @@ const AnimatedTitleKeyframes = keyframes`
 		width: 50%; 
 		height: 100%;
 		@media (max-width: 768px) {
-			width: 80%;
+			width: 100%;
 		} 
 	}
 `
