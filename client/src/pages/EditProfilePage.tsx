@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { useDetectMobile } from '../libs/hooksLib'
 import { Div, Button } from '../components/BaseComponents'
 import { Header } from '../components/Header'
+import { v4 as uuidv4 } from 'uuid'
 
 // logic
 import { useAppContext } from '../context/AppContext'
@@ -33,11 +34,19 @@ export const EditProfilePage: React.FC = () => {
       let type: string
       for (type of ['bio', 'experiences']) {
         if (profile.components.find(comp => comp.type === type) === undefined) {
-          profile.components.push({
-            id: '123',
-            type: type,
-            props: {}
-          })
+          if (type === 'bio') {
+            profile.components.push({
+              id: uuidv4().toString(),
+              type: type,
+              props: { bio: '' }
+            })
+          } else if (type === 'experiences') {
+            profile.components.push({
+              id: uuidv4().toString(),
+              type: 'experiences',
+              props: { experiences: [] }
+            })
+          }
         }
       }
 
