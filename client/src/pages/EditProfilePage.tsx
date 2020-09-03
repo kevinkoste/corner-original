@@ -8,7 +8,8 @@ import { Header } from '../components/Header'
 
 // logic
 import { useAppContext } from '../context/AppContext'
-import { useProfileContext, updateProfile, setEditing, updateComponent } from '../context/ProfileContext'
+import { Profile } from '../models/Profile'
+import { useProfileContext, updateProfile, setEditing } from '../context/ProfileContext'
 import { GenerateEditComponent } from '../components/EditProfileComponents'
 import { GetPublicProfileData, PostProtectProfile } from '../libs/apiLib'
 
@@ -23,13 +24,28 @@ export const EditProfilePage: React.FC = () => {
 
   // on mount, supply profileState with public profile data
   useEffect(() => {
-    GetPublicProfileData(state.username)
-      .then(res => {
-        profileDispatch(updateProfile(res.data))
-      })
-      .catch(err => {
-        console.log(err)
-      })
+
+    const onMount = async () => {
+      const response = await GetPublicProfileData(state.username)
+      const profile: Profile = response.data
+
+      // add any missing components
+      let type: string
+      for (type of ['bio', 'experiences']) {
+        if (profile.components.find(comp => comp.type === type) === undefined) {
+          profile.components.push({
+            id: '123',
+            type: type,
+            props: {}
+          })
+        }
+      }
+
+      // dispatch to profile context
+      profileDispatch(updateProfile(profile))
+    }
+
+    onMount()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

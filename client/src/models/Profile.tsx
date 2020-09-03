@@ -12,7 +12,7 @@ export const EmptyProfile: Profile = {
 // COMPONENT TYPES //
 export type Component = {
   id: string,
-  type: 'name' | 'headline' | 'bio' | 'headshot' | 'article' | 'experiences',
+  type: string,
   props: any
 }
 
