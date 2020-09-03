@@ -179,6 +179,7 @@ const ButtonContainer = styled(Div)`
 const EditButton = styled(Button)`
   position: fixed;
   bottom: 10px;
+  right: 8.34vw;
   @media (max-width: 768px) {
 		right: 4.17vw;
 	}
