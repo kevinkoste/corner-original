@@ -128,6 +128,7 @@ const HeaderContainer = styled(Div)`
 	padding-top: 15px;
 	padding-bottom: 5px;
 	border-bottom: 1px solid black;
+	max-width: 1300px;
 `
 
 const HeaderTitleText = styled(H1)`
@@ -210,6 +211,7 @@ const BurgerMenu = styled.div`
 
 const BodyContainer = styled(Div)`
 	padding-top: 51px;
+	max-width: 1300px;
 `
 
 

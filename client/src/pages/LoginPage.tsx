@@ -88,4 +88,5 @@ const BodyContainer = styled(Div)`
   align-items: center;
   margin: auto;
 	padding-top: 51px;
+	max-width: 1150px;
 `

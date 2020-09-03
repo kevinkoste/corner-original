@@ -484,9 +484,9 @@ const HeadlineTextArea = styled(TextArea)`
 
 const ComponentContainer = styled(Div)`
 	margin-top: 40px;
-	margin-bottom: 80px;
 	@media (max-width) {
 		margin-top: 20px;
+		margin-bottom: 80px;
 	}
 `
 

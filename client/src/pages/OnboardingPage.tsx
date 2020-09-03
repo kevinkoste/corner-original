@@ -131,6 +131,7 @@ const BodyContainer = styled(Div)`
 	flex: 1;
 	justify-content: center;
 	padding-top: 51px;
+	max-width: 1150px;
 `
 
 const ButtonContainer = styled(Div)`
