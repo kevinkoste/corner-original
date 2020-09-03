@@ -54,11 +54,15 @@ export const ProfilePage: React.FC = () => {
   
         <Header title={profile.components.find(component => component.type === 'name')?.props.name} />
   
-        <BodyContainer column width={mobile ? 11 : 6}>
+        <BodyContainer column width={mobile ? 11 : 8}>
 
           <CenteredContainer column width={12}>
             { profile.components
-              .filter(comp => comp.type === 'headshot' || comp.type === 'headline' )
+              .filter(comp => comp.type === 'headshot' )
+              .map(comp => GenerateComponent(comp, profile))
+            }
+            { profile.components
+              .filter(comp => comp.type === 'headline' )
               .map(comp => GenerateComponent(comp, profile))
             }
           </CenteredContainer>
@@ -127,7 +131,11 @@ const BodyContainer = styled(Div)`
 
 const CenteredContainer = styled(Div)`
   justify-content: center;
+  flex-direction: row;
   min-height: ${(window.innerHeight - 51)+"px"};
+  @media (max-width: 768px) {
+    flex-direction: column;
+	}
 `
 
 const NotFoundContainer = styled(Div)`

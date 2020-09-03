@@ -65,6 +65,7 @@ export const Img = styled.div<ImageProps>`
   position: relative;
   text-align: center;
   background-color: white;
+  max-height: 0px;
   padding-bottom: ${props => GridMap[props.size]};
   width: ${props => GridMap[props.size]};
 `
