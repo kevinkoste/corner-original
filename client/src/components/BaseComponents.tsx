@@ -97,6 +97,19 @@ export const TextArea = styled(TextareaAutosize)`
   font-size: 30px;
 `
 
+export const Input = styled.input`
+	outline: none;
+	box-shadow: none;
+	border: none;
+	overflow: hidden;
+	resize: none;
+	padding: 0px;
+  text-align: left;
+  white-space: pre-wrap;
+  font-family: 'source-serif';
+  font-size: 30px;
+`
+
 export const Button = styled.button`
   /* removing default button styles */
   display: inline-block;
@@ -116,15 +129,3 @@ export const Button = styled.button`
   border-radius: 30px;
 `
 
-
-// type ImageProps = {
-//   src: string
-// }
-// export const Icon = styled.img<ImageProps>`
-//   src: ${props => pros.src};
-//   background-position: center;
-//   background-size: cover;
-//   position: relative;
-//   text-align: center;
-//   padding-bottom: ${props => GridMap[props.size]};
-// `

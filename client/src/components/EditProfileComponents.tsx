@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { v4 as uuidv4 } from 'uuid'
+import ClipLoader from "react-spinners/ClipLoader"
 
 // presentation/types
-import ClipLoader from "react-spinners/ClipLoader"
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div, H1, H2, Img, ExternalImg, TextArea, Button } from '../components/BaseComponents'
+import { Div, H1, H2, Img, ExternalImg, TextArea, Button, Input } from '../components/BaseComponents'
 import { Component,	HeadlineComponent,	BioComponent,	HeadshotComponent, ExperiencesComponent,ArticleComponent } from '../models/Profile'
 
 // logic
-import { useProfileContext, setEditing, updateComponent, deleteComponent } from '../context/ProfileContext'
-import { PostProtectProfileImage } from '../libs/apiLib'
+import { useProfileContext, setEditing, updateComponent, updateExperience } from '../context/ProfileContext'
+import { PostProtectProfileImage, GetPublicCompanyFromDomain } from '../libs/apiLib'
 
 
 export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
@@ -200,22 +201,25 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 
   const { profileState, profileDispatch } = useProfileContext()
 
-	const [ experiences, setExperiences ] = useState(props.experiences)
+	// const [ experiences, setExperiences ] = useState(props.experiences)
 
 	const placeholder = [
 		{
+			id: '1',
 			domain: 'google.com',
 			title: 'Security Engineer',
 			company: 'Google',
 			date: 'June 2020 - present'
 		},
 		{
+			id: '2',
 			domain: 'retool.com',
 			title: 'Sofware Engineer',
 			company: 'Retool',
 			date: 'Jan 2019 - June 2020'
 		},
 		{
+			id: '3',
 			domain: 'stripe.com',
 			title: 'Software Engineering Intern',
 			company: 'Stripe',
@@ -223,21 +227,38 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 		}
 	]
 
-	const handleClickAway = () => {
-		profileDispatch(updateComponent({
-			id: id,
-			type: 'experiences',
-			props: {
-				experiences: experiences
-			}
-		}))
-	}
-
 	const onAddClick = () => {
 		profileDispatch(setEditing(true))
 	}
 
-	if (!profileState.editing && experiences.length === 0) {
+	// controlling domain input for add experience option
+	const [ domainInput, setDomainInput ] = useState<string>('')
+
+	const onDomainClick = async () => {
+		let company: string
+		try {
+			const response = await GetPublicCompanyFromDomain(domainInput)
+			company = response.data
+		} catch {
+			company = ''
+		}
+
+		const experience = {
+			id: uuidv4().toString(),
+			domain: domainInput,
+			title: '',
+			company: company,
+			date: ''
+		}
+
+		profileDispatch(updateComponent({
+			id: id,
+			type: 'experiences',
+			props: { experiences: [...profileState.profile.components.find(comp => comp.type === 'experiences')?.props.experiences, experience] }
+		}))
+	}
+
+	if (!profileState.editing && profileState.profile.components.find(comp => comp.type === 'experiences')?.props.experiences.length === 0) {
 		return (
 			<Div column width={12} style={{marginTop: '60px'}}>
 
@@ -248,11 +269,9 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 				<Div column width={12} style={{position: 'relative'}}>
 					{ placeholder.map((exp, idx) => 
 						<ExperienceRow
+							color={'lightgray'}
 							key={idx}
-							domain={exp.domain}
-							title={exp.title}
-							company={exp.company}
-							date={exp.date}
+							experience={exp}
 						/>
 					)}
 					<AddButton onClick={onAddClick}>
@@ -269,15 +288,34 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 					Experiences
 				</H1>
 
-				{ experiences.map((exp, idx) => 
-					<ExperienceRow
+				{/* this needs to be the experiences edit row */}
+				{ profileState.profile.components.find(comp => comp.type === 'experiences')?.props.experiences.map((exp: any, idx: number) => 
+					<ExperienceEditRow
 						key={idx}
-						domain={exp.domain}
-						title={exp.title}
-						company={exp.company}
-						date={exp.date}
+						experience={exp}
 					/>
 				)}
+
+				{/* this is the domain input form */}
+				<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
+			
+					<Div column width={12} style={{ marginLeft:'10px' }}>
+						<H2>
+							Enter your company domain name
+						</H2>
+						<Div width={12} style={{ position:'relative' }}>
+							<ExperienceInput
+								placeholder={'google.com'}
+								onChange={(event: any) => setDomainInput(event.target.value)}
+								value={domainInput}
+							/>
+							<DomainButton onClick={onDomainClick}>
+								Invite &#62;
+							</DomainButton>
+						</Div>
+					</Div>
+
+				</Div>
 
 			</Div>
 		)
@@ -288,13 +326,10 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 					Experiences
 				</H1>
 
-				{ experiences.map((exp, idx) => 
+				{ profileState.profile.components.find(comp => comp.type === 'experiences')?.props.experiences.map((exp: any, idx: number) => 
 					<ExperienceRow
 						key={idx}
-						domain={exp.domain}
-						title={exp.title}
-						company={exp.company}
-						date={exp.date}
+						experience={exp}
 					/>
 				)}
 
@@ -304,18 +339,20 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 }
 
 
-type ExperienceRowProps = { domain: string, title: string, company: string, date: string }
-export const ExperienceRow: React.FC<ExperienceRowProps> = ({ domain, title, company, date }) => {
+type ExperienceRowProps = { experience: any, color?: string }
+const ExperienceRow: React.FC<ExperienceRowProps> = ({ experience, color }) => {
+
+	const { domain, title, company, date } = experience
 
 	return (
 		<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
 
 			<ExternalImg
 				src={`//logo.clearbit.com/${domain}`}
-				style={{ minWidth:'51px', minHeight:'51px', backgroundSize:'auto' }}
+				style={{ minWidth:'51px', minHeight:'51px', backgroundSize:'contain' }}
 			/>
 
-			<Div column width={12} style={{ marginLeft:'10px' }}>
+			<Div column width={12} style={{ marginLeft:'10px', color: color||'black' }}>
 				<H2>
 					{title} at {company}
 				</H2>
@@ -327,6 +364,83 @@ export const ExperienceRow: React.FC<ExperienceRowProps> = ({ domain, title, com
 		</Div>
 	)
 }
+
+const ExperienceEditRow: React.FC<ExperienceRowProps> = ({ experience, color }) => {
+
+	const { id, domain, title, company, date } = experience
+
+	const { profileState, profileDispatch } = useProfileContext()
+
+	const [ titleInput, setTitleInput ] = useState(title)
+	const [ companyInput, setCompanyInput ] = useState(company)
+	const [ dateInput, setDateInput ] = useState(date)
+
+	const handleClickAway = () => {
+		profileDispatch(updateExperience({
+			id: id,
+			domain: domain,
+			title: titleInput,
+			company: companyInput,
+			date: dateInput
+		}))
+	}
+
+
+	return (
+		<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
+
+			{/* need to add delete functionality */}
+			<ExternalImg
+				src={`//logo.clearbit.com/${domain}`}
+				style={{ minWidth:'51px', minHeight:'51px', backgroundSize:'contain' }}
+			/>
+
+			<Div column width={12} style={{ marginLeft:'10px', color: color||'black' }}>
+				<Div row width={12}>
+					<ExperienceInput
+						placeholder={'Software Engineer'}
+						onChange={(event: any) => setTitleInput(event.target.value)}
+						value={titleInput}
+						onBlur={handleClickAway}
+					/>
+					at 
+					<ExperienceInput
+						placeholder={'Google'}
+						onChange={(event: any) => setCompanyInput(event.target.value)}
+						value={companyInput}
+						onBlur={handleClickAway}
+					/>
+				</Div>
+				<ExperienceInput
+					placeholder={'August 2019 - Present'}
+					onChange={(event: any) => setDateInput(event.target.value)}
+					value={dateInput}
+					onBlur={handleClickAway}
+				/>
+			</Div>
+
+		</Div>
+	)
+}
+
+const ExperienceInput = styled(Input)`
+	font-family: 'inter';
+  font-size: 16px;
+	line-height: 24px;
+`
+
+const DomainButton = styled(Button)`
+	/* background-color: black; */
+	/* color: white; */
+	font-size: 16px;
+	font-family: 'inter';
+  line-height: 24px;
+	padding: 0;
+	@media (max-width: 768px) {
+		position: absolute;
+		right: 0;
+	}
+`
 
 
 

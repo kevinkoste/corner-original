@@ -37,6 +37,13 @@ export const GetPublicUsernameAvailability = (username: string): Promise<any> =>
   })
 }
 
+export const GetPublicCompanyFromDomain = (domain: string): Promise<any> => { 
+  return axios({
+    method: 'get',
+    url: `/public/employer/${domain}`
+  })
+}
+
 
 // PROTECTED ROUTES // 
 export const PostProtectOnboardCheck = (): Promise<any> => {

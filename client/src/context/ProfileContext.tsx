@@ -27,13 +27,14 @@ const UPDATE_PROFILE = "UPDATE_PROFILE"
 const SET_EDITING = "SET_EDITING"
 const UPDATE_COMPONENT = "UPDATE_COMPONENT"
 const DELETE_COMPONENT = "DELETE_COMPONENT"
-
+const UPDATE_EXPERIENCE = "UPDATE_EXPERIENCE"
 
 // Valid action types
 type Action =
  | { type: "UPDATE_PROFILE", profile: Profile }
  | { type: "SET_EDITING", editing: boolean }
  | { type: "UPDATE_COMPONENT", component: any }
+ | { type: "UPDATE_EXPERIENCE", experience: any }
  | { type: "DELETE_COMPONENT", id: string }
 
 
@@ -53,6 +54,10 @@ export const updateComponent = (component: any): Action => {
 
 export const deleteComponent = (id: string): Action => {
   return { type: DELETE_COMPONENT, id: id}
+}
+
+export const updateExperience = (experience: any): Action => {
+  return { type: UPDATE_EXPERIENCE, experience: experience}
 }
 
 
@@ -100,6 +105,32 @@ const ProfileReducer = (state: StateType, action: Action) => {
         profile: {
           ...state.profile,
           components: state.profile.components.filter(component => component.id !== action.id )
+        }
+      }
+
+    case UPDATE_EXPERIENCE:
+      console.log('handling update experience with experience:', action.experience)
+
+      console.log('updating experiences to', 
+        state.profile.components
+          .find(comp => comp.type === 'experiences')?.props.experiences
+          .map((exp: any) => exp.id === action.experience.id ? action.experience : exp)
+      )
+
+      return {
+        ...state,
+        profile: {
+          ...state.profile,
+          components: state.profile.components.map(comp => comp.type !== 'experiences' ? comp : 
+            {
+              ...state.profile.components.find(comp => comp.type === 'experiences'),
+              props: {
+                experiences: state.profile.components
+                  .find(comp => comp.type === 'experiences')?.props.experiences
+                  .map((exp: any) => exp.id === action.experience.id ? action.experience : exp)
+              }
+            }
+          )
         }
       }
 
