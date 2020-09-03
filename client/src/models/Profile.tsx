@@ -49,6 +49,7 @@ export type HeadshotComponent = {
 }
 
 export type Experience = {
+  domain: string,
   title: string,
   company: string,
   date: string
