@@ -1,8 +1,12 @@
 import express from 'express'
 import CotterNode from 'cotter-node'
 import CotterToken from 'cotter-token-js'
+import axios from 'axios'
+import cheerio from 'cheerio'
 
+import { processSiteTitle, getModeAndFreq } from '../libs/utils'
 import db from '../libs/dynamo'
+
 
 const router = express.Router()
 
@@ -142,6 +146,58 @@ router.get('/availability/:username', (req, res) => {
     res.status(500)
   })
 })
+
+
+
+// GET /public/employer/:url - gets employer data from url
+router.get('/employer/:url', (req, res) => {
+
+  // body: { url: url }
+  // need domain.topleveldomain, ie google.com
+  // req.params.url
+
+  const parsedUrl = 'http://' + req.params.url
+
+  axios.get(parsedUrl)
+    .then(data => {
+
+      const $ = cheerio.load(data.data)
+      
+      // scrape all of these, process them
+      const title = $('head > title').text()
+      const ogtitle = $("meta[property='og:title']").attr("content")
+      const ogsitename = $("meta[property='og:site_name']").attr("content")
+
+      const all = []
+      if (title !== undefined && title !== null) {
+        all.push(processSiteTitle(title))
+      }
+      if (ogtitle !== undefined && ogtitle !== null) {
+        all.push(processSiteTitle(ogtitle))
+      }
+      if (ogsitename !== undefined && ogsitename !== null) {
+        all.push(processSiteTitle(ogsitename))
+      }
+
+      const { mode, greatestFreq } = getModeAndFreq(all)
+
+      let result: string
+      if (greatestFreq > 1) {
+        result = mode.trim()
+      } else {
+        all.sort((a,b) => a.length - b.length)
+        result = all[0].trim()
+      }
+
+      res.status(200).send(result)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).end()
+    })
+
+})
+
 
 export default router
 

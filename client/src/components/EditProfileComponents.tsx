@@ -298,6 +298,8 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 const ExperienceRow = styled(Div)`
 `
 
+const ExperienceInput = styled
+
 export const Article: React.FC<ArticleComponent> = ({ id, props }) => {
 
 	return (
