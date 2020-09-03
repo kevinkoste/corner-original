@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
+import { v4 as uuidv4 } from 'uuid'
 
 // presentation
 import { useDetectMobile } from '../libs/hooksLib'
 import { Div, Button } from '../components/BaseComponents'
 import { Header } from '../components/Header'
-import { v4 as uuidv4 } from 'uuid'
 
 // logic
 import { useAppContext } from '../context/AppContext'
@@ -23,7 +23,7 @@ export const EditProfilePage: React.FC = () => {
   const { state, dispatch } = useAppContext()
   const { profileState, profileDispatch } = useProfileContext()
 
-  // on mount, supply profileState with public profile data
+  // on mount, supply profileState with public profile data and add missing components if needed
   useEffect(() => {
 
     const onMount = async () => {
