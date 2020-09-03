@@ -260,6 +260,14 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 		}))
 	}
 
+	// enter key advances form
+	const onKeyDown = (event: any) => {
+		if (event.key === 'Enter') {
+			event.preventDefault()
+			onDomainClick()
+		}
+	}
+
 	if (!profileState.editing && profileState.profile.components.find(comp => comp.type === 'experiences')?.props.experiences.length === 0) {
 		return (
 			<ComponentContainer column width={12}>
@@ -290,7 +298,7 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 					Experiences
 				</H1>
 
-				{/* this needs to be the experiences edit row */}
+				{/* the experiences edit row */}
 				{ profileState.profile.components.find(comp => comp.type === 'experiences')?.props.experiences.map((exp: any, idx: number) => 
 					<ExperienceEditRow
 						key={idx}
@@ -309,6 +317,7 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 							<ExperienceInput
 								placeholder={'google.com'}
 								onChange={(event: any) => setDomainInput(event.target.value)}
+								onKeyDown={onKeyDown}
 								value={domainInput}
 								style={{borderBottom: 'none', height: 'auto', marginLeft: '0px'}}
 							/>

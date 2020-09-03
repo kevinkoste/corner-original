@@ -216,41 +216,46 @@ router.get('/employer/:url', (req, res) => {
   const parsedUrl = 'http://' + req.params.url
 
   axios.get(parsedUrl)
-    .then(data => {
+  .then(data => {
 
-      const $ = cheerio.load(data.data)
-      // scrape all of these, process them
-      const title = $('head > title').text()
-      const ogtitle = $("meta[property='og:title']").attr("content")
-      const ogsitename = $("meta[property='og:site_name']").attr("content")
+    let $: any
+    try {
+      $ = cheerio.load(data.data)
+    } catch {
+      res.status(200).send('')
+    }
 
-      const all = []
-      if (title !== undefined && title !== null) {
-        all.push(processSiteTitle(title))
-      }
-      if (ogtitle !== undefined && ogtitle !== null) {
-        all.push(processSiteTitle(ogtitle))
-      }
-      if (ogsitename !== undefined && ogsitename !== null) {
-        all.push(processSiteTitle(ogsitename))
-      }
+    // scrape all of these, process them
+    const title = $('head > title').text()
+    const ogtitle = $("meta[property='og:title']").attr("content")
+    const ogsitename = $("meta[property='og:site_name']").attr("content")
 
-      const { mode, greatestFreq } = getModeAndFreq(all)
+    const all = []
+    if (title !== undefined && title !== null) {
+      all.push(processSiteTitle(title))
+    }
+    if (ogtitle !== undefined && ogtitle !== null) {
+      all.push(processSiteTitle(ogtitle))
+    }
+    if (ogsitename !== undefined && ogsitename !== null) {
+      all.push(processSiteTitle(ogsitename))
+    }
 
-      let result: string
-      if (greatestFreq > 1) {
-        result = mode.trim()
-      } else {
-        all.sort((a,b) => a.length - b.length)
-        result = all[0].trim()
-      }
+    const { mode, greatestFreq } = getModeAndFreq(all)
 
-      res.status(200).send(result)
-    })
-    .catch(err => {
-      console.log(err)
-      res.status(500).end()
-    })
+    let result: string
+    if (greatestFreq > 1) {
+      result = mode.trim()
+    } else {
+      all.sort((a,b) => a.length - b.length)
+      result = all[0].trim()
+    }
+
+    res.status(200).send(result)
+  })
+  .catch(err => {
+    res.status(500).end()
+  })
 
 })
 

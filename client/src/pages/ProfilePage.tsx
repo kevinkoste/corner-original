@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { useDetectMobile } from '../libs/hooksLib'
 import { Div, H1, Button } from '../components/BaseComponents'
 import { Header } from '../components/Header'
+import { ProfileModal } from '../components/ProfileModal'
 
 // logic
 import { useAppContext } from '../context/AppContext'
@@ -95,6 +96,14 @@ export const ProfilePage: React.FC = () => {
               Join Corner
             </EditButton>
           </ButtonContainer>
+        }
+
+        { state.auth &&
+          <ProfileModal profile={profile} />
+        }
+
+        { mobile &&
+          <Div style={{height:'60px'}}/>
         }
   
       </PageContainer>
