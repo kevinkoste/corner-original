@@ -96,6 +96,10 @@ export const EditProfilePage: React.FC = () => {
               .filter(comp => comp.type === 'bio' )
               .map(comp => GenerateEditComponent(comp))
             }
+            { !mobile && profileState.profile.components
+              .filter(comp => comp.type === 'experiences' )
+              .map(comp => GenerateEditComponent(comp))
+            }
           </FrontPageWrapper>
         </CenteredContainer>
         <Div column width={12}>
@@ -104,7 +108,7 @@ export const EditProfilePage: React.FC = () => {
             .map(comp => GenerateEditComponent(comp))
           }
           { !mobile && profileState.profile.components
-            .filter(comp => comp.type !== 'headshot' && comp.type !== 'headline' && comp.type !== 'bio' )
+            .filter(comp => comp.type !== 'headshot' && comp.type !== 'headline' && comp.type !== 'bio' && comp.type !== 'experiences' )
             .map(comp => GenerateEditComponent(comp))
           }
         </Div>
