@@ -57,19 +57,31 @@ export const ProfilePage: React.FC = () => {
         <BodyContainer column width={mobile ? 11 : 8}>
 
           <CenteredContainer column width={12}>
+            <FrontPageWrapper>
             { profile.components
               .filter(comp => comp.type === 'headshot' )
               .map(comp => GenerateComponent(comp, profile))
             }
+            </FrontPageWrapper>
+            <FrontPageWrapper>
             { profile.components
               .filter(comp => comp.type === 'headline' )
               .map(comp => GenerateComponent(comp, profile))
             }
+            { !mobile && profile.components
+              .filter(comp => comp.type === 'bio' )
+              .map(comp => GenerateComponent(comp, profile))
+            }
+            </FrontPageWrapper>
           </CenteredContainer>
           
           <Div column width={12}>
-          { profile.components
+          { mobile && profile.components
             .filter(comp => comp.type !== 'headshot' && comp.type !== 'headline' )
+            .map(comp => GenerateComponent(comp, profile))
+          }
+          { !mobile && profile.components
+            .filter(comp => comp.type !== 'headshot' && comp.type !== 'headline' && comp.type !== 'bio' )
             .map(comp => GenerateComponent(comp, profile))
           }
           </Div>
@@ -135,6 +147,16 @@ const CenteredContainer = styled(Div)`
   min-height: ${(window.innerHeight - 51)+"px"};
   @media (max-width: 768px) {
     flex-direction: column;
+	}
+`
+
+const FrontPageWrapper = styled(Div)`
+	width: 50%;
+	flex-direction: column;
+	justify-content: center;
+	display: flex;
+	@media (max-width: 768px) {
+		width: unset;
 	}
 `
 
