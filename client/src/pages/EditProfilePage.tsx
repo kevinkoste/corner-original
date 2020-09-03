@@ -131,6 +131,7 @@ const PageContainer = styled(Div)`
 
 const BodyContainer = styled(Div)`
   padding-top: 51px;
+  max-width: 1150px;
 `
 
 const CenteredContainer = styled(Div)`
@@ -159,6 +160,9 @@ const EditButton = styled(Button)`
   @media (max-width: 768px) {
 		right: 4.17vw;
 	}
+  @media (min-width: 1560px) {
+    right: ${parseInt(((window.innerWidth-1300)*0.5).toString(),10) + "px"}
+  }
 `
 
 const ButtonContainer = styled(Div)`

@@ -128,6 +128,7 @@ const HeaderContainer = styled(Div)`
 	padding-top: 15px;
 	padding-bottom: 5px;
 	border-bottom: 1px solid black;
+	max-width: 1300px;
 `
 
 const HeaderTitleText = styled(H1)`
@@ -144,7 +145,7 @@ const AnimatedNameKeyframes = keyframes`
 		width: 50%; 
 		height: 100%; 
 		@media (max-width: 768px) {
-			width: 80%;
+			width: 100%;
 		}
 	}
 	99.99% { width: 0%; height: 100%; }
@@ -165,7 +166,7 @@ const AnimatedTitleKeyframes = keyframes`
 		width: 50%; 
 		height: 100%;
 		@media (max-width: 768px) {
-			width: 80%;
+			width: 100%;
 		} 
 	}
 `
@@ -210,6 +211,7 @@ const BurgerMenu = styled.div`
 
 const BodyContainer = styled(Div)`
 	padding-top: 51px;
+	max-width: 1300px;
 `
 
 
