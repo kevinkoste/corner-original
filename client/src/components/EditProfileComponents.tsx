@@ -2,14 +2,15 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { v4 as uuidv4 } from 'uuid'
 import ClipLoader from "react-spinners/ClipLoader"
+import ExitIcon from '../icons/delete.svg'
 
 // presentation/types
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div, H1, H2, Img, ExternalImg, TextArea, Button, Input } from '../components/BaseComponents'
+import { Div, H1, H2, Img, ExternalImg, TextArea, Button, Input, InlineInput } from '../components/BaseComponents'
 import { Component,	HeadlineComponent,	BioComponent,	HeadshotComponent, ExperiencesComponent,ArticleComponent } from '../models/Profile'
 
 // logic
-import { useProfileContext, setEditing, updateComponent, updateExperience } from '../context/ProfileContext'
+import { useProfileContext, setEditing, updateComponent, updateExperience, deleteExperience } from '../context/ProfileContext'
 import { PostProtectProfileImage, GetPublicCompanyFromDomain } from '../libs/apiLib'
 
 
@@ -239,6 +240,7 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 		try {
 			const response = await GetPublicCompanyFromDomain(domainInput)
 			company = response.data
+			console.log(response.data)
 		} catch {
 			company = ''
 		}
@@ -260,7 +262,7 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 
 	if (!profileState.editing && profileState.profile.components.find(comp => comp.type === 'experiences')?.props.experiences.length === 0) {
 		return (
-			<Div column width={12} style={{marginTop: '60px'}}>
+			<ComponentContainer column width={12}>
 
 				<H1 style={{color: 'lightgray'}}>
 					Experiences
@@ -279,11 +281,11 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 					</AddButton>
 				</Div>
 
-			</Div>
+			</ComponentContainer>
 		)
 	} else if (profileState.editing) {
 		return (
-			<Div column width={12} style={{marginTop: '60px'}}>
+			<ComponentContainer column width={12}>
 				<H1>
 					Experiences
 				</H1>
@@ -299,7 +301,7 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 				{/* this is the domain input form */}
 				<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
 			
-					<Div column width={12} style={{ marginLeft:'10px' }}>
+					<Div column width={12}>
 						<H2>
 							Enter your company domain name
 						</H2>
@@ -308,20 +310,21 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 								placeholder={'google.com'}
 								onChange={(event: any) => setDomainInput(event.target.value)}
 								value={domainInput}
+								style={{borderBottom: 'none', height: 'auto'}}
 							/>
 							<DomainButton onClick={onDomainClick}>
-								Invite &#62;
+								Add Experience &#62;
 							</DomainButton>
 						</Div>
 					</Div>
 
 				</Div>
 
-			</Div>
+			</ComponentContainer>
 		)
 	} else {
 		return (
-			<Div column width={12} style={{marginTop: '60px'}}>
+			<ComponentContainer column width={12}>
 				<H1>
 					Experiences
 				</H1>
@@ -333,7 +336,7 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 					/>
 				)}
 
-			</Div>
+			</ComponentContainer>
 		)
 	}
 }
@@ -384,30 +387,49 @@ const ExperienceEditRow: React.FC<ExperienceRowProps> = ({ experience, color }) 
 			date: dateInput
 		}))
 	}
+	
+	const handleDeleteExperience = () => {
+		profileDispatch(deleteExperience({
+			id: id,
+			domain: domain,
+			title: titleInput,
+			company: companyInput,
+			date: dateInput
+		}))
+	}
 
 
 	return (
 		<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
 
 			{/* need to add delete functionality */}
+			<Div style={{position: 'relative'}}>
 			<ExternalImg
 				src={`//logo.clearbit.com/${domain}`}
-				style={{ minWidth:'51px', minHeight:'51px', backgroundSize:'contain' }}
-			/>
+				style={{ minWidth:'51px', minHeight:'51px', backgroundSize:'contain' }}>
+			</ExternalImg>
+			<DeleteIcon 
+					src={ExitIcon}
+					onClick={handleDeleteExperience}/>
+			</Div>
 
-			<Div column width={12} style={{ marginLeft:'10px', color: color||'black' }}>
+			<ExperienceText column width={12} style={{ marginLeft:'10px', color: color||'black' }}>
 				<Div row width={12}>
 					<ExperienceInput
 						placeholder={'Software Engineer'}
 						onChange={(event: any) => setTitleInput(event.target.value)}
 						value={titleInput}
+						style={{width: 'auto'}}
+						// style={(titleInput==='')? {width: Math.ceil('Software Engineer'.length * .95) + "ex"} : {width: Math.ceil(titleInput.length * .95) + "ex"}}
 						onBlur={handleClickAway}
 					/>
-					at 
+					<H2>&nbsp;at&nbsp;</H2> 
 					<ExperienceInput
 						placeholder={'Google'}
 						onChange={(event: any) => setCompanyInput(event.target.value)}
 						value={companyInput}
+						style={{width: 'auto'}}
+						// style={(companyInput==='')? {width: Math.ceil('Google'.length * 1.1) + "ex"} : {width: Math.ceil(companyInput.length * 1.1) + "ex"}}
 						onBlur={handleClickAway}
 					/>
 				</Div>
@@ -415,23 +437,37 @@ const ExperienceEditRow: React.FC<ExperienceRowProps> = ({ experience, color }) 
 					placeholder={'August 2019 - Present'}
 					onChange={(event: any) => setDateInput(event.target.value)}
 					value={dateInput}
+					style={{width: 'auto'}}
+					// style={(dateInput==='')? {width: Math.ceil('August 2019 - Present'.length * 1) + "ex"} : {width: Math.ceil(dateInput.length * 1) + "ex"}}
 					onBlur={handleClickAway}
 				/>
-			</Div>
+			</ExperienceText>
 
 		</Div>
 	)
 }
 
-const ExperienceInput = styled(Input)`
-	font-family: 'inter';
-  font-size: 16px;
-	line-height: 24px;
+const ExperienceInput = styled(InlineInput)`
+	border-bottom: 1px solid black;
+	height: 18px;
+`
+
+const ExperienceText = styled(Div)`
+	display: inline-block;
+`
+
+const DeleteIcon = styled.img`
+	position: absolute;
+	background-size: 50%;
+	left:0;
+	z-index: 2;
+	height: 51px;
+	width: 51px;
 `
 
 const DomainButton = styled(Button)`
-	/* background-color: black; */
-	/* color: white; */
+	background-color: white;
+	color: black;
 	font-size: 16px;
 	font-family: 'inter';
   line-height: 24px;
@@ -483,10 +519,9 @@ const HeadlineTextArea = styled(TextArea)`
 `
 
 const ComponentContainer = styled(Div)`
-	margin-top: 40px;
-	@media (max-width) {
+	margin-top: 20px;
+	@media (max-width: 768px) {
 		margin-top: 20px;
-		margin-bottom: 80px;
 	}
 `
 

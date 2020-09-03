@@ -51,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 
 				<HeaderContainer row width={mobile ? 11 : 10} style={{borderBottom: '1px solid white', backgroundColor: 'black'}}>
 					<HeaderTitleText style={{color: 'white'}}>
-						Search Profiles...
+						Corner
 					</HeaderTitleText>
 					<ExitButton onClick={onClick} src={ExitIcon} />
 				</HeaderContainer>
