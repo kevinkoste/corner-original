@@ -7,7 +7,8 @@ import ExitIcon from '../icons/delete.svg'
 // presentation/types
 import { useDetectMobile } from '../libs/hooksLib'
 import { Div, H1, H2, Img, ExternalImg, TextArea, Button, Input, InlineInput } from '../components/BaseComponents'
-import { Component,	HeadlineComponent,	BioComponent,	HeadshotComponent, ExperiencesComponent,ArticleComponent, IntegrationsComponent, Integration, Post } from '../models/Profile'
+import { Component,	HeadlineComponent,	BioComponent,	HeadshotComponent, ExperiencesComponent, ArticleComponent, IntegrationsComponent, Integration, Post } from '../models/Profile'
+import { Bookshelf } from '../components/ProfileBookshelf'
 
 // logic
 import { useProfileContext, setEditing, updateComponent, updateExperience, deleteExperience } from '../context/ProfileContext'
@@ -351,12 +352,12 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 
 
 type ExperienceRowProps = { experience: any, color?: string }
-const ExperienceRow: React.FC<ExperienceRowProps> = ({ experience, color }) => {
+export const ExperienceRow: React.FC<ExperienceRowProps> = ({ experience, color }) => {
 
 	const { domain, title, company, date } = experience
 
 	return (
-		<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
+		<Div row width={12} style={{ alignItems:'top', marginBottom:'15px', marginTop:'15px' }}>
 			<LogoWrapper style={{position: 'relative'}}>
 			<ExternalImg
 				src={`//logo.clearbit.com/${domain}`}
@@ -409,7 +410,7 @@ const ExperienceEditRow: React.FC<ExperienceRowProps> = ({ experience, color }) 
 
 
 	return (
-		<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
+		<Div row width={12} style={{ alignItems:'top', marginBottom:'15px', marginTop:'15px' }}>
 
 			{/* need to add delete functionality */}
 			<LogoWrapper style={{position: 'relative'}}>
@@ -461,6 +462,7 @@ const ExperienceInput = styled(InlineInput)`
 	height: 20px;
 	margin-right: 5px;
 	margin-left: 5px;
+	border-radius: 0px;
 `
 
 const ExperienceText = styled(Div)`
@@ -470,6 +472,9 @@ const ExperienceText = styled(Div)`
 
 const LogoWrapper = styled(Div)`
 	margin-left: 15px;
+	@media (max-width: 768px) {
+		margin-left: 0px;
+	}
 `
 
 const DeleteIcon = styled.img`
@@ -815,7 +820,8 @@ type ComponentIndex = {
 }
 const Components: ComponentIndex  = {
 	headline: Headline,
-  bio: Bio,
+	bio: Bio,
+	bookshelf: Bookshelf,
 	headshot: Headshot,
 	experiences: Experiences,
   article: Article,

@@ -2,8 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { Div, H1, H2, Img } from './BaseComponents'
-import { Component, HeadlineComponent, BioComponent, HeadshotComponent, ArticleComponent, Profile } from '../models/Profile'
+import { Component, HeadlineComponent, BioComponent, HeadshotComponent, ArticleComponent, Profile, ExperiencesComponent } from '../models/Profile'
 import { useDetectMobile } from '../libs/hooksLib'
+import { ExperienceRow } from './EditProfileComponents'
 
 
 export const Headline: React.FC<HeadlineComponent> = ({ id, props }) => {
@@ -43,6 +44,32 @@ export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 	)
 }
 
+export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
+	const mobile: boolean = useDetectMobile()
+	if (props.experiences.length !== 0) {
+		return (
+			<ComponentContainer column width={12}>
+				<H1>
+					Experiences
+				</H1>
+
+				{ props.experiences.map((exp: any, idx: number) => 
+					<ExperienceRow
+						key={idx}
+						experience={exp}
+					/>
+				)}
+
+			</ComponentContainer>
+		)
+	}
+	else {
+		return (
+			<span></span>
+		)
+	}
+}
+
 export const Article: React.FC<ArticleComponent> = ({ id, props }) => {
 	return (
 		<BioText>
@@ -69,7 +96,6 @@ const ComponentContainer = styled(Div)`
 	margin-top: 40px;
 	@media (max-width: 768px) {
 		margin-top: 20px;
-		margin-bottom: 80px;
 	}
 `
 
@@ -84,7 +110,8 @@ const Components: ComponentIndex  = {
 	headline: Headline,
   bio: Bio,
   headshot: Headshot,
-  article: Article
+	article: Article,
+	experiences: Experiences,
 }
 
 export const GenerateComponent = (component: Component, profile: any) => {

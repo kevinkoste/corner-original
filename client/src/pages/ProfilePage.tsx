@@ -73,6 +73,10 @@ export const ProfilePage: React.FC = () => {
               .filter(comp => comp.type === 'bio' )
               .map(comp => GenerateComponent(comp, profile))
             }
+            { !mobile && profile.components
+              .filter(comp => comp.type === 'experiences' )
+              .map(comp => GenerateComponent(comp, profile))
+            }
             </FrontPageWrapper>
           </CenteredContainer>
           
@@ -82,7 +86,7 @@ export const ProfilePage: React.FC = () => {
             .map(comp => GenerateComponent(comp, profile))
           }
           { !mobile && profile.components
-            .filter(comp => comp.type !== 'headshot' && comp.type !== 'headline' && comp.type !== 'bio' )
+            .filter(comp => comp.type !== 'headshot' && comp.type !== 'headline' && comp.type !== 'bio' && comp.type !== 'experiences' )
             .map(comp => GenerateComponent(comp, profile))
           }
           </Div>
@@ -101,9 +105,8 @@ export const ProfilePage: React.FC = () => {
         { state.auth &&
           <ProfileModal profile={profile} />
         }
-
         { mobile &&
-          <Div style={{height:'60px'}}/>
+        <Div style={{height:'60px'}}/>
         }
   
       </PageContainer>
@@ -126,6 +129,9 @@ export const ProfilePage: React.FC = () => {
               Join Corner
             </EditButton>
           </ButtonContainer>
+        }
+        { mobile &&
+        <Div style={{height:'60px'}}/>
         }
 
 
@@ -154,7 +160,7 @@ const BodyContainer = styled(Div)`
 const CenteredContainer = styled(Div)`
   justify-content: center;
   flex-direction: row;
-  min-height: ${(window.innerHeight - 51)+"px"};
+  min-height: ${(window.innerHeight - 111)+"px"};
   @media (max-width: 768px) {
     flex-direction: column;
 	}
@@ -177,7 +183,7 @@ const NotFoundContainer = styled(Div)`
 
 const ButtonContainer = styled(Div)`
 	display: flex;
-	position: relative;
+	position: fixed;
 	justify-content: space-between;
 	max-width: 350px;
 	@media (max-width: 768px) {

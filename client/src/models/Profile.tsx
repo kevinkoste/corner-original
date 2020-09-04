@@ -48,12 +48,22 @@ export type HeadshotComponent = {
   }
 }
 
+export type Book = { id: string, title: string, author: string, date: string, link: string, image: string }
+export type BookshelfComponent = {
+  id: string,
+  type: 'bookshelf',
+  props: {
+    books: Book[]
+  }
+}
+
 export type Experience = {
   domain: string,
   title: string,
   company: string,
   date: string
 }
+
 export type ExperiencesComponent = {
   id: string,
   type: 'experiences',

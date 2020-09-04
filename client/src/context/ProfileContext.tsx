@@ -29,6 +29,8 @@ const UPDATE_COMPONENT = "UPDATE_COMPONENT"
 const DELETE_COMPONENT = "DELETE_COMPONENT"
 const UPDATE_EXPERIENCE = "UPDATE_EXPERIENCE"
 const DELETE_EXPERIENCE = "DELETE_EXPERIENCE"
+const DELETE_BOOK_BY_ID = "DELETE_BOOK_BY_ID"
+
 
 // Valid action types
 type Action =
@@ -38,7 +40,7 @@ type Action =
  | { type: "UPDATE_EXPERIENCE", experience: any }
  | { type: "DELETE_EXPERIENCE", experience: any }
  | { type: "DELETE_COMPONENT", id: string }
-
+ | { type: "DELETE_BOOK_BY_ID", id: string }
 
 
 // Action creators
@@ -64,6 +66,10 @@ export const updateExperience = (experience: any): Action => {
 
 export const deleteExperience = (experience: any): Action => {
   return { type: DELETE_EXPERIENCE, experience: experience}
+}
+
+export const deleteBookById = (id: string): Action => {
+  return { type: DELETE_BOOK_BY_ID, id: id }
 }
 
 
@@ -162,6 +168,24 @@ const ProfileReducer = (state: StateType, action: Action) => {
                     .find(comp => comp.type === 'experiences')?.props.experiences
                     .filter((exp:any) => exp.id !== action.experience.id)
                     // .map((exp: any) => exp.id === action.experience.id ? action.experience : exp)
+                }
+              }
+            )
+          }
+        }
+
+      case DELETE_BOOK_BY_ID:
+        return {
+          ...state,
+          profile: {
+            ...state.profile,
+            components: state.profile.components.map(comp => comp.type !== 'bookshelf' ? comp : 
+              {
+                ...state.profile.components.find(comp => comp.type === 'bookshelf'),
+                props: {
+                  books: state.profile.components
+                    .find(comp => comp.type === 'bookshelf')?.props.books
+                    .filter((book: any) => book.id !== action.id)
                 }
               }
             )
