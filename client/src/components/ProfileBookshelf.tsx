@@ -112,17 +112,20 @@ const BookRow: React.FC<BookRowProps> = ({ book, color }) => {
   const { title, author, date, link, image } = book
 
 	return (
-		<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
+		<Div row width={12} style={{ alignItems:'top', marginTop:'15px', marginBottom:'15px' }}>
 			<LogoWrapper style={{position: 'relative'}}>
 			<ExternalImg
 				src={image}
-				style={{ minWidth:'51px', minHeight:'51px', backgroundSize:'contain' }}
+				style={{ minWidth:'51px', minHeight:'60px', backgroundSize:'contain' }}
 			/>
 			</LogoWrapper>
 
 			<ExperienceText column width={12} style={{color: color||'black' }}>
 				<H2>
-					{title} by {author}
+					{title}
+				</H2>
+				<H2>
+					{author}
 				</H2>
 				<H2>
 					{date}
@@ -147,11 +150,11 @@ const BookEditRow: React.FC<BookRowProps> = ({ book, color }) => {
   
 
 	return (
-		<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
+		<Div row width={12} style={{ alignItems:'top', marginTop:'15px', marginBottom:'15px' }}>
 			<LogoWrapper style={{position: 'relative'}}>
         <ExternalImg
           src={image}
-          style={{ minWidth:'51px', minHeight:'51px', backgroundSize:'contain' }}
+          style={{ minWidth:'60px', minHeight:'60px', backgroundSize:'contain' }}
         />
         <DeleteIcon 
           src={ExitIcon}
@@ -161,7 +164,10 @@ const BookEditRow: React.FC<BookRowProps> = ({ book, color }) => {
 
 			<ExperienceText column width={12} style={{color: color||'black' }}>
 				<H2>
-					{title} by {author}
+					{title}
+				</H2>
+				<H2>
+					{author}
 				</H2>
 				<H2>
 					{date}
@@ -250,89 +256,6 @@ const BookAddRow: React.FC<BookAddRowProps> = ({ id }) => {
 }
 
 
-
-// const ExperienceEditRow: React.FC<ExperienceRowProps> = ({ experience, color }) => {
-
-// 	const { id, domain, title, company, date } = experience
-
-// 	const { profileState, profileDispatch } = useProfileContext()
-
-// 	const [ titleInput, setTitleInput ] = useState(title)
-// 	const [ companyInput, setCompanyInput ] = useState(company)
-// 	const [ dateInput, setDateInput ] = useState(date)
-
-// 	const handleClickAway = () => {
-// 		profileDispatch(updateExperience({
-// 			id: id,
-// 			domain: domain,
-// 			title: titleInput,
-// 			company: companyInput,
-// 			date: dateInput
-// 		}))
-// 	}
-	
-// 	const handleDeleteExperience = () => {
-// 		profileDispatch(deleteExperience({
-// 			id: id,
-// 			domain: domain,
-// 			title: titleInput,
-// 			company: companyInput,
-// 			date: dateInput
-// 		}))
-// 	}
-
-
-// 	return (
-// 		<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
-
-// 			{/* need to add delete functionality */}
-// 			<LogoWrapper style={{position: 'relative'}}>
-//         <ExternalImg
-//           src={`//logo.clearbit.com/${domain}`}
-//           style={{ minWidth:'51px', minHeight:'51px', backgroundSize:'contain' }}>
-//         </ExternalImg>
-//         <DeleteIcon 
-//           src={ExitIcon}
-//           onClick={handleDeleteExperience}
-//         />
-// 			</LogoWrapper>
-
-// 			<ExperienceText column width={12} style={{ color: color||'black' }}>
-// 				<Div row width={12}>
-// 					<BookInput
-// 						placeholder={'Software Engineer'}
-// 						onChange={(event: any) => setTitleInput(event.target.value)}
-// 						value={titleInput}
-// 						style={{width: '40%'}}
-// 						// style={(titleInput==='')? {width: Math.ceil('Software Engineer'.length * .95) + "ex"} : {width: Math.ceil(titleInput.length * .95) + "ex"}}
-// 						onBlur={handleClickAway}
-// 					/>
-// 					<H2>&nbsp;at&nbsp;</H2> 
-// 					<BookInput
-// 						placeholder={'Google'}
-// 						onChange={(event: any) => setCompanyInput(event.target.value)}
-// 						value={companyInput}
-// 						style={{width: '40%'}}
-// 						// style={(companyInput==='')? {width: Math.ceil('Google'.length * 1.1) + "ex"} : {width: Math.ceil(companyInput.length * 1.1) + "ex"}}
-// 						onBlur={handleClickAway}
-// 					/>
-// 				</Div>
-// 				<BookInput
-// 					placeholder={'August 2019 - Present'}
-// 					onChange={(event: any) => setDateInput(event.target.value)}
-// 					value={dateInput}
-// 					style={{width: 'calc(80% + 37px)'}}
-// 					// style={(dateInput==='')? {width: Math.ceil('August 2019 - Present'.length * 1) + "ex"} : {width: Math.ceil(dateInput.length * 1) + "ex"}}
-// 					onBlur={handleClickAway}
-// 				/>
-// 			</ExperienceText>
-
-// 		</Div>
-// 	)
-// }
-
-
-
 const BookInput = styled(InlineInput)`
 	border-bottom: 1px solid black;
 	height: 20px;
@@ -347,6 +270,9 @@ const ExperienceText = styled(Div)`
 
 const LogoWrapper = styled(Div)`
 	margin-left: 15px;
+	@media (max-width: 768px) {
+		margin-left: 0px;
+	}
 `
 
 const DeleteIcon = styled.img`
