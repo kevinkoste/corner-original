@@ -73,3 +73,27 @@ export type ArticleComponent = {
     link: string
   }
 }
+
+export type SubstackComponent = {
+  id: string,
+  type: 'substack',
+  props: {
+    integrationType: string,
+    title: string,
+    subtitle: string,
+    link: string,
+    timestamp: string
+  }
+}
+
+export type MediumComponent = {
+  id: string,
+  type: 'medium',
+  props: {
+    integrationType: string,
+    title: string,
+    subtitle: string,
+    link: string,
+    timestamp: string
+  }
+}

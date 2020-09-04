@@ -5,11 +5,11 @@ import styled from 'styled-components'
 import ClipLoader from "react-spinners/ClipLoader"
 import { useDetectMobile } from '../libs/hooksLib'
 import { Div, H1, H2, Img, ExternalImg, TextArea, Button } from '../components/BaseComponents'
-import { Component,	HeadlineComponent,	BioComponent,	HeadshotComponent, ExperiencesComponent,ArticleComponent } from '../models/Profile'
+import { Component,	HeadlineComponent,	BioComponent,	HeadshotComponent, ExperiencesComponent,ArticleComponent, SubstackComponent } from '../models/Profile'
 
 // logic
 import { useProfileContext, setEditing, updateComponent, deleteComponent } from '../context/ProfileContext'
-import { PostProtectProfileImage } from '../libs/apiLib'
+import { PostProtectProfileImage, FetchSubstack, FetchMedium } from '../libs/apiLib'
 
 
 export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
@@ -328,8 +328,59 @@ export const ExperienceRow: React.FC<ExperienceRowProps> = ({ domain, title, com
 	)
 }
 
+export const Substack: React.FC<SubstackComponent> = ({ id, props }) => {
+	const { profileState, profileDispatch } = useProfileContext()
 
+	const [ substackName, setSubstackName ] = useState('')
+	const [ substacks, setSubstacks ] = useState([])
 
+	const onChangeSubstackName = (event: any) => {
+		setSubstackName(event.target.value);
+	}
+
+	const onSubmitSubstack = (event: any) => {
+		if (substackName !== "") {
+			event.preventDefault();
+			FetchSubstack(substackName)
+			.then(res => {
+				setSubstacks(res.data)
+			})
+			.catch(err => {
+				console.error(err)
+			})
+		}
+	}
+
+	const onDeleteSubstack = (event: any) => {
+		setSubstacks([]);
+	}
+
+	if (profileState.editing && substacks.length === 0) {
+		return (
+			<div>
+				<input type="text" value={substackName} onChange={onChangeSubstackName}/>
+				<button onClick={onSubmitSubstack}>submit</button>
+			</div>
+		)
+	} else if (substacks.length > 0) {
+		return (
+			<div>
+				<p>Title: {props.title}</p>
+				<p>Subtitle: {props.subtitle}</p>
+				<p>Timestamp: {props.timestamp}</p>
+				<button onClick={onDeleteSubstack}>delete</button>
+			</div>
+		)
+	} else {
+		return (
+			<div>
+				<p>Title: {props.title}</p>
+				<p>Subtitle: {props.subtitle}</p>
+				<p>Timestamp: {props.timestamp}</p>
+			</div>
+		)
+	}
+}
 
 export const Article: React.FC<ArticleComponent> = ({ id, props }) => {
 
@@ -463,7 +514,8 @@ const Components: ComponentIndex  = {
   bio: Bio,
 	headshot: Headshot,
 	experiences: Experiences,
-  article: Article
+  article: Article,
+  substack: Substack
 }
 
 
