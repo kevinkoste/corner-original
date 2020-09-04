@@ -78,47 +78,25 @@ router.post('/upload-image/:username', (req, res) => {
   })
 })
 
-router.post('/add-substack', (req, res) => {
-  const substackName = req.body.substackName
-  const email = req.body.email
-
-  fetchSubstack(substackName).then(substack => {
-    db.update({
-      TableName: 'profiles',
-      Key: { email: email },
-      UpdateExpression: "set substack = :s",
-      ExpressionAttributeValues: {
-        ":s": substack
-      }
-    }).then(response => {
-      console.log('response from db update: ', response)
-      res.status(200).send('successfully added substack')
-    }).catch(err => {
-      console.log(err)
-      res.status(500).end('failed to add substack')
-    })
+router.post('/fetch-substack', (req, res) => {
+  const substackUrl = req.body.substackUrl
+  fetchSubstack(substackUrl)
+  .then(substack => {
+    res.status(200).send(substack)
+  }).catch(err => {
+    console.log(err)
+    res.status(500).end('failed to add substack')
   })
 })
 
-router.post('/add-medium', (req, res) => {
-  const mediumName = req.body.mediumName
-  const email = req.body.email
-
-  fetchMedium(mediumName).then(medium => {
-    db.update({
-      TableName: 'profiles',
-      Key: { email: email },
-      UpdateExpression: "set medium = :m",
-      ExpressionAttributeValues: {
-        ":m": medium
-      }
-    }).then(response => {
-      console.log('response from db update: ', response)
-      res.status(200).send('successfully added medium')
-    }).catch(err => {
-      console.log(err)
-      res.status(500).end('failed to add medium')
-    })
+router.post('/fetch-medium', (req, res) => {
+  const mediumUrl = req.body.mediumUrl
+  fetchMedium(mediumUrl)
+  .then(medium => {
+    res.status(200).send(medium)
+  }).catch(err => {
+    console.log(err)
+    res.status(500).end('failed to add medium')
   })
 })
 
