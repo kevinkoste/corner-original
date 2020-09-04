@@ -471,6 +471,9 @@ const ExperienceText = styled(Div)`
 
 const LogoWrapper = styled(Div)`
 	margin-left: 15px;
+	@media (max-width: 768px) {
+		margin-left: 0px;
+	}
 `
 
 const DeleteIcon = styled.img`

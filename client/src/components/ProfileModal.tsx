@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { useDetectMobile } from '../libs/hooksLib'
 import { Div, H1, H2, Button, TextArea } from '../components/BaseComponents'
-import ExitIcon from '../icons/exit.png'
+import ExitIcon from '../icons/bigdelete.svg'
 
 import { Profile } from '../models/Profile'
 import { useAppContext, setAuth } from '../context/AppContext'
