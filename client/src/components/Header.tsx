@@ -51,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 
 				<HeaderContainer row width={mobile ? 11 : 10} style={{borderBottom: '1px solid white', backgroundColor: 'black'}}>
 					<HeaderTitleText style={{color: 'white'}}>
-						Search Profiles...
+						Corner
 					</HeaderTitleText>
 					<ExitButton onClick={onClick} src={ExitIcon} />
 				</HeaderContainer>
@@ -128,6 +128,7 @@ const HeaderContainer = styled(Div)`
 	padding-top: 15px;
 	padding-bottom: 5px;
 	border-bottom: 1px solid black;
+	max-width: 1300px;
 `
 
 const HeaderTitleText = styled(H1)`
@@ -143,19 +144,32 @@ const AnimatedNameKeyframes = keyframes`
 	50% { 
 		width: 50%; 
 		height: 100%; 
-		@media (max-width: 768px) {
-			width: 80%;
-		}
 	}
 	99.99% { width: 0%; height: 100%; }
 	100% { width: 0%; height: 0%; }
 `
+
+const AnimatedNameKeyframesMobile = keyframes`
+	0% { width: 0%; height: 0%; }
+	0.01% { width: 0%; height: 100%; }
+	50% { 
+		width: 85%; 
+		height: 100%; 
+	}
+	99.99% { width: 0%; height: 100%; }
+	100% { width: 0%; height: 0%; }
+`
+
+
 const AnimatedName = styled(HeaderTitleText)`
 	animation-name: ${AnimatedNameKeyframes};
 	animation-duration: 3s;
 	animation-delay: 0.5s;
 	animation-timing-function: steps(30, end);
 	animation-fill-mode: both;
+	@media (max-width: 768px) {
+		animation-name: ${AnimatedNameKeyframesMobile};
+	}
 `
 
 const AnimatedTitleKeyframes = keyframes`
@@ -164,17 +178,27 @@ const AnimatedTitleKeyframes = keyframes`
 	100% { 
 		width: 50%; 
 		height: 100%;
-		@media (max-width: 768px) {
-			width: 80%;
-		} 
 	}
 `
+
+const AnimatedTitleKeyframesMobile = keyframes`
+	0% { width: 0%; height: 0%; }
+	0.01% { width: 0%; height: 100%; }
+	100% { 
+		width: 80%; 
+		height: 100%;
+	}
+`
+
 const AnimatedTitle = styled(HeaderTitleText)`
 	animation-name: ${AnimatedTitleKeyframes};
 	animation-duration: 1.5s;
 	animation-delay: 3.5s;
 	animation-timing-function: steps(30, end);
 	animation-fill-mode: both;
+	@media (max-width: 768px) {
+		animation-name: ${AnimatedTitleKeyframesMobile};
+	}
 `
 
 const BurgerButton = styled.img`
@@ -210,6 +234,7 @@ const BurgerMenu = styled.div`
 
 const BodyContainer = styled(Div)`
 	padding-top: 51px;
+	max-width: 1300px;
 `
 
 

@@ -60,6 +60,7 @@ type ImageProps = {
   size?: number,
 }
 export const Img = styled.div<ImageProps>`
+  background-color: unset;
   background-image: ${props => `url(${process.env.REACT_APP_S3_BUCKET + props.src})`};
   background-position: center;
   background-size: cover;
@@ -67,7 +68,6 @@ export const Img = styled.div<ImageProps>`
   image-orientation: from-image;
   position: relative;
   text-align: center;
-  background-color: white;
   max-height: 0px;
   padding-bottom: ${props => props.size ? GridMap[props.size] : 'unset'};
   width: ${props => props.size ? GridMap[props.size] : 'unset'};
@@ -101,6 +101,34 @@ export const TextArea = styled(TextareaAutosize)`
   font-size: 30px;
 `
 
+export const Input = styled.input`
+	outline: none;
+	box-shadow: none;
+	border: none;
+	overflow: hidden;
+	resize: none;
+	padding: 0px;
+  text-align: left;
+  white-space: pre-wrap;
+  font-family: 'source-serif';
+  font-size: 30px;
+`
+
+export const InlineInput = styled.input`
+	outline: none;
+	box-shadow: none;
+	border: none;
+	overflow: hidden;
+	padding: 0px;
+  margin: 0px;
+  font-family: 'inter';
+  font-size: 18px;
+  line-height: 24px;
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+`
+
 export const Button = styled.button`
   /* removing default button styles */
   display: inline-block;
@@ -124,15 +152,3 @@ export const Button = styled.button`
   }
 `
 
-
-// type ImageProps = {
-//   src: string
-// }
-// export const Icon = styled.img<ImageProps>`
-//   src: ${props => pros.src};
-//   background-position: center;
-//   background-size: cover;
-//   position: relative;
-//   text-align: center;
-//   padding-bottom: ${props => GridMap[props.size]};
-// `

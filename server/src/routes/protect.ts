@@ -78,55 +78,11 @@ router.post('/upload-image/:username', (req, res) => {
   })
 })
 
-// router.post('/add-substack', (req, res) => {
-//   const substackName = req.body.substackName
-//   const email = req.body.email
-
-//   fetchSubstack(substackName).then(substack => {
-//     db.update({
-//       TableName: 'profiles',
-//       Key: { email: email },
-//       UpdateExpression: "set substack = :s",
-//       ExpressionAttributeValues: {
-//         ":s": substack
-//       }
-//     }).then(response => {
-//       console.log('response from db update: ', response)
-//       res.status(200).send('successfully added substack')
-//     }).catch(err => {
-//       console.log(err)
-//       res.status(500).end('failed to add substack')
-//     })
-//   })
-// })
-
-// router.post('/add-medium', (req, res) => {
-//   const mediumName = req.body.mediumName
-//   const email = req.body.email
-
-//   fetchMedium(mediumName).then(medium => {
-//     db.update({
-//       TableName: 'profiles',
-//       Key: { email: email },
-//       UpdateExpression: "set medium = :m",
-//       ExpressionAttributeValues: {
-//         ":m": medium
-//       }
-//     }).then(response => {
-//       console.log('response from db update: ', response)
-//       res.status(200).send('successfully added medium')
-//     }).catch(err => {
-//       console.log(err)
-//       res.status(500).end('failed to add medium')
-//     })
-//   })
-// })
-
 router.post('/fetch-substack', (req, res) => {
-  const substackName = req.body.substackName
-  fetchSubstack(substackName)
+  const substackUrl = req.body.substackUrl
+  fetchSubstack(substackUrl)
   .then(substack => {
-    return substack
+    res.status(200).send(substack)
   }).catch(err => {
     console.log(err)
     res.status(500).end('failed to add substack')
@@ -134,38 +90,15 @@ router.post('/fetch-substack', (req, res) => {
 })
 
 router.post('/fetch-medium', (req, res) => {
-  const mediumName = req.body.mediumName
-  fetchMedium(mediumName)
+  const mediumUrl = req.body.mediumUrl
+  fetchMedium(mediumUrl)
   .then(medium => {
-    return medium
+    res.status(200).send(medium)
   }).catch(err => {
     console.log(err)
     res.status(500).end('failed to add medium')
   })
 })
-
-// // POST /protect/employer - gets employer data from url
-// router.post('/employer', (req, res) => {
-
-//   // body: { url: url }
-
-
-//   s3.upload({
-//     Bucket: process.env.AWS_S3_BUCKET,
-//     Key: `images/${imageId}.${type.ext}`,
-//     ACL: 'public-read',
-//     Body: buffer,
-//   })
-//   .then(data => {
-//     console.log('response from s3', data)
-//     res.status(200).json({
-//       image: data.Key
-//     })
-//   })
-//   .catch(err => {
-//     console.log(err)
-//     res.status(500)
-// })
 
 
 // ONBOARDING/INVITED ROUTES //
@@ -177,7 +110,6 @@ router.post('/onboard/check', (req, res) => {
     TableName: 'profiles',
     Key: { email: req.body.email }
   }).then(data => {
-    console.log('found in db:', data.Item)
     if ('username' in data.Item) {
       res.status(200).json({
         onboarded: true,
@@ -222,8 +154,6 @@ router.post('/invite/check', (req, res) => {
 router.post('/invite', (req, res) => {
 
   // body: {invitedEmail, senderEmail }
-
-  console.log('in protect/invite with body:', req.body)
 
   const invitedEmail = req.body.invitedEmail
   const senderEmail = req.body.senderEmail

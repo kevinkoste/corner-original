@@ -1,27 +1,27 @@
 import axios from 'axios'
 
-export const fetchSubstack = (substackName: string) => {
+export const fetchSubstack = (substackUrl: string) => {
   return axios.get("https://api.rss2json.com/v1/api.json", {
     params: {
-      rss_url: "https://" + substackName + ".substack.com/feed"
+      rss_url: substackUrl + "feed"
     }
   })
   .then(response => {
-    return parseRss(substackName, response.data)
+    return parseRss(substackUrl, response.data)
   }).catch(error => {
     console.error(error)
     return error
   });
 }
 
-export const fetchMedium = (mediumName: string) => {
+export const fetchMedium = (mediumUrl: string) => {
   return axios.get("https://api.rss2json.com/v1/api.json", {
     params: {
-      rss_url: "https://medium.com/feed/@" + mediumName
+      rss_url: mediumUrl.replace("medium.com/", "medium.com/feed/")
     }
   })
   .then(response => {
-    return parseRss(mediumName, response.data)
+    return parseRss(mediumUrl, response.data)
   }).catch(error => {
     console.error(error)
     return error
@@ -30,16 +30,15 @@ export const fetchMedium = (mediumName: string) => {
 
 
 type Rss = {
-  name: string,
+  url: string,
   title: string,
   description: string,
   posts: any[]
 }
 
-const parseRss = (name: string, rss: any) => {
-  console.log(rss)
+const parseRss = (url: string, rss: any) => {
   const parsedRss: Rss = {
-    name: name,
+    url: url,
     title: rss.feed.title,
     description: rss.feed.description,
     posts: []

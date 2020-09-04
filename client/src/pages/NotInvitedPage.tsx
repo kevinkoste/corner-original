@@ -36,6 +36,7 @@ const PageContainer = styled(Div)`
 
 const BodyContainer = styled(Div)`
   padding-top: 51px;
+  max-width: 1150px;
 `
 
 const NotFoundContainer = styled(Div)`

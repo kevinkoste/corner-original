@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { v4 as uuidv4 } from 'uuid'
+import ClipLoader from "react-spinners/ClipLoader"
+import ExitIcon from '../icons/delete.svg'
 
 // presentation/types
-import ClipLoader from "react-spinners/ClipLoader"
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div, H1, H2, Img, ExternalImg, TextArea, Button } from '../components/BaseComponents'
-import { Component,	HeadlineComponent,	BioComponent,	HeadshotComponent, ExperiencesComponent,ArticleComponent, SubstackComponent } from '../models/Profile'
+import { Div, H1, H2, Img, ExternalImg, TextArea, Button, Input, InlineInput } from '../components/BaseComponents'
+import { Component,	HeadlineComponent,	BioComponent,	HeadshotComponent, ExperiencesComponent,ArticleComponent, IntegrationsComponent, Integration, Post } from '../models/Profile'
 
 // logic
-import { useProfileContext, setEditing, updateComponent, deleteComponent } from '../context/ProfileContext'
-import { PostProtectProfileImage, FetchSubstack, FetchMedium } from '../libs/apiLib'
-
+import { useProfileContext, setEditing, updateComponent, updateExperience, deleteExperience } from '../context/ProfileContext'
+import { PostProtectProfileImage, GetPublicCompanyFromDomain, FetchSubstack, FetchMedium } from '../libs/apiLib'
 
 export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 
@@ -200,22 +201,25 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 
   const { profileState, profileDispatch } = useProfileContext()
 
-	const [ experiences, setExperiences ] = useState(props.experiences)
+	// const [ experiences, setExperiences ] = useState(props.experiences)
 
 	const placeholder = [
 		{
+			id: '1',
 			domain: 'google.com',
 			title: 'Security Engineer',
 			company: 'Google',
 			date: 'June 2020 - present'
 		},
 		{
+			id: '2',
 			domain: 'retool.com',
 			title: 'Sofware Engineer',
 			company: 'Retool',
 			date: 'Jan 2019 - June 2020'
 		},
 		{
+			id: '3',
 			domain: 'stripe.com',
 			title: 'Software Engineering Intern',
 			company: 'Stripe',
@@ -223,23 +227,49 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 		}
 	]
 
-	const handleClickAway = () => {
-		profileDispatch(updateComponent({
-			id: id,
-			type: 'experiences',
-			props: {
-				experiences: experiences
-			}
-		}))
-	}
-
 	const onAddClick = () => {
 		profileDispatch(setEditing(true))
 	}
 
-	if (!profileState.editing && experiences.length === 0) {
+	// controlling domain input for add experience option
+	const [ domainInput, setDomainInput ] = useState<string>('')
+
+	const onDomainClick = async () => {
+		let company: string
+		try {
+			const response = await GetPublicCompanyFromDomain(domainInput)
+			company = response.data
+			console.log(response.data)
+		} catch {
+			company = ''
+		}
+
+		const experience = {
+			id: uuidv4().toString(),
+			domain: domainInput,
+			title: '',
+			company: company,
+			date: ''
+		}
+
+		profileDispatch(updateComponent({
+			id: id,
+			type: 'experiences',
+			props: { experiences: [...profileState.profile.components.find(comp => comp.type === 'experiences')?.props.experiences, experience] }
+		}))
+	}
+
+	// enter key advances form
+	const onKeyDown = (event: any) => {
+		if (event.key === 'Enter') {
+			event.preventDefault()
+			onDomainClick()
+		}
+	}
+
+	if (!profileState.editing && profileState.profile.components.find(comp => comp.type === 'experiences')?.props.experiences.length === 0) {
 		return (
-			<Div column width={12} style={{marginTop: '60px'}}>
+			<ComponentContainer column width={12}>
 
 				<H1 style={{color: 'lightgray'}}>
 					Experiences
@@ -248,11 +278,9 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 				<Div column width={12} style={{position: 'relative'}}>
 					{ placeholder.map((exp, idx) => 
 						<ExperienceRow
+							color={'lightgray'}
 							key={idx}
-							domain={exp.domain}
-							title={exp.title}
-							company={exp.company}
-							date={exp.date}
+							experience={exp}
 						/>
 					)}
 					<AddButton onClick={onAddClick}>
@@ -260,127 +288,404 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 					</AddButton>
 				</Div>
 
-			</Div>
+			</ComponentContainer>
 		)
 	} else if (profileState.editing) {
 		return (
-			<Div column width={12} style={{marginTop: '60px'}}>
+			<ComponentContainer column width={12}>
 				<H1>
 					Experiences
 				</H1>
 
-				{ experiences.map((exp, idx) => 
-					<ExperienceRow
+				{/* the experiences edit row */}
+				{ profileState.profile.components.find(comp => comp.type === 'experiences')?.props.experiences.map((exp: any, idx: number) => 
+					<ExperienceEditRow
 						key={idx}
-						domain={exp.domain}
-						title={exp.title}
-						company={exp.company}
-						date={exp.date}
+						experience={exp}
 					/>
 				)}
 
-			</Div>
+				{/* this is the domain input form */}
+				<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
+			
+					<Div column width={12}>
+						<H2>
+							Enter your company domain name
+						</H2>
+						<Div width={12} style={{ position:'relative' }}>
+							<ExperienceInput
+								placeholder={'google.com'}
+								onChange={(event: any) => setDomainInput(event.target.value)}
+								onKeyDown={onKeyDown}
+								value={domainInput}
+								style={{borderBottom: 'none', height: 'auto', marginLeft: '0px'}}
+							/>
+							<DomainButton onClick={onDomainClick}>
+								Add Experience &#62;
+							</DomainButton>
+						</Div>
+					</Div>
+
+				</Div>
+
+			</ComponentContainer>
 		)
 	} else {
 		return (
-			<Div column width={12} style={{marginTop: '60px'}}>
+			<ComponentContainer column width={12}>
 				<H1>
 					Experiences
 				</H1>
 
-				{ experiences.map((exp, idx) => 
+				{ profileState.profile.components.find(comp => comp.type === 'experiences')?.props.experiences.map((exp: any, idx: number) => 
 					<ExperienceRow
 						key={idx}
-						domain={exp.domain}
-						title={exp.title}
-						company={exp.company}
-						date={exp.date}
+						experience={exp}
 					/>
 				)}
 
-			</Div>
+			</ComponentContainer>
 		)
 	}
 }
 
 
-type ExperienceRowProps = { domain: string, title: string, company: string, date: string }
-export const ExperienceRow: React.FC<ExperienceRowProps> = ({ domain, title, company, date }) => {
+type ExperienceRowProps = { experience: any, color?: string }
+const ExperienceRow: React.FC<ExperienceRowProps> = ({ experience, color }) => {
+
+	const { domain, title, company, date } = experience
 
 	return (
 		<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
-
+			<LogoWrapper style={{position: 'relative'}}>
 			<ExternalImg
 				src={`//logo.clearbit.com/${domain}`}
-				style={{ minWidth:'51px', minHeight:'51px', backgroundSize:'auto' }}
+				style={{ minWidth:'51px', minHeight:'51px', backgroundSize:'contain' }}
 			/>
+			</LogoWrapper>
 
-			<Div column width={12} style={{ marginLeft:'10px' }}>
+			<ExperienceText column width={12} style={{color: color||'black' }}>
 				<H2>
 					{title} at {company}
 				</H2>
 				<H2>
 					{date}
 				</H2>
-			</Div>
+			</ExperienceText>
 
 		</Div>
 	)
 }
 
-export const Substack: React.FC<SubstackComponent> = ({ id, props }) => {
+const ExperienceEditRow: React.FC<ExperienceRowProps> = ({ experience, color }) => {
+
+	const { id, domain, title, company, date } = experience
+
 	const { profileState, profileDispatch } = useProfileContext()
 
-	const [ substackName, setSubstackName ] = useState('')
-	const [ substacks, setSubstacks ] = useState([])
+	const [ titleInput, setTitleInput ] = useState(title)
+	const [ companyInput, setCompanyInput ] = useState(company)
+	const [ dateInput, setDateInput ] = useState(date)
 
-	const onChangeSubstackName = (event: any) => {
-		setSubstackName(event.target.value);
+	const handleClickAway = () => {
+		profileDispatch(updateExperience({
+			id: id,
+			domain: domain,
+			title: titleInput,
+			company: companyInput,
+			date: dateInput
+		}))
+	}
+	
+	const handleDeleteExperience = () => {
+		profileDispatch(deleteExperience({
+			id: id,
+			domain: domain,
+			title: titleInput,
+			company: companyInput,
+			date: dateInput
+		}))
 	}
 
-	const onSubmitSubstack = (event: any) => {
-		if (substackName !== "") {
-			event.preventDefault();
-			FetchSubstack(substackName)
-			.then(res => {
-				setSubstacks(res.data)
-			})
-			.catch(err => {
-				console.error(err)
-			})
+
+	return (
+		<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
+
+			{/* need to add delete functionality */}
+			<LogoWrapper style={{position: 'relative'}}>
+			<ExternalImg
+				src={`//logo.clearbit.com/${domain}`}
+				style={{ minWidth:'51px', minHeight:'51px', backgroundSize:'contain' }}>
+			</ExternalImg>
+			<DeleteIcon 
+					src={ExitIcon}
+					onClick={handleDeleteExperience}/>
+			</LogoWrapper>
+
+			<ExperienceText column width={12} style={{ color: color||'black' }}>
+				<Div row width={12}>
+					<ExperienceInput
+						placeholder={'Software Engineer'}
+						onChange={(event: any) => setTitleInput(event.target.value)}
+						value={titleInput}
+						style={{width: '40%'}}
+						// style={(titleInput==='')? {width: Math.ceil('Software Engineer'.length * .95) + "ex"} : {width: Math.ceil(titleInput.length * .95) + "ex"}}
+						onBlur={handleClickAway}
+					/>
+					<H2>&nbsp;at&nbsp;</H2> 
+					<ExperienceInput
+						placeholder={'Google'}
+						onChange={(event: any) => setCompanyInput(event.target.value)}
+						value={companyInput}
+						style={{width: '40%'}}
+						// style={(companyInput==='')? {width: Math.ceil('Google'.length * 1.1) + "ex"} : {width: Math.ceil(companyInput.length * 1.1) + "ex"}}
+						onBlur={handleClickAway}
+					/>
+				</Div>
+				<ExperienceInput
+					placeholder={'August 2019 - Present'}
+					onChange={(event: any) => setDateInput(event.target.value)}
+					value={dateInput}
+					style={{width: 'calc(80% + 37px)'}}
+					// style={(dateInput==='')? {width: Math.ceil('August 2019 - Present'.length * 1) + "ex"} : {width: Math.ceil(dateInput.length * 1) + "ex"}}
+					onBlur={handleClickAway}
+				/>
+			</ExperienceText>
+
+		</Div>
+	)
+}
+
+const ExperienceInput = styled(InlineInput)`
+	border-bottom: 1px solid black;
+	height: 20px;
+	margin-right: 5px;
+	margin-left: 5px;
+`
+
+const ExperienceText = styled(Div)`
+	display: inline-block;
+	margin-left: 15px;
+`
+
+const LogoWrapper = styled(Div)`
+	margin-left: 15px;
+`
+
+const DeleteIcon = styled.img`
+	position: absolute;
+	background-size: 50%;
+	left:0;
+	z-index: 2;
+	height: 51px;
+	width: 51px;
+`
+
+const DomainButton = styled(Button)`
+	background-color: white;
+	color: black;
+	font-size: 16px;
+	font-family: 'inter';
+  line-height: 24px;
+	padding: 0;
+	@media (max-width: 768px) {
+		position: absolute;
+		right: 0;
+	}`
+
+export const Integrations: React.FC<IntegrationsComponent> = ({ id, props }) => {
+	const { profileState, profileDispatch } = useProfileContext()
+	const [ integrationUrl, setIntegrationUrl ] = useState<string>('')
+
+	const placeholder = [
+		{
+			id: '1',
+			type: 'substack',
+			title: 'Maybe Baby',
+			description: 'Something',
+  			url: 'https://haleynahman.substack.com/',
+			posts: [{
+				title: 'Podcast: Xanax for the human condition (#17)',
+				subtitle: 'todo: deal with long subtitles',
+				link: 'https://haleynahman.substack.com/p/podcast-xanax-for-the-human-condition',
+				timestamp: '2020-08-04 18:30:46'
+			}]
+		},
+		{
+			id: '2',
+			type: 'medium',
+			title: 'Figma on Medium',
+			description: 'The collaborative interface design tool.',
+  			url: 'https://medium.com/@figmadesign',
+			posts: [{
+				title: 'Nominate photography for the 2018 Unsplash Awards',
+				subtitle: 'todo: deal with images in subtitles',
+				link: 'https://medium.com/figma-design/nominate-photography-for-the-2018-unsplash-awards-36fd26c463a3?source=---------2------------------',
+				timestamp: '2018-11-15 15:15:20'
+			}]
+		},
+	]
+
+	const onChangeIntegrationUrl = (event: any) => {
+		setIntegrationUrl(event.target.value);
+	}
+
+	const onAddIntegration = async () => {
+		let integration = {}
+		try {
+			if (integrationUrl.includes("medium.com")) {
+				const response = await FetchMedium(integrationUrl)
+				integration = {
+					id: uuidv4().toString(),
+					type: "medium",
+					title: response.data.title,
+					description: response.data.description,
+					url: response.data.url,
+					posts: response.data.posts
+				}
+			} else if (integrationUrl.includes("substack.com")) {
+				const response = await FetchSubstack(integrationUrl)
+				integration = {
+					id: uuidv4().toString(),
+					type: "substack",
+					title: response.data.title,
+					description: response.data.description,
+					url: response.data.url,
+					posts: response.data.posts
+				}
+			}
+		} catch (e) {
+			console.log(e)
 		}
+
+		profileDispatch(updateComponent({
+			id: id,
+			type: 'integrations',
+			props: { integrations: [...profileState.profile.components.find(comp => comp.type === 'integrations')?.props.integrations, integration] }
+		}))
+	}
+	
+	const onDeleteIntegration = (event: any) => {
+		// todo: implement
 	}
 
-	const onDeleteSubstack = (event: any) => {
-		setSubstacks([]);
+	const onAddClick = () => {
+		profileDispatch(setEditing(true))
 	}
 
-	if (profileState.editing && substacks.length === 0) {
+	if (!profileState.editing && profileState.profile.components.find(comp => comp.type === 'integrations')?.props.integrations.length === 0) {
 		return (
-			<div>
-				<input type="text" value={substackName} onChange={onChangeSubstackName}/>
-				<button onClick={onSubmitSubstack}>submit</button>
-			</div>
+			<ComponentContainer column width={12}>
+
+				<H1 style={{color: 'lightgray'}}>
+					Integrations
+				</H1>
+
+				<Div column width={12} style={{position: 'relative'}}>
+					{ placeholder.map((integration, idx) =>
+						<IntegrationSection
+							color={'lightgray'}
+							key={idx}
+							integration={integration}
+						/>
+					)}
+					<AddButton onClick={onAddClick}>
+						Add integrations
+					</AddButton>
+				</Div>
+
+			</ComponentContainer>
 		)
-	} else if (substacks.length > 0) {
+	} else if (profileState.editing) {
 		return (
-			<div>
-				<p>Title: {props.title}</p>
-				<p>Subtitle: {props.subtitle}</p>
-				<p>Timestamp: {props.timestamp}</p>
-				<button onClick={onDeleteSubstack}>delete</button>
-			</div>
+			<ComponentContainer column width={12}>
+				<H1>
+					Integrations
+				</H1>
+
+				{/* the integrations edit row */}
+				{ profileState.profile.components.find(comp => comp.type === 'integrations')?.props.integrations.map((integration: Integration, idx: number) => 
+					<div>
+						<IntegrationSection
+							key={idx}
+							integration={integration}
+						/>
+					</div>
+				)}
+
+				{/* this is the integration input form */}
+				<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
+					<Div column width={12}>
+						<H2>
+							Enter a link to your substack or medium
+						</H2>
+						<Div width={12} style={{ position:'relative' }}>
+							<input type="text" value={integrationUrl} onChange={onChangeIntegrationUrl}/>
+							<button onClick={onAddIntegration}>submit</button>
+						</Div>
+					</Div>
+
+				</Div>
+
+			</ComponentContainer>
 		)
 	} else {
 		return (
-			<div>
-				<p>Title: {props.title}</p>
-				<p>Subtitle: {props.subtitle}</p>
-				<p>Timestamp: {props.timestamp}</p>
-			</div>
+			<ComponentContainer column width={12}>
+				<H1>
+					Integrations
+				</H1>
+
+				{ profileState.profile.components.find(comp => comp.type === 'integrations')?.props.integrations.map((integration: Integration, idx: number) => 
+					<IntegrationSection
+						key={idx}
+						integration={integration}
+					/>
+				)}
+
+			</ComponentContainer>
 		)
 	}
 }
+
+// todo: conditionally render latest post + "see more"
+type IntegrationSectionProps = { integration: any, color?: string }
+const IntegrationSection: React.FC<IntegrationSectionProps> = ({ integration, color }) => {
+	const { type, posts } = integration
+	return (
+		<React.Fragment>
+			{ posts.map((post: Post) =>
+				<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
+					<LogoWrapper style={{position: 'relative'}}>
+					<ExternalImg
+						src={`//logo.clearbit.com/${type}.com`}
+						style={{ minWidth:'51px', minHeight:'51px', backgroundSize:'contain' }}
+					/>
+					</LogoWrapper>
+
+					<IntegrationText column width={12} style={{color: color||'black' }}>
+						<a href={post.link}>
+							<H2>
+								{post.title}
+							</H2>
+						</a>
+						<H2>
+							{post.subtitle}
+						</H2>
+						<H2>
+							{post.timestamp}
+						</H2>
+					</IntegrationText>
+				</Div>
+			)}
+		</React.Fragment>
+	)
+}
+
+const IntegrationText = styled(Div)`
+	display: inline-block;
+	margin-left: 15px;
+`
 
 export const Article: React.FC<ArticleComponent> = ({ id, props }) => {
 
@@ -420,9 +725,8 @@ const HeadlineTextArea = styled(TextArea)`
 `
 
 const ComponentContainer = styled(Div)`
-	margin-top: 40px;
-	margin-bottom: 80px;
-	@media (max-width) {
+	margin-top: 20px;
+	@media (max-width: 768px) {
 		margin-top: 20px;
 	}
 `
@@ -515,7 +819,7 @@ const Components: ComponentIndex  = {
 	headshot: Headshot,
 	experiences: Experiences,
   article: Article,
-  substack: Substack
+//   integrations: Integrations
 }
 
 

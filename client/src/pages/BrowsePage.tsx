@@ -31,7 +31,7 @@ export const BrowsePage: React.FC = () => {
 
       <Header title='Browse' />
 
-      <BodyContainer column width={mobile ? 11 : 6}>
+      <BodyContainer column width={mobile ? 11 : 10}>
         {profiles
           .filter(profile => Object.keys(profile).length !== 0)
           .map((profile, index) => <ProfileRow key={index} profile={profile}/> )
@@ -53,6 +53,7 @@ const BodyContainer = styled(Div)`
   align-items: center;
   padding-top: 51px;
   margin-bottom: 60px;
+  max-width: 1150px;
 `
 
 

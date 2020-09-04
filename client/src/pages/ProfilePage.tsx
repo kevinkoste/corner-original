@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { useDetectMobile } from '../libs/hooksLib'
 import { Div, H1, Button } from '../components/BaseComponents'
 import { Header } from '../components/Header'
+import { ProfileModal } from '../components/ProfileModal'
 
 // logic
 import { useAppContext } from '../context/AppContext'
@@ -96,6 +97,14 @@ export const ProfilePage: React.FC = () => {
             </EditButton>
           </ButtonContainer>
         }
+
+        { state.auth &&
+          <ProfileModal profile={profile} />
+        }
+
+        { mobile &&
+          <Div style={{height:'60px'}}/>
+        }
   
       </PageContainer>
     )
@@ -139,6 +148,7 @@ const PageContainer = styled(Div)`
 
 const BodyContainer = styled(Div)`
   padding-top: 51px;
+  max-width: 1150px;
 `
 
 const CenteredContainer = styled(Div)`
@@ -182,4 +192,7 @@ const EditButton = styled(Button)`
   @media (max-width: 768px) {
 		right: 4.17vw;
 	}
+  @media (min-width: 1560px) {
+    right: ${parseInt(((window.innerWidth-1300)*0.5).toString(),10) + "px"}
+  }
 `

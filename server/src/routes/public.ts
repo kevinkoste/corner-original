@@ -1,6 +1,7 @@
 import express from 'express'
 import CotterNode from 'cotter-node'
 import CotterToken from 'cotter-token-js'
+import { v4 as uuidv4 } from 'uuid'
 import axios from 'axios'
 import cheerio from 'cheerio'
 
@@ -10,69 +11,127 @@ import db from '../libs/dynamo'
 
 const router = express.Router()
 
+// // POST /public/login - handles login or signup
+// router.post('/login', (req, res) => {
+
+//   // Get access token from body
+//   const access_token = req.body.oauth_token.access_token
+
+//   // Validate access token
+//   CotterNode
+//     .CotterValidateJWT(access_token)
+//     .then(valid => {
+//       if (!valid) throw Error('Invalid access token')
+
+//       console.log('token is valid, updating table')
+
+//       // Get authId from decoded token and email from body
+//       const decoded = new CotterToken.CotterAccessToken(access_token)
+//       const authId = decoded.getClientUserID()
+//       const email = req.body.email
+
+//       // now add (or update if returning) user to db
+//       db.update({
+//         TableName: 'profiles',
+//         Key: { email: email },
+//         UpdateExpression: "set authId = :x",
+//         ExpressionAttributeValues: {
+//           ":x": authId
+//         }
+//       }).then(data => {
+
+//         console.log('data from profiles tables after updating authId:', data)
+
+//         // then check if the user has been invited
+//         db.get({
+//           TableName: 'invites',
+//           Key: { email: email }
+//         }).then(data => {
+//           console.log('data from invites table ater getting email', data)
+//           if (data.Item !== undefined && data.Item !== null) {
+//             // person has been invited
+//             res.status(200).send(true)
+//           } else {
+//             res.status(200).send(false)
+//           }
+//         }).catch(err => {
+//           console.log(err)
+//           res.status(500)
+//         })
+//       }).catch(err => {
+//         console.log(err)
+//         res.status(500).end(err)
+//       })
+//     })
+//     .catch(err => {
+//       console.log(err)
+//       res.status(403).end(err)
+//     })
+// })
+
+
 // POST /public/login - handles login or signup
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
 
   // Get access token from body
   const access_token = req.body.oauth_token.access_token
 
-  // Validate access token
-  CotterNode
-    .CotterValidateJWT(access_token)
-    .then(valid => {
-      if (!valid) throw Error('Invalid access token')
+  const valid = await CotterNode.CotterValidateJWT(access_token)
+  if (!valid) {
+    res.status(403).end('Invalid Access Token')
+  }
 
-      console.log('token is valid, updating table')
+  // Get authId from decoded token and email from body
+  const decoded = new CotterToken.CotterAccessToken(access_token)
+  const authId = decoded.getClientUserID()
+  const email = req.body.email
 
-      // Get authId from decoded token and email from body
-      const decoded = new CotterToken.CotterAccessToken(access_token)
-      const authId = decoded.getClientUserID()
-      const email = req.body.email
+  const checkRes = await db.get({
+    TableName: 'invites',
+    Key: { email }
+  })
 
-      // now add (or update if returning) user to db
-      db.update({
-        TableName: 'profiles',
-        Key: { email: email },
-        UpdateExpression: "set authId = :x",
-        ExpressionAttributeValues: {
-          ":x": authId
-        }
-      }).then(data => {
-
-        console.log('data from profiles tables after updating authId:', data)
-
-        // then check if the user has been invited
-        db.get({
-          TableName: 'invites',
-          Key: { email: email }
-        }).then(data => {
-          console.log('data from invites table ater getting email', data)
-          if (data.Item !== undefined && data.Item !== null) {
-            // person has been invited
-            res.status(200).send(true)
-          } else {
-            res.status(200).send(false)
-          }
-        }).catch(err => {
-          console.log(err)
-          res.status(500)
-        })
-      }).catch(err => {
-        console.log(err)
-        res.status(500).end(err)
-      })
+  if (checkRes.Item !== undefined && checkRes.Item !== null) {
+    // user does not exist, add to db
+    await db.update({
+      TableName: 'profiles',
+      Key: { email },
+      UpdateExpression: "set authId = :x, socialId = :y",
+      ExpressionAttributeValues: {
+        ":x": authId,
+        ":y": uuidv4().toString()
+      }
     })
-    .catch(err => {
-      console.log(err)
-      res.status(403).end(err)
+  } else {
+    // user exists, update authId
+    await db.update({
+      TableName: 'profiles',
+      Key: { email },
+      UpdateExpression: "set authId = :x",
+      ExpressionAttributeValues: {
+        ":x": authId
+      }
     })
+  }
+
+  // check if user has been invited
+  const inviteRes = await db.get({
+    TableName: 'invites',
+    Key: { email }
+  })
+
+  if (inviteRes.Item !== undefined && inviteRes.Item !== null) {
+    // person has been invited
+    res.status(200).send(true)
+  } else {
+    res.status(200).send(false)
+  }
+
 })
 
 
 // GET /public/profile - public route to access profile information
-router.get('/profile', (req, res) => {
-
-  console.log('in public/profile with req')
+router.get('/profile', (req, res, next) => {
 
   if (!('username' in req.query)) {
     res.status(200).send(false)
@@ -85,10 +144,10 @@ router.get('/profile', (req, res) => {
     IndexName: "username-index",
     KeyConditionExpression: "username = :key",
     ExpressionAttributeValues: {
-        ":key": username
-    }
+      ":key": username
+    },
+    ProjectionExpression: "username, components"
   }).then(data => {
-    console.log(data)
     if (data.Items.length < 1 || data.Items[0].username !== username) {
       res.status(200).send(false)
     } else {
@@ -98,10 +157,7 @@ router.get('/profile', (req, res) => {
       }
       res.status(200).send(profile)
     }
-  }).catch(err => {
-    console.log(err)
-    res.status(500)
-  })
+  }).catch(err => next(err))
 })
 
 // GET /public/all-profiles - public route to access all profiles
@@ -133,7 +189,6 @@ router.get('/availability/:username', (req, res) => {
         ":key": username
     }
   }).then(data => {
-    console.log(data)
     if (data.Items.length < 1 || data.Items[0].username !== username) {
       // username is available
       res.status(200).send(true)
@@ -159,42 +214,41 @@ router.get('/employer/:url', (req, res) => {
   const parsedUrl = 'http://' + req.params.url
 
   axios.get(parsedUrl)
-    .then(data => {
+  .then(data => {
 
-      const $ = cheerio.load(data.data)
-      
-      // scrape all of these, process them
-      const title = $('head > title').text()
-      const ogtitle = $("meta[property='og:title']").attr("content")
-      const ogsitename = $("meta[property='og:site_name']").attr("content")
+    const $ = cheerio.load(data.data)
 
-      const all = []
-      if (title !== undefined && title !== null) {
-        all.push(processSiteTitle(title))
-      }
-      if (ogtitle !== undefined && ogtitle !== null) {
-        all.push(processSiteTitle(ogtitle))
-      }
-      if (ogsitename !== undefined && ogsitename !== null) {
-        all.push(processSiteTitle(ogsitename))
-      }
+    // scrape all of these, process them
+    const title = $('head > title').text()
+    const ogtitle = $("meta[property='og:title']").attr("content")
+    const ogsitename = $("meta[property='og:site_name']").attr("content")
 
-      const { mode, greatestFreq } = getModeAndFreq(all)
+    const all = []
+    if (title !== undefined && title !== null) {
+      all.push(processSiteTitle(title))
+    }
+    if (ogtitle !== undefined && ogtitle !== null) {
+      all.push(processSiteTitle(ogtitle))
+    }
+    if (ogsitename !== undefined && ogsitename !== null) {
+      all.push(processSiteTitle(ogsitename))
+    }
 
-      let result: string
-      if (greatestFreq > 1) {
-        result = mode.trim()
-      } else {
-        all.sort((a,b) => a.length - b.length)
-        result = all[0].trim()
-      }
+    const { mode, greatestFreq } = getModeAndFreq(all)
 
-      res.status(200).send(result)
-    })
-    .catch(err => {
-      console.log(err)
-      res.status(500).end()
-    })
+    let result: string
+    if (greatestFreq > 1) {
+      result = mode.trim()
+    } else {
+      all.sort((a,b) => a.length - b.length)
+      result = all[0].trim()
+    }
+
+    res.status(200).send(result)
+  })
+  .catch(err => {
+    res.status(200).send('')
+  })
 
 })
 

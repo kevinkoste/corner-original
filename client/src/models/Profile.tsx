@@ -12,7 +12,7 @@ export const EmptyProfile: Profile = {
 // COMPONENT TYPES //
 export type Component = {
   id: string,
-  type: 'name' | 'headline' | 'bio' | 'headshot' | 'article',
+  type: string,
   props: any
 }
 
@@ -74,26 +74,23 @@ export type ArticleComponent = {
   }
 }
 
-export type SubstackComponent = {
-  id: string,
-  type: 'substack',
-  props: {
-    integrationType: string,
-    title: string,
-    subtitle: string,
-    link: string,
-    timestamp: string
-  }
+export type Post = {
+  title: string,
+  timestamp: string,
+  subtitle: string,
+  link: string
 }
-
-export type MediumComponent = {
+export type Integration = {
+  type: string,
+  title: string,
+  description: string,
+  url: string,
+  posts: Post[]
+}
+export type IntegrationsComponent = {
   id: string,
-  type: 'medium',
+  type: 'integrations',
   props: {
-    integrationType: string,
-    title: string,
-    subtitle: string,
-    link: string,
-    timestamp: string
+    integrations: Integration[]
   }
 }

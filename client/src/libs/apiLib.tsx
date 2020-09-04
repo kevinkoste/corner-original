@@ -37,6 +37,13 @@ export const GetPublicUsernameAvailability = (username: string): Promise<any> =>
   })
 }
 
+export const GetPublicCompanyFromDomain = (domain: string): Promise<any> => { 
+  return axios({
+    method: 'get',
+    url: `/public/employer/${domain}`
+  })
+}
+
 
 // PROTECTED ROUTES // 
 export const PostProtectOnboardCheck = (): Promise<any> => {
@@ -182,45 +189,7 @@ export const PostProtectInviteNewEmail = (invitedEmail: string): Promise<any> =>
     })
 }
 
-// export const AddMedium = (email: string, mediumName: string): Promise<any> => {
-//   return GetCotterToken()
-//     .then(res => res.token)
-//     .then(token => {
-//       return axios({
-//         method: 'post',
-//         url: '/protect/add-medium',
-//         headers: { 'authorization': `Bearer ${token}` },
-//         data: {
-//           email: email,
-//           mediumName: mediumName
-//         }
-//       })
-//     })
-//     .catch(err => {
-//       console.log(err)
-//     })
-// }
-
-// export const AddSubstack = (email: string, substackName: string): Promise<any> => {
-//   return GetCotterToken()
-//     .then(res => res.token)
-//     .then(token => {
-//       return axios({
-//         method: 'post',
-//         url: '/protect/add-substack',
-//         headers: { 'authorization': `Bearer ${token}` },
-//         data: {
-//           email: email,
-//           substackName: substackName
-//         }
-//       })
-//     })
-//     .catch(err => {
-//       console.log(err)
-//     })
-// }
-
-export const FetchMedium = (mediumName: string): Promise<any> => {
+export const FetchMedium = (mediumUrl: string): Promise<any> => {
   return GetCotterToken()
     .then(res => res.token)
     .then(token => {
@@ -229,8 +198,7 @@ export const FetchMedium = (mediumName: string): Promise<any> => {
         url: '/protect/fetch-medium',
         headers: { 'authorization': `Bearer ${token}` },
         data: {
-          email: email,
-          mediumName: mediumName
+          mediumUrl: mediumUrl
         }
       })
     })
@@ -239,7 +207,7 @@ export const FetchMedium = (mediumName: string): Promise<any> => {
     })
 }
 
-export const FetchSubstack = (substackName: string): Promise<any> => {
+export const FetchSubstack = (substackUrl: string): Promise<any> => {
   return GetCotterToken()
     .then(res => res.token)
     .then(token => {
@@ -248,8 +216,7 @@ export const FetchSubstack = (substackName: string): Promise<any> => {
         url: '/protect/fetch-substack',
         headers: { 'authorization': `Bearer ${token}` },
         data: {
-          email: email,
-          substackName: substackName
+          substackUrl: substackUrl
         }
       })
     })

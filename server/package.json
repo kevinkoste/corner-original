@@ -8,16 +8,16 @@
   "scripts": {
     "dev": "docker rm -f corner || true && docker rmi -f kevinkoste/corner || true && tsc && docker build -t kevinkoste/corner . && docker run --publish 8000:8000 --name corner kevinkoste/corner:latest",
     "push": "tsc && docker build -t kevinkoste/corner . && docker push kevinkoste/corner",
-    "start": "tsc && node -r dotenv/config --es-module-specifier-resolution=node dist/app.js",
+    "start": "node -r dotenv/config --es-module-specifier-resolution=node dist/app.js",
     "build": "tsc",
     "deploy": "heroku container:push web -a corner-server && heroku container:release web -a corner-server",
+    "deploy-staging": "heroku container:push web -a corner-server-staging && heroku container:release web -a corner-server-staging",
     "create-tables": "aws cloudformation create-stack --stack-name corner-tables --template-body file://src/resources/tables.yml",
     "create-stack": "aws cloudformation create-stack --stack-name corner --template-body file://src/resources/resources.yml --parameters ParameterKey=CornerKeyPair,ParameterValue=CornerKeyPair",
     "update-stack": "aws cloudformation update-stack --stack-name corner --template-body file://src/resources/resources.yml --parameters ParameterKey=CornerKeyPair,ParameterValue=CornerKeyPair"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.2.4",
-    "@types/cheerio": "^0.22.21",
     "aws-sdk": "^2.738.0",
     "axios": "^0.20.0",
     "body-parser": "^1.19.0",
@@ -35,6 +35,7 @@
     "uuid": "^8.3.0"
   },
   "devDependencies": {
+    "@types/cheerio": "^0.22.21",
     "@types/cors": "^2.8.7",
     "@types/express": "^4.17.7",
     "@types/multiparty": "^0.0.32",

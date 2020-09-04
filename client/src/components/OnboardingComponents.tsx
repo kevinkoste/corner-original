@@ -411,14 +411,14 @@ export const OnboardingDone: React.FC = () => {
 		components[indexHeadline] = components[indexHeadshot]
 		components[indexHeadshot] = tmp
 
-		// add the empty bio component
-		components.push({
-			id: uuidv4().toString(),
-			type: 'bio',
-			props: {
-				bio: ''
-			}
-		})
+		// add the empty bio component NOT ANYMORE!
+		// components.push({
+		// 	id: uuidv4().toString(),
+		// 	type: 'bio',
+		// 	props: {
+		// 		bio: ''
+		// 	}
+		// })
 
 		// assemble profile
 		const profile = {
