@@ -354,3 +354,26 @@ const AddButton = styled(Button)`
   transform: translate(-50%,-50%);
 `
 
+
+
+// building the public version here:
+
+export const PublicBookshelf: React.FC<BookshelfComponent> = ({ id, props }) => {
+  
+	return (
+		<ComponentContainer column width={12}>
+			<H1>
+				Bookshelf
+			</H1>
+
+			{ props.books.map((book: any, idx: number) => 
+				<BookRow
+					withLink={true}
+					key={idx}
+					book={book}
+				/>
+			)}
+
+		</ComponentContainer>
+	)
+}

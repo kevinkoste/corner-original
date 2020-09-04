@@ -5,6 +5,7 @@ import { Div, H1, H2, Img } from './BaseComponents'
 import { Component, HeadlineComponent, BioComponent, HeadshotComponent, ArticleComponent, Profile, ExperiencesComponent } from '../models/Profile'
 import { useDetectMobile } from '../libs/hooksLib'
 import { ExperienceRow } from './EditProfileComponents'
+import { PublicBookshelf } from '../components/ProfileBookshelf'
 
 
 export const Headline: React.FC<HeadlineComponent> = ({ id, props }) => {
@@ -113,6 +114,7 @@ const Components: ComponentIndex  = {
   headshot: Headshot,
 	article: Article,
 	experiences: Experiences,
+	bookshelf: PublicBookshelf
 }
 
 export const GenerateComponent = (component: Component, profile: any) => {
