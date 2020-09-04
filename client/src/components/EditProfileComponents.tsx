@@ -319,7 +319,7 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 								onChange={(event: any) => setDomainInput(event.target.value)}
 								onKeyDown={onKeyDown}
 								value={domainInput}
-								style={{borderBottom: 'none', height: 'auto'}}
+								style={{borderBottom: 'none', height: 'auto', marginLeft: '0px'}}
 							/>
 							<DomainButton onClick={onDomainClick}>
 								Add Experience &#62;
@@ -358,20 +358,21 @@ const ExperienceRow: React.FC<ExperienceRowProps> = ({ experience, color }) => {
 
 	return (
 		<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
-
+			<LogoWrapper style={{position: 'relative'}}>
 			<ExternalImg
 				src={`//logo.clearbit.com/${domain}`}
 				style={{ minWidth:'51px', minHeight:'51px', backgroundSize:'contain' }}
 			/>
+			</LogoWrapper>
 
-			<Div column width={12} style={{ marginLeft:'10px', color: color||'black' }}>
+			<ExperienceText column width={12} style={{color: color||'black' }}>
 				<H2>
 					{title} at {company}
 				</H2>
 				<H2>
 					{date}
 				</H2>
-			</Div>
+			</ExperienceText>
 
 		</Div>
 	)
@@ -412,7 +413,7 @@ const ExperienceEditRow: React.FC<ExperienceRowProps> = ({ experience, color }) 
 		<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
 
 			{/* need to add delete functionality */}
-			<Div style={{position: 'relative'}}>
+			<LogoWrapper style={{position: 'relative'}}>
 			<ExternalImg
 				src={`//logo.clearbit.com/${domain}`}
 				style={{ minWidth:'51px', minHeight:'51px', backgroundSize:'contain' }}>
@@ -420,15 +421,15 @@ const ExperienceEditRow: React.FC<ExperienceRowProps> = ({ experience, color }) 
 			<DeleteIcon 
 					src={ExitIcon}
 					onClick={handleDeleteExperience}/>
-			</Div>
+			</LogoWrapper>
 
-			<ExperienceText column width={12} style={{ marginLeft:'10px', color: color||'black' }}>
+			<ExperienceText column width={12} style={{ color: color||'black' }}>
 				<Div row width={12}>
 					<ExperienceInput
 						placeholder={'Software Engineer'}
 						onChange={(event: any) => setTitleInput(event.target.value)}
 						value={titleInput}
-						style={{width: 'auto'}}
+						style={{width: '40%'}}
 						// style={(titleInput==='')? {width: Math.ceil('Software Engineer'.length * .95) + "ex"} : {width: Math.ceil(titleInput.length * .95) + "ex"}}
 						onBlur={handleClickAway}
 					/>
@@ -437,7 +438,7 @@ const ExperienceEditRow: React.FC<ExperienceRowProps> = ({ experience, color }) 
 						placeholder={'Google'}
 						onChange={(event: any) => setCompanyInput(event.target.value)}
 						value={companyInput}
-						style={{width: 'auto'}}
+						style={{width: '40%'}}
 						// style={(companyInput==='')? {width: Math.ceil('Google'.length * 1.1) + "ex"} : {width: Math.ceil(companyInput.length * 1.1) + "ex"}}
 						onBlur={handleClickAway}
 					/>
@@ -446,7 +447,7 @@ const ExperienceEditRow: React.FC<ExperienceRowProps> = ({ experience, color }) 
 					placeholder={'August 2019 - Present'}
 					onChange={(event: any) => setDateInput(event.target.value)}
 					value={dateInput}
-					style={{width: 'auto'}}
+					style={{width: 'calc(80% + 37px)'}}
 					// style={(dateInput==='')? {width: Math.ceil('August 2019 - Present'.length * 1) + "ex"} : {width: Math.ceil(dateInput.length * 1) + "ex"}}
 					onBlur={handleClickAway}
 				/>
@@ -458,11 +459,18 @@ const ExperienceEditRow: React.FC<ExperienceRowProps> = ({ experience, color }) 
 
 const ExperienceInput = styled(InlineInput)`
 	border-bottom: 1px solid black;
-	height: 18px;
+	height: 20px;
+	margin-right: 5px;
+	margin-left: 5px;
 `
 
 const ExperienceText = styled(Div)`
 	display: inline-block;
+	margin-left: 15px;
+`
+
+const LogoWrapper = styled(Div)`
+	margin-left: 15px;
 `
 
 const DeleteIcon = styled.img`
