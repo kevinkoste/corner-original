@@ -32,13 +32,19 @@ export const EditProfilePage: React.FC = () => {
 
       // add any missing components
       let type: string
-      for (type of ['bio', 'experiences']) {
+      for (type of ['bio', 'bookshelf', 'experiences']) {
         if (profile.components.find(comp => comp.type === type) === undefined) {
           if (type === 'bio') {
             profile.components.push({
               id: uuidv4().toString(),
               type: type,
               props: { bio: '' }
+            })
+          } else if (type === 'bookshelf') {
+            profile.components.push({
+              id: uuidv4().toString(),
+              type: 'bookshelf',
+              props: { books: [] }
             })
           } else if (type === 'experiences') {
             profile.components.push({

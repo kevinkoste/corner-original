@@ -7,7 +7,8 @@ import ExitIcon from '../icons/delete.svg'
 // presentation/types
 import { useDetectMobile } from '../libs/hooksLib'
 import { Div, H1, H2, Img, ExternalImg, TextArea, Button, Input, InlineInput } from '../components/BaseComponents'
-import { Component,	HeadlineComponent,	BioComponent,	HeadshotComponent, ExperiencesComponent,ArticleComponent } from '../models/Profile'
+import { Component,	HeadlineComponent,	BioComponent,	HeadshotComponent, ExperiencesComponent, ArticleComponent } from '../models/Profile'
+import { Bookshelf } from '../components/ProfileBookshelf'
 
 // logic
 import { useProfileContext, setEditing, updateComponent, updateExperience, deleteExperience } from '../context/ProfileContext'
@@ -626,7 +627,8 @@ type ComponentIndex = {
 }
 const Components: ComponentIndex  = {
 	headline: Headline,
-  bio: Bio,
+	bio: Bio,
+	bookshelf: Bookshelf,
 	headshot: Headshot,
 	experiences: Experiences,
   article: Article
