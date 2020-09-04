@@ -83,6 +83,7 @@ export const Article: React.FC<ArticleComponent> = ({ id, props }) => {
 
 const HeadlineText = styled(H1)`
 	margin-bottom: 15px;
+	margin-top: 20px;
 `
 
 const BioText = styled(H2)`
@@ -96,7 +97,7 @@ const ProfileImage = styled(Img)`
 ` 
 
 const ComponentContainer = styled(Div)`
-	margin-bottom: 20px;
+	margin-bottom: 30px;
 `
 
 

@@ -99,7 +99,7 @@ export const Headline: React.FC<HeadlineComponent> = ({ id, props }) => {
 		return (
 			<ComponentContainer column width={12} style={{position: 'relative'}}>
 
-				<H1 style={{color: 'lightgray'}}>
+				<H1 style={{color: 'lightgray', marginTop: '20px'}}>
 					{placeholder}
 				</H1>
 
@@ -520,10 +520,12 @@ export const Article: React.FC<ArticleComponent> = ({ id, props }) => {
 
 const HeadlineText = styled(H1)`
 	margin-bottom: 15px;
+	margin-top: 20px;
 `
 
 const HeadlineTextArea = styled(TextArea)`
 	font-size: 36px;
+	margin-top: 20px;
 	::-webkit-input-placeholder { /* Chrome */
   	color: lightgray;
 	}
@@ -544,7 +546,7 @@ const HeadlineTextArea = styled(TextArea)`
 `
 
 const ComponentContainer = styled(Div)`
-	margin-bottom: 20px;
+	margin-bottom: 30px;
 `
 
 const BioText = styled(H2)`
