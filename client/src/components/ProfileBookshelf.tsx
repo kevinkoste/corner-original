@@ -52,6 +52,7 @@ export const Bookshelf: React.FC<BookshelfComponent> = ({ id, props }) => {
 				<Div column width={12} style={{position: 'relative'}}>
 					{ placeholder.map((book, idx) => 
 						<BookRow
+							withLink={false}
 							color={'lightgray'}
 							key={idx}
 							book={book}
@@ -72,16 +73,16 @@ export const Bookshelf: React.FC<BookshelfComponent> = ({ id, props }) => {
           Bookshelf
 				</H1>
 
+				<BookAddRow
+          id={id}
+        />
+
 				{ profileState.profile.components.find(comp => comp.type === 'bookshelf')?.props.books.map((book: any, idx: number) => 
 					<BookEditRow
 						key={idx}
 						book={book}
 					/>
 				)}
-
-        <BookAddRow
-          id={id}
-        />
 
 			</ComponentContainer>
 		)
@@ -94,6 +95,7 @@ export const Bookshelf: React.FC<BookshelfComponent> = ({ id, props }) => {
 
         { profileState.profile.components.find(comp => comp.type === 'bookshelf')?.props.books.map((book: any, idx: number) => 
 					<BookRow
+						withLink={true}
 						key={idx}
 						book={book}
 					/>
@@ -106,43 +108,69 @@ export const Bookshelf: React.FC<BookshelfComponent> = ({ id, props }) => {
 
 
 // pure presentation component for Book
-type BookRowProps = { book: any, color?: string }
-const BookRow: React.FC<BookRowProps> = ({ book, color }) => {
+type BookRowProps = { book: any, color?: string, withLink?: boolean }
+const BookRow: React.FC<BookRowProps> = ({ book, color, withLink }) => {
 
   const { title, author, date, link, image } = book
 
-	return (
-		<Div row width={12} style={{ alignItems:'top', marginTop:'15px', marginBottom:'15px' }}>
-			<LogoWrapper style={{position: 'relative'}}>
-			<ExternalImg
-				src={image}
-				style={{ minWidth:'51px', minHeight:'60px', backgroundSize:'contain' }}
-			/>
-			</LogoWrapper>
+	if (withLink) {
+		return (
+			<a href={withLink ? link : 'javascript:void(0)'} target="_blank" style={{ textDecoration: 'none' }}>
+				<Div row width={12} style={{ alignItems:'top', marginTop:'15px', marginBottom:'15px' }}>
+					<LogoWrapper style={{position: 'relative'}}>
+					<ExternalImg
+						src={image}
+						style={{ minWidth:'51px', minHeight:'60px', backgroundSize:'contain' }}
+					/>
+					</LogoWrapper>
 
-			<ExperienceText column width={12} style={{color: color||'black' }}>
-				<H2>
-					{title}
-				</H2>
-				<H2>
-					{author}
-				</H2>
-				<H2>
-					{date}
-				</H2>
-			</ExperienceText>
+					<ExperienceText column width={12} style={{color: color||'black', overflow:'hidden' }}>
+						<BookText>
+							{title}
+						</BookText>
+						<BookText>
+							{author}
+						</BookText>
+						<BookText>
+							{date}
+						</BookText>
+					</ExperienceText>
 
-		</Div>
-	)
+				</Div>
+			</a>
+		)
+	} else {
+		return (
+			<Div row width={12} style={{ alignItems:'top', marginTop:'15px', marginBottom:'15px' }}>
+				<LogoWrapper style={{position: 'relative'}}>
+				<ExternalImg
+					src={image}
+					style={{ minWidth:'51px', minHeight:'60px', backgroundSize:'contain' }}
+				/>
+				</LogoWrapper>
+
+				<ExperienceText column width={12} style={{color: color||'black', overflow:'hidden' }}>
+					<BookText>
+						{title}
+					</BookText>
+					<BookText>
+						{author}
+					</BookText>
+					<BookText>
+						{date}
+					</BookText>
+				</ExperienceText>
+			</Div>
+		)
+	}
 }
 
 // similar to presentation but with delete button
-type BookEditRowProps = { book: any, color?: string }
 const BookEditRow: React.FC<BookRowProps> = ({ book, color }) => {
 
-  const { profileState, profileDispatch } = useProfileContext()
+  const { profileDispatch } = useProfileContext()
 
-  const { id, title, author, date, link, image } = book
+  const { id, title, author, date, image } = book
 
   const handleDeleteBook = () => {
 		profileDispatch(deleteBookById(id))
@@ -162,16 +190,16 @@ const BookEditRow: React.FC<BookRowProps> = ({ book, color }) => {
         />
 			</LogoWrapper>
 
-			<ExperienceText column width={12} style={{color: color||'black' }}>
-				<H2>
+			<ExperienceText column width={12} style={{color: color||'black', overflow:'hidden'}}>
+				<BookText>
 					{title}
-				</H2>
-				<H2>
+				</BookText>
+				<BookText>
 					{author}
-				</H2>
-				<H2>
+				</BookText>
+				<BookText>
 					{date}
-				</H2>
+				</BookText>
 			</ExperienceText>
 
 		</Div>
@@ -186,13 +214,9 @@ const BookAddRow: React.FC<BookAddRowProps> = ({ id }) => {
   const { profileState, profileDispatch } = useProfileContext()
 
   const [ bookInput, setBookInput ] = useState<string>('')
-  const [ bookData, setBookData ] = useState<Book>({
-    id: '',
-    title: '',
-    author: '',
-    date: '',
-    link: '',
-    image: ''
+	const [ bookData, setBookData ] = useState<Book>({
+		id: '', title: '', author: '',
+		date: '', link: '', image: ''
   })
 
   // checks availability on a timeout
@@ -224,11 +248,18 @@ const BookAddRow: React.FC<BookAddRowProps> = ({ id }) => {
 
 
 	const onClick = () => {
-		profileDispatch(updateComponent({
-			id: id,
-			type: 'bookshelf',
-			props: { books: [...profileState.profile.components.find(comp => comp.type === 'bookshelf')?.props.books, bookData] }
-		}))
+		if (bookInput !== '') {
+			setBookInput('')
+			setBookData({
+				id: '', title: '', author: '',
+				date: '', link: '', image: ''
+			})
+			profileDispatch(updateComponent({
+				id: id,
+				type: 'bookshelf',
+				props: { books: [bookData, ...profileState.profile.components.find(comp => comp.type === 'bookshelf')?.props.books] }
+			}))
+		}
 	}
 
   return (
@@ -240,15 +271,21 @@ const BookAddRow: React.FC<BookAddRowProps> = ({ id }) => {
         </H2>
         <Div width={12} style={{ position:'relative' }}>
           <BookInput
-            placeholder={'lEaN IN'}
+            placeholder={'Lean In'}
             onChange={(event: any) => setBookInput(event.target.value)}
             value={bookInput}
             style={{borderBottom: 'none', height: 'auto', marginLeft: '0px'}}
           />
-          <DomainButton onClick={onClick}>
-            Add Book &#62;
-          </DomainButton>
         </Div>
+
+				{/* this is the preview row */}
+				<Div onClick={onClick}>
+					<BookRow
+						withLink={false}
+						book={bookData}
+					/>
+				</Div>
+
       </Div>
 
     </Div>
@@ -268,6 +305,12 @@ const ExperienceText = styled(Div)`
 	margin-left: 15px;
 `
 
+const BookText = styled(H2)`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+
 const LogoWrapper = styled(Div)`
 	margin-left: 15px;
 	@media (max-width: 768px) {
@@ -284,18 +327,18 @@ const DeleteIcon = styled.img`
 	width: 51px;
 `
 
-const DomainButton = styled(Button)`
-	background-color: white;
-	color: black;
-	font-size: 16px;
-	font-family: 'inter';
-  line-height: 24px;
-	padding: 0;
-	@media (max-width: 768px) {
-		position: absolute;
-		right: 0;
-	}
-`
+// const DomainButton = styled(Button)`
+// 	background-color: white;
+// 	color: black;
+// 	font-size: 16px;
+// 	font-family: 'inter';
+//   line-height: 24px;
+// 	padding: 0;
+// 	@media (max-width: 768px) {
+// 		position: absolute;
+// 		right: 0;
+// 	}
+// `
 
 const ComponentContainer = styled(Div)`
 	margin-top: 20px;
