@@ -353,12 +353,12 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 
 
 type ExperienceRowProps = { experience: any, color?: string }
-const ExperienceRow: React.FC<ExperienceRowProps> = ({ experience, color }) => {
+export const ExperienceRow: React.FC<ExperienceRowProps> = ({ experience, color }) => {
 
 	const { domain, title, company, date } = experience
 
 	return (
-		<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
+		<Div row width={12} style={{ alignItems:'top', marginBottom:'15px', marginTop:'15px' }}>
 			<LogoWrapper style={{position: 'relative'}}>
 			<ExternalImg
 				src={`//logo.clearbit.com/${domain}`}
@@ -411,7 +411,7 @@ const ExperienceEditRow: React.FC<ExperienceRowProps> = ({ experience, color }) 
 
 
 	return (
-		<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
+		<Div row width={12} style={{ alignItems:'top', marginBottom:'15px', marginTop:'15px' }}>
 
 			{/* need to add delete functionality */}
 			<LogoWrapper style={{position: 'relative'}}>
@@ -463,6 +463,7 @@ const ExperienceInput = styled(InlineInput)`
 	height: 20px;
 	margin-right: 5px;
 	margin-left: 5px;
+	border-radius: 0px;
 `
 
 const ExperienceText = styled(Div)`
@@ -472,6 +473,9 @@ const ExperienceText = styled(Div)`
 
 const LogoWrapper = styled(Div)`
 	margin-left: 15px;
+	@media (max-width: 768px) {
+		margin-left: 0px;
+	}
 `
 
 const DeleteIcon = styled.img`

@@ -63,6 +63,7 @@ export type Experience = {
   company: string,
   date: string
 }
+
 export type ExperiencesComponent = {
   id: string,
   type: 'experiences',
