@@ -131,7 +131,7 @@ router.post('/login', async (req, res) => {
 
 
 // GET /public/profile - public route to access profile information
-router.get('/profile', (req, res) => {
+router.get('/profile', (req, res, next) => {
 
   if (!('username' in req.query)) {
     res.status(200).send(false)
@@ -145,7 +145,8 @@ router.get('/profile', (req, res) => {
     KeyConditionExpression: "username = :key",
     ExpressionAttributeValues: {
       ":key": username
-    }
+    },
+    ProjectionExpression: "username, components"
   }).then(data => {
     if (data.Items.length < 1 || data.Items[0].username !== username) {
       res.status(200).send(false)
@@ -156,10 +157,7 @@ router.get('/profile', (req, res) => {
       }
       res.status(200).send(profile)
     }
-  }).catch(err => {
-    console.log(err)
-    res.status(500)
-  })
+  }).catch(err => next(err))
 })
 
 // GET /public/all-profiles - public route to access all profiles
@@ -218,12 +216,7 @@ router.get('/employer/:url', (req, res) => {
   axios.get(parsedUrl)
   .then(data => {
 
-    let $: any
-    try {
-      $ = cheerio.load(data.data)
-    } catch {
-      res.status(200).send('')
-    }
+    const $ = cheerio.load(data.data)
 
     // scrape all of these, process them
     const title = $('head > title').text()
@@ -254,7 +247,7 @@ router.get('/employer/:url', (req, res) => {
     res.status(200).send(result)
   })
   .catch(err => {
-    res.status(500).end()
+    res.status(200).send('')
   })
 
 })
