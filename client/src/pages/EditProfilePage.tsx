@@ -151,7 +151,7 @@ const BodyContainer = styled(Div)`
 const CenteredContainer = styled(Div)`
   justify-content: center;
   flex-direction: row;
-  min-height: ${(window.innerHeight - 111)+"px"};
+  min-height: ${(window.innerHeight - 51)+"px"};
   @media (max-width: 768px) {
     flex-direction: column;
 	}
