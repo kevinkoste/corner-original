@@ -90,7 +90,7 @@ const Buttons: React.FC<ButtonsProps> = ({inProp, profile}) => {
       unmountOnExit
       in={inProp}
       classNames="fade"
-      timeout={{ appear: 0, enter: 0, exit: 300 }}
+      timeout={{ appear: 0, enter: 500, exit: 500 }}
       appear>
       <TransitionContainer>
         <FollowButton onClick={onFollowClick} >
