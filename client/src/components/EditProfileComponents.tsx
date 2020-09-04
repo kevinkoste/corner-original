@@ -357,7 +357,7 @@ const ExperienceRow: React.FC<ExperienceRowProps> = ({ experience, color }) => {
 	const { domain, title, company, date } = experience
 
 	return (
-		<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
+		<Div row width={12} style={{ alignItems:'top', marginBottom:'15px', marginTop:'15px' }}>
 			<LogoWrapper style={{position: 'relative'}}>
 			<ExternalImg
 				src={`//logo.clearbit.com/${domain}`}
@@ -410,7 +410,7 @@ const ExperienceEditRow: React.FC<ExperienceRowProps> = ({ experience, color }) 
 
 
 	return (
-		<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
+		<Div row width={12} style={{ alignItems:'top', marginBottom:'15px', marginTop:'15px' }}>
 
 			{/* need to add delete functionality */}
 			<LogoWrapper style={{position: 'relative'}}>
@@ -462,6 +462,7 @@ const ExperienceInput = styled(InlineInput)`
 	height: 20px;
 	margin-right: 5px;
 	margin-left: 5px;
+	border-radius: 0px;
 `
 
 const ExperienceText = styled(Div)`
