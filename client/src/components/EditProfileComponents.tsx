@@ -352,7 +352,7 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 
 
 type ExperienceRowProps = { experience: any, color?: string }
-const ExperienceRow: React.FC<ExperienceRowProps> = ({ experience, color }) => {
+export const ExperienceRow: React.FC<ExperienceRowProps> = ({ experience, color }) => {
 
 	const { domain, title, company, date } = experience
 

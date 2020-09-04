@@ -73,6 +73,10 @@ export const ProfilePage: React.FC = () => {
               .filter(comp => comp.type === 'bio' )
               .map(comp => GenerateComponent(comp, profile))
             }
+            { !mobile && profile.components
+              .filter(comp => comp.type === 'experiences' )
+              .map(comp => GenerateComponent(comp, profile))
+            }
             </FrontPageWrapper>
           </CenteredContainer>
           
@@ -82,7 +86,7 @@ export const ProfilePage: React.FC = () => {
             .map(comp => GenerateComponent(comp, profile))
           }
           { !mobile && profile.components
-            .filter(comp => comp.type !== 'headshot' && comp.type !== 'headline' && comp.type !== 'bio' )
+            .filter(comp => comp.type !== 'headshot' && comp.type !== 'headline' && comp.type !== 'bio' && comp.type !== 'experiences' )
             .map(comp => GenerateComponent(comp, profile))
           }
           </Div>
