@@ -1,14 +1,36 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { useDetectMobile } from '../libs/hooksLib'
 import { Div, H1, H2, Button, TextArea } from '../components/BaseComponents'
-import ExitIcon from '../icons/bigdelete.svg'
 
 import { Profile } from '../models/Profile'
 import { useAppContext, setAuth } from '../context/AppContext'
+import { CSSTransition } from 'react-transition-group';
 
+
+function useOutsideAlerter(ref: any, setShowing: any) {
+  useEffect(() => {
+      /**
+       * Alert if clicked on outside of element
+       */
+      function handleClickOutside(event: any) {
+          if (ref.current && !ref.current.contains(event.target)) {
+              setShowing(false)
+          }
+      }
+
+      // Bind the event listener
+      document.addEventListener("mousedown", handleClickOutside);
+      window.addEventListener('scroll', handleClickOutside, true);
+      return () => {
+          // Unbind the event listener on clean up
+          document.removeEventListener("mousedown", handleClickOutside);
+          window.removeEventListener('scroll', handleClickOutside, true);
+      };
+  }, [ref]);
+}
 
 type ProfileModalProps = { profile: Profile }
 export const ProfileModal: React.FC<ProfileModalProps> = ({ profile }) => {
@@ -16,10 +38,46 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ profile }) => {
   let history = useHistory()
 	const mobile: boolean = useDetectMobile()
 
-  const { state, dispatch } = useAppContext()
   const [ showing, setShowing ] = useState<boolean>(false)
 
+  const wrapperRef = useRef(null);
+  useOutsideAlerter(wrapperRef, setShowing);
+  return (
+    <BodyContainer column width={mobile ? 11 : 10}>
+      
+      {showing && 
+      <ButtonContainer row width={12} ref={wrapperRef}>
+        <ModalButton onClick={() => setShowing(false)} >
+          Done
+        </ModalButton>
+      </ButtonContainer>
+      }
 
+      {!showing && 
+      <ButtonContainer row width={12}>
+        <ModalButton onClick={() => setShowing(true)} >
+          Social
+        </ModalButton>
+      </ButtonContainer>
+      }
+
+      <Buttons inProp={showing} profile={profile} />
+
+      {/* <CSSTransition in={this.showing} timeout={1000} classNames="fadeOut" unmountOnExit={true}><Div>
+      <FollowButton onClick={onFollowClick} >
+        Follow {profile.components.find(component => component.type === 'name')?.props.name.split(' ')[0]}
+      </FollowButton>
+
+      <EndorseButton onClick={onEndorseClick} >
+        Add {profile.components.find(component => component.type === 'name')?.props.name.split(' ')[0]} to Your Corner
+      </EndorseButton>
+      </Div></CSSTransition> */}
+    </BodyContainer>
+  )
+}
+
+type ButtonsProps = {inProp: any, profile: Profile}
+const Buttons: React.FC<ButtonsProps> = ({inProp, profile}) => {
   const onFollowClick = () => {
 
   }
@@ -27,36 +85,26 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ profile }) => {
   const onEndorseClick = () => {
 
   }
-
-
-  if (!showing) {
-    return (
-      <ButtonContainer row width={12}>
-        <ModalButton onClick={() => setShowing(true)} >
-          Social
-        </ModalButton>
-      </ButtonContainer>
-    )
-  } else {
-    return (
-      <BodyContainer column width={mobile ? 11 : 10}>
-        <ButtonContainer row width={12}>
-          <ModalButton onClick={() => setShowing(false)} >
-            Done
-          </ModalButton>
-        </ButtonContainer>
+  return (
+    <CSSTransition       
+      unmountOnExit
+      in={inProp}
+      classNames="fade"
+      timeout={{ appear: 0, enter: 0, exit: 300 }}
+      appear>
+      <TransitionContainer>
         <FollowButton onClick={onFollowClick} >
           Follow {profile.components.find(component => component.type === 'name')?.props.name.split(' ')[0]}
         </FollowButton>
 
         <EndorseButton onClick={onEndorseClick} >
-          Endorse {profile.components.find(component => component.type === 'name')?.props.name.split(' ')[0]}
+          Add {profile.components.find(component => component.type === 'name')?.props.name.split(' ')[0]} to Your Corner
         </EndorseButton>
-
-      </BodyContainer>
-    )
-  }
+      </TransitionContainer>
+    </CSSTransition>
+  )
 }
+
 
 
 const ButtonContainer = styled(Div)`
@@ -67,6 +115,31 @@ const ButtonContainer = styled(Div)`
   @media (max-width: 768px) {
     margin: 0;
   }
+`
+
+const TransitionContainer = styled(Div)`
+  transition: opacity 1s;
+
+  // enter from
+  &.fade-enter {
+    opacity: 0;
+  }
+
+  // enter to
+  &.fade-enter-active {
+    opacity: 1;
+  }
+
+  // exit from
+  &.fade-exit {
+    opacity: 1;
+  }
+
+  // exit to 
+  &.fade-exit-active {
+    opacity: 0;
+  }
+  
 `
 
 const ModalButton = styled(Button)`
@@ -99,48 +172,6 @@ const EndorseButton = styled(Button)`
 const FollowButton = styled(EndorseButton)`
   position: fixed;
   bottom: 116px;
-`
-
-const HeaderContainer = styled(Div)`
-	position: fixed;
-	align-items: center;
-	/* justify-content: stretch; */
-	background-color: white;
-	z-index: 1;
-	
-	padding-top: 15px;
-	padding-bottom: 5px;
-	border-bottom: 1px solid black;
-	max-width: 1300px;
-`
-
-const HeaderTitleText = styled(H1)`
-	overflow: hidden;
-	white-space: nowrap;
-	margin: unset;
-	font-size: 24px;
-`
-
-const ExitButton = styled.img`
-	position: absolute;
-	z-index: 2;
-	right: 0;
-	height: 25px;
-	width: 25px;
-`
-
-const BurgerMenu = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-
-	position: fixed;
-	z-index: 1;
-	top: 0;
-	left: 0;
-	height: 100vh;
-  width: 100vw;
-  background-color: white;
 `
 
 const BodyContainer = styled(Div)`
