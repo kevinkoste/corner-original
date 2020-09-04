@@ -96,7 +96,7 @@ export const Headline: React.FC<HeadlineComponent> = ({ id, props }) => {
 	if (!profileState.editing && textInput === "") {
 		// not editing, component is not populated
 		return (
-			<Div column width={12} style={{marginTop: '20px', position: 'relative'}}>
+			<ComponentContainer column width={12} style={{position: 'relative'}}>
 
 				<H1 style={{color: 'lightgray'}}>
 					{placeholder}
@@ -106,22 +106,26 @@ export const Headline: React.FC<HeadlineComponent> = ({ id, props }) => {
 					Add a headline
 				</AddButton>
 
-			</Div>
+			</ComponentContainer>
 		)
 	} else if (profileState.editing) {
 		return (
+			<ComponentContainer column width={12} style={{position: 'relative'}}>
 			<HeadlineTextArea
 				placeholder={placeholder}
 				onBlur={handleClickAway}
 				onChange={(event: any) => setTextInput(event.target.value)}
 				value={textInput}
 			/>
+			</ComponentContainer>
 		)
 	} else {
 		return (
+			<ComponentContainer column width={12} style={{position: 'relative'}}>
 			<HeadlineText>
 				{textInput}
 			</HeadlineText>
+			</ComponentContainer>
 		)
 	}
 }
@@ -704,12 +708,11 @@ export const Article: React.FC<ArticleComponent> = ({ id, props }) => {
 
 
 const HeadlineText = styled(H1)`
-	margin-top: 20px;
+	margin-bottom: 15px;
 `
 
 const HeadlineTextArea = styled(TextArea)`
 	font-size: 36px;
-	margin-top: 20px;
 	::-webkit-input-placeholder { /* Chrome */
   	color: lightgray;
 	}
@@ -730,14 +733,12 @@ const HeadlineTextArea = styled(TextArea)`
 `
 
 const ComponentContainer = styled(Div)`
-	margin-top: 20px;
-	@media (max-width: 768px) {
-		margin-top: 20px;
-	}
+	margin-bottom: 20px;
 `
 
 const BioText = styled(H2)`
 	margin-top: 10px;
+	margin-bottom: 15px;
 	white-space: pre-wrap;
 `
 
