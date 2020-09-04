@@ -9,9 +9,11 @@ import { ExperienceRow } from './EditProfileComponents'
 
 export const Headline: React.FC<HeadlineComponent> = ({ id, props }) => {
 	return (
-			<HeadlineText>
-				{props.headline}
-			</HeadlineText>
+			<ComponentContainer>
+				<HeadlineText>
+					{props.headline}
+				</HeadlineText>
+			</ComponentContainer>
 	)
 }
 
@@ -80,11 +82,12 @@ export const Article: React.FC<ArticleComponent> = ({ id, props }) => {
 
 
 const HeadlineText = styled(H1)`
-	margin-top: 20px;
+	margin-bottom: 15px;
 `
 
 const BioText = styled(H2)`
 	margin-top: 10px;
+	margin-bottom: 15px;
 `
 
 const ProfileImage = styled(Img)`
@@ -93,10 +96,7 @@ const ProfileImage = styled(Img)`
 ` 
 
 const ComponentContainer = styled(Div)`
-	margin-top: 40px;
-	@media (max-width: 768px) {
-		margin-top: 20px;
-	}
+	margin-bottom: 20px;
 `
 
 
