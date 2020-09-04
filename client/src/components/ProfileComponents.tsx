@@ -46,22 +46,28 @@ export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 
 export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 	const mobile: boolean = useDetectMobile()
-	console.log("experiences being displayed")
-	return (
-		<ComponentContainer column width={12}>
-			<H1>
-				Experiences
-			</H1>
+	if (props.experiences.length !== 0) {
+		return (
+			<ComponentContainer column width={12}>
+				<H1>
+					Experiences
+				</H1>
 
-			{ props.experiences.map((exp: any, idx: number) => 
-				<ExperienceRow
-					key={idx}
-					experience={exp}
-				/>
-			)}
+				{ props.experiences.map((exp: any, idx: number) => 
+					<ExperienceRow
+						key={idx}
+						experience={exp}
+					/>
+				)}
 
-		</ComponentContainer>
-	)
+			</ComponentContainer>
+		)
+	}
+	else {
+		return (
+			<span></span>
+		)
+	}
 }
 
 export const Article: React.FC<ArticleComponent> = ({ id, props }) => {
@@ -90,7 +96,6 @@ const ComponentContainer = styled(Div)`
 	margin-top: 40px;
 	@media (max-width: 768px) {
 		margin-top: 20px;
-		margin-bottom: 80px;
 	}
 `
 

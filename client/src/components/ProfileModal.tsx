@@ -33,34 +33,27 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ profile }) => {
     return (
       <ButtonContainer row width={12}>
         <ModalButton onClick={() => setShowing(true)} >
-          Options!
+          Social
         </ModalButton>
       </ButtonContainer>
     )
   } else {
     return (
-      <BurgerMenu>
+      <BodyContainer column width={mobile ? 11 : 10}>
+        <ButtonContainer row width={12}>
+          <ModalButton onClick={() => setShowing(false)} >
+            Done
+          </ModalButton>
+        </ButtonContainer>
+        <FollowButton onClick={onFollowClick} >
+          Follow {profile.components.find(component => component.type === 'name')?.props.name.split(' ')[0]}
+        </FollowButton>
 
-				<HeaderContainer row width={mobile ? 11 : 10} style={{borderBottom: '1px solid black'}}>
-					<HeaderTitleText>
-            {profile.components.find(component => component.type === 'name')?.props.name}'s Profile
-					</HeaderTitleText>
-					<ExitButton onClick={() => setShowing(false)} src={ExitIcon} />
-				</HeaderContainer>
+        <EndorseButton onClick={onEndorseClick} >
+          Endorse {profile.components.find(component => component.type === 'name')?.props.name.split(' ')[0]}
+        </EndorseButton>
 
-				<BodyContainer column width={mobile ? 11 : 10}>
-
-          <FollowButton onClick={onFollowClick} >
-            Follow {profile.components.find(component => component.type === 'name')?.props.name.split(' ')[0]}
-          </FollowButton>
-
-          <FollowButton onClick={onEndorseClick} >
-            Endorse {profile.components.find(component => component.type === 'name')?.props.name.split(' ')[0]}
-          </FollowButton>
-
-				</BodyContainer>
-
-			</BurgerMenu>
+      </BodyContainer>
     )
   }
 }
@@ -88,16 +81,24 @@ const ModalButton = styled(Button)`
   }
 `
 
-const FollowButton = styled(Button)`
-  /* position: fixed;
-  bottom: 10px;
-  right: 8.34vw; */
+const EndorseButton = styled(Button)`
+  position: fixed;
+  bottom: 63px;
+  right: 8.34vw;
+  color: black;
+  background-color: white;
+  border: 1px solid black;
   @media (max-width: 768px) {
     right: 4.17vw;
   }
   @media (min-width: 1560px) {
     right: ${parseInt(((window.innerWidth-1300)*0.5).toString(),10) + "px"}
   }
+`
+
+const FollowButton = styled(EndorseButton)`
+  position: fixed;
+  bottom: 116px;
 `
 
 const HeaderContainer = styled(Div)`

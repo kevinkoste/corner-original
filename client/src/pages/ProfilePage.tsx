@@ -109,6 +109,9 @@ export const ProfilePage: React.FC = () => {
         { mobile &&
           <Div style={{height:'60px'}}/>
         }
+        { mobile &&
+        <Div style={{height:'60px'}}/>
+        }
   
       </PageContainer>
     )
@@ -130,6 +133,9 @@ export const ProfilePage: React.FC = () => {
               Join Corner
             </EditButton>
           </ButtonContainer>
+        }
+        { mobile &&
+        <Div style={{height:'60px'}}/>
         }
 
 
