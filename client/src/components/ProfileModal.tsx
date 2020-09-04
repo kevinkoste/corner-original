@@ -118,7 +118,7 @@ const ButtonContainer = styled(Div)`
 `
 
 const TransitionContainer = styled(Div)`
-  transition: opacity 1s;
+  transition: opacity .5s;
 
   // enter from
   &.fade-enter {
