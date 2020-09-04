@@ -83,3 +83,24 @@ export type ArticleComponent = {
     link: string
   }
 }
+
+export type Post = {
+  title: string,
+  timestamp: string,
+  subtitle: string,
+  link: string
+}
+export type Integration = {
+  type: string,
+  title: string,
+  description: string,
+  url: string,
+  posts: Post[]
+}
+export type IntegrationsComponent = {
+  id: string,
+  type: 'integrations',
+  props: {
+    integrations: Integration[]
+  }
+}

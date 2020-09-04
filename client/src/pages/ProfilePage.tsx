@@ -105,10 +105,6 @@ export const ProfilePage: React.FC = () => {
         { state.auth &&
           <ProfileModal profile={profile} />
         }
-
-        { mobile &&
-          <Div style={{height:'60px'}}/>
-        }
         { mobile &&
         <Div style={{height:'60px'}}/>
         }
@@ -187,7 +183,7 @@ const NotFoundContainer = styled(Div)`
 
 const ButtonContainer = styled(Div)`
 	display: flex;
-	position: relative;
+	position: fixed;
 	justify-content: space-between;
 	max-width: 350px;
 	@media (max-width: 768px) {

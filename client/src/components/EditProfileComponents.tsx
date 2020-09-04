@@ -7,13 +7,12 @@ import ExitIcon from '../icons/delete.svg'
 // presentation/types
 import { useDetectMobile } from '../libs/hooksLib'
 import { Div, H1, H2, Img, ExternalImg, TextArea, Button, Input, InlineInput } from '../components/BaseComponents'
-import { Component,	HeadlineComponent,	BioComponent,	HeadshotComponent, ExperiencesComponent, ArticleComponent } from '../models/Profile'
+import { Component,	HeadlineComponent,	BioComponent,	HeadshotComponent, ExperiencesComponent, ArticleComponent, IntegrationsComponent, Integration, Post } from '../models/Profile'
 import { Bookshelf } from '../components/ProfileBookshelf'
 
 // logic
 import { useProfileContext, setEditing, updateComponent, updateExperience, deleteExperience } from '../context/ProfileContext'
-import { PostProtectProfileImage, GetPublicCompanyFromDomain } from '../libs/apiLib'
-
+import { PostProtectProfileImage, GetPublicCompanyFromDomain, FetchSubstack, FetchMedium } from '../libs/apiLib'
 
 export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 
@@ -97,7 +96,7 @@ export const Headline: React.FC<HeadlineComponent> = ({ id, props }) => {
 	if (!profileState.editing && textInput === "") {
 		// not editing, component is not populated
 		return (
-			<Div column width={12} style={{marginTop: '20px', position: 'relative'}}>
+			<ComponentContainer column width={12} style={{position: 'relative'}}>
 
 				<H1 style={{color: 'lightgray'}}>
 					{placeholder}
@@ -107,22 +106,26 @@ export const Headline: React.FC<HeadlineComponent> = ({ id, props }) => {
 					Add a headline
 				</AddButton>
 
-			</Div>
+			</ComponentContainer>
 		)
 	} else if (profileState.editing) {
 		return (
+			<ComponentContainer column width={12} style={{position: 'relative'}}>
 			<HeadlineTextArea
 				placeholder={placeholder}
 				onBlur={handleClickAway}
 				onChange={(event: any) => setTextInput(event.target.value)}
 				value={textInput}
 			/>
+			</ComponentContainer>
 		)
 	} else {
 		return (
+			<ComponentContainer column width={12} style={{position: 'relative'}}>
 			<HeadlineText>
 				{textInput}
 			</HeadlineText>
+			</ComponentContainer>
 		)
 	}
 }
@@ -497,11 +500,201 @@ const DomainButton = styled(Button)`
 	@media (max-width: 768px) {
 		position: absolute;
 		right: 0;
+	}`
+
+export const Integrations: React.FC<IntegrationsComponent> = ({ id, props }) => {
+	const { profileState, profileDispatch } = useProfileContext()
+	const [ integrationUrl, setIntegrationUrl ] = useState<string>('')
+
+	const placeholder = [
+		{
+			id: '1',
+			type: 'substack',
+			title: 'Maybe Baby',
+			description: 'Something',
+  			url: 'https://haleynahman.substack.com/',
+			posts: [{
+				title: 'Podcast: Xanax for the human condition (#17)',
+				subtitle: 'todo: deal with long subtitles',
+				link: 'https://haleynahman.substack.com/p/podcast-xanax-for-the-human-condition',
+				timestamp: '2020-08-04 18:30:46'
+			}]
+		},
+		{
+			id: '2',
+			type: 'medium',
+			title: 'Figma on Medium',
+			description: 'The collaborative interface design tool.',
+  			url: 'https://medium.com/@figmadesign',
+			posts: [{
+				title: 'Nominate photography for the 2018 Unsplash Awards',
+				subtitle: 'todo: deal with images in subtitles',
+				link: 'https://medium.com/figma-design/nominate-photography-for-the-2018-unsplash-awards-36fd26c463a3?source=---------2------------------',
+				timestamp: '2018-11-15 15:15:20'
+			}]
+		},
+	]
+
+	const onChangeIntegrationUrl = (event: any) => {
+		setIntegrationUrl(event.target.value);
 	}
+
+	const onAddIntegration = async () => {
+		let integration = {}
+		try {
+			if (integrationUrl.includes("medium.com")) {
+				const response = await FetchMedium(integrationUrl)
+				integration = {
+					id: uuidv4().toString(),
+					type: "medium",
+					title: response.data.title,
+					description: response.data.description,
+					url: response.data.url,
+					posts: response.data.posts
+				}
+			} else if (integrationUrl.includes("substack.com")) {
+				const response = await FetchSubstack(integrationUrl)
+				integration = {
+					id: uuidv4().toString(),
+					type: "substack",
+					title: response.data.title,
+					description: response.data.description,
+					url: response.data.url,
+					posts: response.data.posts
+				}
+			}
+		} catch (e) {
+			console.log(e)
+		}
+
+		profileDispatch(updateComponent({
+			id: id,
+			type: 'integrations',
+			props: { integrations: [...profileState.profile.components.find(comp => comp.type === 'integrations')?.props.integrations, integration] }
+		}))
+	}
+	
+	const onDeleteIntegration = (event: any) => {
+		// todo: implement
+	}
+
+	const onAddClick = () => {
+		profileDispatch(setEditing(true))
+	}
+
+	if (!profileState.editing && profileState.profile.components.find(comp => comp.type === 'integrations')?.props.integrations.length === 0) {
+		return (
+			<ComponentContainer column width={12}>
+
+				<H1 style={{color: 'lightgray'}}>
+					Integrations
+				</H1>
+
+				<Div column width={12} style={{position: 'relative'}}>
+					{ placeholder.map((integration, idx) =>
+						<IntegrationSection
+							color={'lightgray'}
+							key={idx}
+							integration={integration}
+						/>
+					)}
+					<AddButton onClick={onAddClick}>
+						Add integrations
+					</AddButton>
+				</Div>
+
+			</ComponentContainer>
+		)
+	} else if (profileState.editing) {
+		return (
+			<ComponentContainer column width={12}>
+				<H1>
+					Integrations
+				</H1>
+
+				{/* the integrations edit row */}
+				{ profileState.profile.components.find(comp => comp.type === 'integrations')?.props.integrations.map((integration: Integration, idx: number) => 
+					<div>
+						<IntegrationSection
+							key={idx}
+							integration={integration}
+						/>
+					</div>
+				)}
+
+				{/* this is the integration input form */}
+				<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
+					<Div column width={12}>
+						<H2>
+							Enter a link to your substack or medium
+						</H2>
+						<Div width={12} style={{ position:'relative' }}>
+							<input type="text" value={integrationUrl} onChange={onChangeIntegrationUrl}/>
+							<button onClick={onAddIntegration}>submit</button>
+						</Div>
+					</Div>
+
+				</Div>
+
+			</ComponentContainer>
+		)
+	} else {
+		return (
+			<ComponentContainer column width={12}>
+				<H1>
+					Integrations
+				</H1>
+
+				{ profileState.profile.components.find(comp => comp.type === 'integrations')?.props.integrations.map((integration: Integration, idx: number) => 
+					<IntegrationSection
+						key={idx}
+						integration={integration}
+					/>
+				)}
+
+			</ComponentContainer>
+		)
+	}
+}
+
+// todo: conditionally render latest post + "see more"
+type IntegrationSectionProps = { integration: any, color?: string }
+const IntegrationSection: React.FC<IntegrationSectionProps> = ({ integration, color }) => {
+	const { type, posts } = integration
+	return (
+		<React.Fragment>
+			{ posts.map((post: Post) =>
+				<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
+					<LogoWrapper style={{position: 'relative'}}>
+					<ExternalImg
+						src={`//logo.clearbit.com/${type}.com`}
+						style={{ minWidth:'51px', minHeight:'51px', backgroundSize:'contain' }}
+					/>
+					</LogoWrapper>
+
+					<IntegrationText column width={12} style={{color: color||'black' }}>
+						<a href={post.link}>
+							<H2>
+								{post.title}
+							</H2>
+						</a>
+						<H2>
+							{post.subtitle}
+						</H2>
+						<H2>
+							{post.timestamp}
+						</H2>
+					</IntegrationText>
+				</Div>
+			)}
+		</React.Fragment>
+	)
+}
+
+const IntegrationText = styled(Div)`
+	display: inline-block;
+	margin-left: 15px;
 `
-
-
-
 
 export const Article: React.FC<ArticleComponent> = ({ id, props }) => {
 
@@ -515,12 +708,11 @@ export const Article: React.FC<ArticleComponent> = ({ id, props }) => {
 
 
 const HeadlineText = styled(H1)`
-	margin-top: 20px;
+	margin-bottom: 15px;
 `
 
 const HeadlineTextArea = styled(TextArea)`
 	font-size: 36px;
-	margin-top: 20px;
 	::-webkit-input-placeholder { /* Chrome */
   	color: lightgray;
 	}
@@ -541,14 +733,12 @@ const HeadlineTextArea = styled(TextArea)`
 `
 
 const ComponentContainer = styled(Div)`
-	margin-top: 20px;
-	@media (max-width: 768px) {
-		margin-top: 20px;
-	}
+	margin-bottom: 20px;
 `
 
 const BioText = styled(H2)`
 	margin-top: 10px;
+	margin-bottom: 15px;
 	white-space: pre-wrap;
 `
 
@@ -635,7 +825,8 @@ const Components: ComponentIndex  = {
 	bookshelf: Bookshelf,
 	headshot: Headshot,
 	experiences: Experiences,
-  article: Article
+  article: Article,
+//   integrations: Integrations
 }
 
 

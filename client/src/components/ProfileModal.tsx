@@ -175,6 +175,5 @@ const FollowButton = styled(EndorseButton)`
 `
 
 const BodyContainer = styled(Div)`
-	padding-top: 51px;
 	max-width: 1300px;
 `
