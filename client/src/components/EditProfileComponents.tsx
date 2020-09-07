@@ -206,8 +206,6 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 
   const { profileState, profileDispatch } = useProfileContext()
 
-	// const [ experiences, setExperiences ] = useState(props.experiences)
-
 	const placeholder = [
 		{
 			id: '1',
@@ -319,7 +317,7 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 						</H2>
 						<Div width={12} style={{ position:'relative' }}>
 							<ExperienceInput
-								placeholder={'google.com'}
+								placeholder={'e.g. google.com'}
 								onChange={(event: any) => setDomainInput(event.target.value)}
 								onKeyDown={onKeyDown}
 								value={domainInput}

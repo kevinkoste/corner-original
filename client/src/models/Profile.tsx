@@ -104,3 +104,19 @@ export type IntegrationsComponent = {
     integrations: Integration[]
   }
 }
+
+
+export type Education = {
+  domain: string,
+  degree: string,
+  school: string,
+  date: string
+}
+
+export type EducationComponent = {
+  id: string,
+  type: 'experiences',
+  props: {
+    education: Education[],
+  }
+}

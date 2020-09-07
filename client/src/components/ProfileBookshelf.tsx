@@ -182,7 +182,7 @@ const BookEditRow: React.FC<BookRowProps> = ({ book, color }) => {
 			<LogoWrapper style={{position: 'relative'}}>
         <ExternalImg
           src={image}
-          style={{ minWidth:'60px', minHeight:'60px', backgroundSize:'contain' }}
+          style={{ minWidth:'51px', minHeight:'60px', backgroundSize:'contain' }}
         />
         <DeleteIcon 
           src={ExitIcon}
@@ -271,7 +271,7 @@ const BookAddRow: React.FC<BookAddRowProps> = ({ id }) => {
         </H2>
         <Div width={12} style={{ position:'relative' }}>
           <BookInput
-            placeholder={'Lean In'}
+            placeholder={'e.g. Lean In'}
             onChange={(event: any) => setBookInput(event.target.value)}
             value={bookInput}
             style={{borderBottom: 'none', height: 'auto', marginLeft: '0px'}}
@@ -279,12 +279,14 @@ const BookAddRow: React.FC<BookAddRowProps> = ({ id }) => {
         </Div>
 
 				{/* this is the preview row */}
-				<Div onClick={onClick}>
-					<BookRow
-						withLink={false}
-						book={bookData}
-					/>
-				</Div>
+				{ (bookInput !== '') &&
+					<Div onClick={onClick}>
+						<BookRow
+							withLink={false}
+							book={bookData}
+						/>
+					</Div>
+				}
 
       </Div>
 
@@ -326,19 +328,6 @@ const DeleteIcon = styled.img`
 	height: 51px;
 	width: 51px;
 `
-
-// const DomainButton = styled(Button)`
-// 	background-color: white;
-// 	color: black;
-// 	font-size: 16px;
-// 	font-family: 'inter';
-//   line-height: 24px;
-// 	padding: 0;
-// 	@media (max-width: 768px) {
-// 		position: absolute;
-// 		right: 0;
-// 	}
-// `
 
 const ComponentContainer = styled(Div)`
 	margin-top: 20px;
