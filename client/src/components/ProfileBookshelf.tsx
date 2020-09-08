@@ -22,16 +22,16 @@ export const Bookshelf: React.FC<BookshelfComponent> = ({ id, props }) => {
       title: 'The Dream Machine',
       author: 'J.C.R. Licklider',
       date: '2002',
-      link: 'http://books.google.com/books?id=7HpQAAAAMAAJ&dq=thedreammachine&hl=&source=gbs_api',
-      image: 'http://books.google.com/books/content?id=7HpQAAAAMAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api'
+      link: 'https://books.google.com/books?id=7HpQAAAAMAAJ&dq=thedreammachine&hl=&source=gbs_api',
+      image: 'https://books.google.com/books/content?id=7HpQAAAAMAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api'
 		},
 		{
       id: '2',
       title: 'The Dream Machine',
       author: 'J.C.R. Licklider',
       date: '2002',
-      link: 'http://books.google.com/books?id=7HpQAAAAMAAJ&dq=thedreammachine&hl=&source=gbs_api',
-      image: 'http://books.google.com/books/content?id=7HpQAAAAMAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api'
+      link: 'https://books.google.com/books?id=7HpQAAAAMAAJ&dq=thedreammachine&hl=&source=gbs_api',
+      image: 'https://books.google.com/books/content?id=7HpQAAAAMAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api'
 		}
 	]
 
@@ -226,7 +226,10 @@ const BookAddRow: React.FC<BookAddRowProps> = ({ id }) => {
 				GetBookData(bookInput)
 				.then(res => {
 
-          const book = res.data.items[0]
+					const book = res.data.items[0]
+					
+					const imageUrlRaw = book.volumeInfo.imageLinks.thumbnail
+					const imageUrl = imageUrlRaw.slice(0,4) + "s" + imageUrlRaw.slice(4)
 
           setBookData({
             id: uuidv4().toString(),
@@ -234,7 +237,7 @@ const BookAddRow: React.FC<BookAddRowProps> = ({ id }) => {
             author: book.volumeInfo.authors[0],
             date: book.volumeInfo.publishedDate.substring(0,4),
             link: book.volumeInfo.infoLink,
-            image: book.volumeInfo.imageLinks.thumbnail
+            image: imageUrl
           })
 
 				})

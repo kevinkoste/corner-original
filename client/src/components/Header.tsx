@@ -134,7 +134,6 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 const HeaderContainer = styled(Div)`
 	position: fixed;
 	align-items: center;
-	/* justify-content: stretch; */
 	background-color: white;
 	z-index: 1;
 	
@@ -149,6 +148,9 @@ const HeaderTitleText = styled(H1)`
 	white-space: nowrap;
 	margin: unset;
 	font-size: 24px;
+	:hover {
+		cursor: pointer;
+	}
 `
 
 const AnimatedNameKeyframes = keyframes`
@@ -183,6 +185,9 @@ const AnimatedName = styled(HeaderTitleText)`
 	@media (max-width: 768px) {
 		animation-name: ${AnimatedNameKeyframesMobile};
 	}
+	:hover {
+		cursor: pointer;
+	}
 `
 
 const AnimatedTitleKeyframes = keyframes`
@@ -212,6 +217,9 @@ const AnimatedTitle = styled(HeaderTitleText)`
 	@media (max-width: 768px) {
 		animation-name: ${AnimatedTitleKeyframesMobile};
 	}
+	:hover {
+		cursor: pointer;
+	}
 `
 
 const BurgerButton = styled.img`
@@ -220,6 +228,9 @@ const BurgerButton = styled.img`
 	right: 0;
 	height: 30px;
 	width: 30px;
+	:hover {
+		cursor: pointer;
+	}
 `
 
 const ExitButton = styled.img`
@@ -228,6 +239,9 @@ const ExitButton = styled.img`
 	right: 0;
 	height: 25px;
 	width: 25px;
+	:hover {
+		cursor: pointer;
+	}
 `
 
 const BurgerMenu = styled.div`
@@ -331,5 +345,8 @@ const InviteButton = styled(Button)`
 		position: absolute;
 		right: 0;
 		font-size: 16px;
+	}
+	:hover {
+		cursor: pointer;
 	}
 `
