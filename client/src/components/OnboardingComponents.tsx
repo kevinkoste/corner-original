@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useHistory } from "react-router-dom"
 import { v4 as uuidv4 } from 'uuid'
-
+import imageCompression from 'browser-image-compression'
 import ClipLoader from "react-spinners/ClipLoader"
+
 import { useDetectMobile } from '../libs/hooksLib'
 import { useAppContext, setUsername } from '../context/AppContext'
 import { useOnboardingContext, updateUsername, updateComponent } from '../context/OnboardingContext'
@@ -292,7 +293,6 @@ export const OnboardingHeadshot: React.FC<OnboardingHeadshotProps> = ({ id, titl
 
 	let mobile = useDetectMobile()
 	const { onboardingState, onboardingDispatch } = useOnboardingContext()
-	const [ valid, setValid ] = useState<boolean>(false)
 
 	// local state to render spinner while uploading image
 	const [ uploading, setUploading ] = useState<boolean>(false)
@@ -309,7 +309,6 @@ export const OnboardingHeadshot: React.FC<OnboardingHeadshotProps> = ({ id, titl
 	useEffect(() => {
 		const foundComponent = onboardingState.profile.components.find(component => component.type === 'headshot')
 		if (foundComponent) {
-			setValid(true)
 			setShowButton(true)
 			// @ts-ignore
 			const image = foundComponent.props.image
@@ -320,38 +319,68 @@ export const OnboardingHeadshot: React.FC<OnboardingHeadshotProps> = ({ id, titl
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	const handleFileUpload = (event: any) => {
+	const handleFileUpload = async (event: any) => {
 		setUploading(true)
+
+		const imageFile = event.target.files[0]
+		const compressedFile = await imageCompression(imageFile, {
+			maxSizeMB: 0.3,
+			useWebWorker: true
+		})
+
 		const formData = new FormData()
-		formData.append('file', event.target.files[0])
-		PostProtectProfileImage(onboardingState.profile.username, formData)
-			.then(res => {
-				console.log('response from upload-image endpoint:', res.data.image)
-				const uploadedImage = res.data.image
+		formData.append('file', compressedFile)
 
-				// maintain local component for display
-				setComponent({
-					...component,
-					props: {
-						image: uploadedImage
-					}
-				})
+		const res = await PostProtectProfileImage(onboardingState.profile.username, formData)
+		const uploadedImage = res.data.image
 
-				// update glocal component
-				onboardingDispatch(updateComponent({
-					...component,
-					props: {
-						image: uploadedImage
-					}
-				}))
+		// maintain local component for display
+		setComponent({
+			...component,
+			props: {
+				image: uploadedImage
+			}
+		})
 
-				// handle display states
-				setUploading(false)
-				setShowButton(true)
+		// update glocal component
+		onboardingDispatch(updateComponent({
+			...component,
+			props: {
+				image: uploadedImage
+			}
+		}))
 
-			}).catch(err => {
-				setUploading(false)
-			})
+		setUploading(false)
+		setShowButton(true)
+
+		// PostProtectProfileImage(onboardingState.profile.username, formData)
+		// 	.then(res => {
+		// 		console.log('response from upload-image endpoint:', res.data.image)
+		// 		const uploadedImage = res.data.image
+
+		// 		// maintain local component for display
+		// 		setComponent({
+		// 			...component,
+		// 			props: {
+		// 				image: uploadedImage
+		// 			}
+		// 		})
+
+		// 		// update glocal component
+		// 		onboardingDispatch(updateComponent({
+		// 			...component,
+		// 			props: {
+		// 				image: uploadedImage
+		// 			}
+		// 		}))
+
+		// 		// handle display states
+		// 		setUploading(false)
+		// 		setShowButton(true)
+
+		// 	}).catch(err => {
+		// 		setUploading(false)
+		// 	})
 	}
 
 	// need to add spinner here based on {uploading}
