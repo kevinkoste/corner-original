@@ -72,18 +72,6 @@ export type ExperiencesComponent = {
   }
 }
 
-export type ArticleComponent = {
-  id: string,
-  type: 'article',
-  props: {
-    source: string,
-    title: string,
-    subtitle: string,
-    date: string,
-    link: string
-  }
-}
-
 export type Post = {
   title: string,
   timestamp: string,

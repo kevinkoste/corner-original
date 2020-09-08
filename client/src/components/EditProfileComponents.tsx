@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { v4 as uuidv4 } from 'uuid'
+import imageCompression from 'browser-image-compression'
 import ClipLoader from "react-spinners/ClipLoader"
 import ExitIcon from '../icons/delete.svg'
 
 // presentation/types
 import { useDetectMobile } from '../libs/hooksLib'
 import { Div, H1, H2, Img, ExternalImg, TextArea, Button, InlineInput } from '../components/BaseComponents'
-import { Component,	HeadlineComponent,	BioComponent,	HeadshotComponent, ExperiencesComponent, ArticleComponent, IntegrationsComponent, Integration, Post } from '../models/Profile'
+import { Component,	HeadlineComponent,	BioComponent, HeadshotComponent,
+	ExperiencesComponent, IntegrationsComponent, Integration, Post } from '../models/Profile'
 import { Bookshelf } from '../components/ProfileBookshelf'
 
 // logic
@@ -22,23 +24,30 @@ export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 
 	const [ uploading, setUploading ] = useState(false)
 
-	const handleFileUpload = (event: any) => {
+	const handleFileUpload = async (event: any) => {
 		setUploading(true)
+
+		const imageFile = event.target.files[0]
+		const compressedFile = await imageCompression(imageFile, {
+			maxSizeMB: 0.3,
+			useWebWorker: true
+		})
+
 		const formData = new FormData()
-		formData.append('file', event.target.files[0])
-		PostProtectProfileImage(profileState.profile.username, formData)
-			.then(res => {
-				profileDispatch(updateComponent({
-					id: id,
-					type: 'headshot',
-					props: {
-						image: res.data.image
-					}
-				}))
-				setUploading(false)
-			}).catch(err => {
-				setUploading(false)
-			})
+		formData.append('file', compressedFile)
+
+		const res = await PostProtectProfileImage(profileState.profile.username, formData)
+		const uploadedImage = res.data.image
+
+		profileDispatch(updateComponent({
+			id: id,
+			type: 'headshot',
+			props: {
+				image: uploadedImage
+			}
+		}))
+
+		setUploading(false)
 	}
 	
 	return (
@@ -572,9 +581,9 @@ export const Integrations: React.FC<IntegrationsComponent> = ({ id, props }) => 
 		}))
 	}
 	
-	const onDeleteIntegration = (event: any) => {
-		// todo: implement
-	}
+	// const onDeleteIntegration = (event: any) => {
+	// 	// todo: implement
+	// }
 
 	const onAddClick = () => {
 		profileDispatch(setEditing(true))
@@ -693,17 +702,6 @@ const IntegrationText = styled(Div)`
 	display: inline-block;
 	margin-left: 15px;
 `
-
-export const Article: React.FC<ArticleComponent> = ({ id, props }) => {
-
-	return (
-		<BioText>
-			{props.title}
-		</BioText>
-	)
-}
-
-
 
 const HeadlineText = styled(H1)`
 	margin-bottom: 15px;
@@ -825,7 +823,6 @@ const Components: ComponentIndex  = {
 	bookshelf: Bookshelf,
 	headshot: Headshot,
 	experiences: Experiences,
-  article: Article,
 //   integrations: Integrations
 }
 

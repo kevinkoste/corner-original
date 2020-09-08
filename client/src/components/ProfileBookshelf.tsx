@@ -114,7 +114,7 @@ const BookRow: React.FC<BookRowProps> = ({ book, color, withLink }) => {
 
 	if (withLink) {
 		return (
-			<a href={withLink ? link : 'javascript:void(0)'} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+			<a href={withLink ? link : void(0)} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
 				<Div row width={12} style={{ alignItems:'top', marginTop:'15px', marginBottom:'15px' }}>
 					<LogoWrapper style={{position: 'relative'}}>
 					<ExternalImg

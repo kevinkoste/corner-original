@@ -353,34 +353,6 @@ export const OnboardingHeadshot: React.FC<OnboardingHeadshotProps> = ({ id, titl
 		setUploading(false)
 		setShowButton(true)
 
-		// PostProtectProfileImage(onboardingState.profile.username, formData)
-		// 	.then(res => {
-		// 		console.log('response from upload-image endpoint:', res.data.image)
-		// 		const uploadedImage = res.data.image
-
-		// 		// maintain local component for display
-		// 		setComponent({
-		// 			...component,
-		// 			props: {
-		// 				image: uploadedImage
-		// 			}
-		// 		})
-
-		// 		// update glocal component
-		// 		onboardingDispatch(updateComponent({
-		// 			...component,
-		// 			props: {
-		// 				image: uploadedImage
-		// 			}
-		// 		}))
-
-		// 		// handle display states
-		// 		setUploading(false)
-		// 		setShowButton(true)
-
-		// 	}).catch(err => {
-		// 		setUploading(false)
-		// 	})
 	}
 
 	// need to add spinner here based on {uploading}

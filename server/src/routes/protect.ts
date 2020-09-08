@@ -53,10 +53,31 @@ router.post('/profile', async (req, res) => {
 
 // POST /protect/upload-image - uploads a new image for a profile
 // also need to try to delete profiles prev photo on new upload
-router.post('/upload-image/:username', (req, res) => {
+router.post('/upload-image/:username', async (req, res) => {
 
   // body: {username: username, formData: formData}
-  // const username = req.params.username
+  const username = req.params.username
+
+  // first delete the existing headshot image
+  const profile = await db.query({
+    TableName: "profiles",
+    IndexName: "username-index",
+    KeyConditionExpression: "username = :key",
+    ExpressionAttributeValues: {
+      ":key": username
+    },
+    ProjectionExpression: "username, components"
+  })
+
+  if (profile.Items.length >= 1) {
+    const image = profile.Items[0].components.find((comp: any) => comp.type === 'headshot').props.image
+    await s3.delete({
+      Bucket: process.env.AWS_S3_BUCKET,
+      Key: `${image}`,
+    })
+    console.log('just deleted image with name:', image)
+  }
+
 
   const imageId = uuidv4()
   const form = new multiparty.Form()

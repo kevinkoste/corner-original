@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { useDetectMobile } from '../libs/hooksLib'
 import { Div, H1, H2, Img } from '../components/BaseComponents'
-import { Component, HeadlineComponent, HeadshotComponent, ArticleComponent, Profile, ExperiencesComponent } from '../models/Profile'
+import { Component, HeadlineComponent, HeadshotComponent, Profile, ExperiencesComponent } from '../models/Profile'
 import { ExperienceRow } from '../components/EditProfileComponents'
 import { PublicBookshelf } from '../components/ProfileBookshelf'
 
@@ -73,15 +73,6 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 	}
 }
 
-export const Article: React.FC<ArticleComponent> = ({ id, props }) => {
-	return (
-		<BioText>
-			{props.title}
-		</BioText>
-	)
-}
-
-
 const HeadlineText = styled(H1)`
 	margin-bottom: 15px;
 	margin-top: 20px;
@@ -112,7 +103,6 @@ const Components: ComponentIndex  = {
 	headline: Headline,
   bio: Bio,
   headshot: Headshot,
-	article: Article,
 	experiences: Experiences,
 	bookshelf: PublicBookshelf
 }
