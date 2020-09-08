@@ -13,7 +13,7 @@ export const HomePage: React.FC = () => {
 
   let history = useHistory()
 	const mobile: boolean = useDetectMobile()
-	const { state, dispatch } = useAppContext()
+	const { state } = useAppContext()
 
 	const onClick = () => {
     history.push('/login')
@@ -23,6 +23,7 @@ export const HomePage: React.FC = () => {
     if (state.auth) {
       history.push('/browse')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -48,6 +49,8 @@ export const HomePage: React.FC = () => {
     </PageContainer>
   )
 }
+
+export default HomePage
 
 const PageContainer = styled(Div)`
   max-width: 100vw;

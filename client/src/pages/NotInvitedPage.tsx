@@ -24,8 +24,8 @@ export const NotInvitedPage: React.FC = () => {
 
     </PageContainer>
   )
-
 }
+export default NotInvitedPage
 
 const PageContainer = styled(Div)`
   max-width: 100vw;
@@ -34,10 +34,10 @@ const PageContainer = styled(Div)`
 	position: relative;
 `
 
-const BodyContainer = styled(Div)`
-  padding-top: 51px;
-  max-width: 1150px;
-`
+// const BodyContainer = styled(Div)`
+//   padding-top: 51px;
+//   max-width: 1150px;
+// `
 
 const NotFoundContainer = styled(Div)`
   flex: 1;

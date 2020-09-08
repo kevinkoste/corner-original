@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Div, H1, H2, Img } from './BaseComponents'
-import { Component, HeadlineComponent, BioComponent, HeadshotComponent, ArticleComponent, Profile, ExperiencesComponent } from '../models/Profile'
 import { useDetectMobile } from '../libs/hooksLib'
-import { ExperienceRow } from './EditProfileComponents'
+import { Div, H1, H2, Img } from '../components/BaseComponents'
+import { Component, HeadlineComponent, HeadshotComponent, ArticleComponent, Profile, ExperiencesComponent } from '../models/Profile'
+import { ExperienceRow } from '../components/EditProfileComponents'
 import { PublicBookshelf } from '../components/ProfileBookshelf'
 
 
@@ -48,7 +48,7 @@ export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 }
 
 export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
-	const mobile: boolean = useDetectMobile()
+	// const mobile: boolean = useDetectMobile()
 	if (props.experiences.length !== 0) {
 		return (
 			<ComponentContainer column width={12}>

@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 // presentation
-import { Div, Button } from '../components/BaseComponents'
+import { Div } from '../components/BaseComponents'
 import { Header } from '../components/Header'
 import { useDetectMobile } from '../libs/hooksLib'
 
@@ -75,6 +75,7 @@ export const LoginPage: React.FC = () => {
 		</PageContainer>
 	)
 }
+export default LoginPage
 
 const PageContainer = styled(Div)`
   max-width: 100vw;

@@ -4,8 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import ExitIcon from '../icons/delete.svg'
 
 // presentation/types
-import { useDetectMobile } from '../libs/hooksLib'
-import { Div, H1, H2, Img, ExternalImg, TextArea, Button, Input, InlineInput } from '../components/BaseComponents'
+import { Div, H1, H2, ExternalImg, Button, InlineInput } from '../components/BaseComponents'
 import { Book, BookshelfComponent } from '../models/Profile'
 
 // logic
@@ -115,7 +114,7 @@ const BookRow: React.FC<BookRowProps> = ({ book, color, withLink }) => {
 
 	if (withLink) {
 		return (
-			<a href={withLink ? link : 'javascript:void(0)'} target="_blank" style={{ textDecoration: 'none' }}>
+			<a href={withLink ? link : 'javascript:void(0)'} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
 				<Div row width={12} style={{ alignItems:'top', marginTop:'15px', marginBottom:'15px' }}>
 					<LogoWrapper style={{position: 'relative'}}>
 					<ExternalImg

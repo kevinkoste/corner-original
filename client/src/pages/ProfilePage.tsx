@@ -19,7 +19,7 @@ export const ProfilePage: React.FC = () => {
 
   let history = useHistory()
   const mobile: boolean = useDetectMobile()
-  const { state, dispatch } = useAppContext()
+  const { state } = useAppContext()
 
   const { username } = useParams()
   const [ loading, setLoading ] = useState<boolean>(true)
@@ -29,23 +29,23 @@ export const ProfilePage: React.FC = () => {
   // on component mount, get profile data from server
   useEffect(() => {
 
-    if (state.username === username) {
-      history.push(`/edit/${state.username}`)
-    } else {
-      GetPublicProfileData(username)
-      .then(res => {
+    const onMount = async () => {
+      if (state.username === username) {
+        history.push(`/edit/${state.username}`)
+      } else {
+        const res = await GetPublicProfileData(username)
         if (res.data === false) {
           setProfileExists(false)
           setLoading(false)
         } else {
-          console.log('got public profile with res:', res)
           setProfile(res.data)
           setProfileExists(true)
           setLoading(false)
         }
-      })
-      .catch(err => console.log(err))
+      }
     }
+
+    onMount()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -142,8 +142,8 @@ export const ProfilePage: React.FC = () => {
       <div style={{height: '100vh', backgroundColor: 'white'}}/>
     )
   }
-
 }
+export default ProfilePage
 
 const PageContainer = styled(Div)`
   max-width: 100vw;

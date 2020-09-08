@@ -6,7 +6,7 @@ import ExitIcon from '../icons/delete.svg'
 
 // presentation/types
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div, H1, H2, Img, ExternalImg, TextArea, Button, Input, InlineInput } from '../components/BaseComponents'
+import { Div, H1, H2, Img, ExternalImg, TextArea, Button, InlineInput } from '../components/BaseComponents'
 import { Component,	HeadlineComponent,	BioComponent,	HeadshotComponent, ExperiencesComponent, ArticleComponent, IntegrationsComponent, Integration, Post } from '../models/Profile'
 import { Bookshelf } from '../components/ProfileBookshelf'
 
@@ -384,7 +384,7 @@ const ExperienceEditRow: React.FC<ExperienceRowProps> = ({ experience, color }) 
 
 	const { id, domain, title, company, date } = experience
 
-	const { profileState, profileDispatch } = useProfileContext()
+	const { profileDispatch } = useProfileContext()
 
 	const [ titleInput, setTitleInput ] = useState(title)
 	const [ companyInput, setCompanyInput ] = useState(company)

@@ -1,53 +1,49 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div, H1, H2, Button, TextArea } from '../components/BaseComponents'
+import { Div, Button } from '../components/BaseComponents'
 
 import { Profile } from '../models/Profile'
-import { useAppContext, setAuth } from '../context/AppContext'
 import { CSSTransition } from 'react-transition-group';
 
 
 function useOutsideAlerter(ref: any, setShowing: any) {
   useEffect(() => {
-      /**
-       * Alert if clicked on outside of element
-       */
-      function handleClickOutside(event: any) {
-          if (ref.current && !ref.current.contains(event.target)) {
-              setShowing(false)
-          }
+    // Alert if clicked on outside of element
+    function handleClickOutside(event: any) {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setShowing(false)
       }
+    }
 
-      // Bind the event listener
-      document.addEventListener("mousedown", handleClickOutside);
-      window.addEventListener('scroll', handleClickOutside, true);
-      return () => {
-          // Unbind the event listener on clean up
-          document.removeEventListener("mousedown", handleClickOutside);
-          window.removeEventListener('scroll', handleClickOutside, true);
-      };
-  }, [ref]);
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside)
+    window.addEventListener('scroll', handleClickOutside, true)
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener("mousedown", handleClickOutside)
+      window.removeEventListener('scroll', handleClickOutside, true)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ref])
 }
 
 type ProfileModalProps = { profile: Profile }
 export const ProfileModal: React.FC<ProfileModalProps> = ({ profile }) => {
 
-  let history = useHistory()
 	const mobile: boolean = useDetectMobile()
 
   const [ showing, setShowing ] = useState<boolean>(false)
 
-  const wrapperRef = useRef(null);
-  useOutsideAlerter(wrapperRef, setShowing);
+  const wrapperRef = useRef(null)
+  useOutsideAlerter(wrapperRef, setShowing)
   return (
     <BodyContainer column width={mobile ? 11 : 10}>
       
       {showing && 
       <ButtonContainer row width={12} ref={wrapperRef}>
-        <ModalButton onClick={() => setShowing(false)} >
+        <ModalButton onClick={() => setShowing(false)}>
           Done
         </ModalButton>
       </ButtonContainer>
@@ -55,7 +51,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ profile }) => {
 
       {!showing && 
       <ButtonContainer row width={12}>
-        <ModalButton onClick={() => setShowing(true)} >
+        <ModalButton onClick={() => setShowing(true)}>
           Social
         </ModalButton>
       </ButtonContainer>
@@ -63,15 +59,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ profile }) => {
 
       <Buttons inProp={showing} profile={profile} />
 
-      {/* <CSSTransition in={this.showing} timeout={1000} classNames="fadeOut" unmountOnExit={true}><Div>
-      <FollowButton onClick={onFollowClick} >
-        Follow {profile.components.find(component => component.type === 'name')?.props.name.split(' ')[0]}
-      </FollowButton>
-
-      <EndorseButton onClick={onEndorseClick} >
-        Add {profile.components.find(component => component.type === 'name')?.props.name.split(' ')[0]} to Your Corner
-      </EndorseButton>
-      </Div></CSSTransition> */}
     </BodyContainer>
   )
 }
@@ -120,22 +107,22 @@ const ButtonContainer = styled(Div)`
 const TransitionContainer = styled(Div)`
   transition: opacity .5s;
 
-  // enter from
+  /* enter from */
   &.fade-enter {
     opacity: 0;
   }
 
-  // enter to
+  /* enter to */
   &.fade-enter-active {
     opacity: 1;
   }
 
-  // exit from
+  /* exit from */
   &.fade-exit {
     opacity: 1;
   }
 
-  // exit to 
+  /* exit to  */
   &.fade-exit-active {
     opacity: 0;
   }

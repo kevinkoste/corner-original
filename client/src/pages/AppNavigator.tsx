@@ -1,25 +1,23 @@
-import React, { useState, useEffect } from 'react'
-import { Route, Switch, BrowserRouter, useHistory } from 'react-router-dom'
+import React, { useState, useEffect, Suspense, lazy } from 'react'
+import { Route, Switch, BrowserRouter } from 'react-router-dom'
 
 import { useAppContext, setAuth, setOnboarded, setUsername } from '../context/AppContext'
 import { OnboardingProvider } from '../context/OnboardingContext'
 import { ProfileProvider } from '../context/ProfileContext'
 
-import { HomePage } from '../pages/HomePage'
-import { ProfilePage } from './ProfilePage'
-import { EditProfilePage } from './EditProfilePage'
-import { LoginPage } from '../pages/LoginPage'
-import { OnboardingPage } from '../pages/OnboardingPage'
-import { BrowsePage } from '../pages/BrowsePage'
-import { NotInvitedPage } from '../pages/NotInvitedPage'
-
-import { PostProtectOnboardCheck } from '../libs/apiLib'
 import { cotter } from '../libs/cotterLib'
+import { PostProtectOnboardCheck } from '../libs/apiLib'
 
+const HomePage = lazy(() => import('../pages/HomePage'))
+const ProfilePage = lazy(() => import('../pages/ProfilePage'))
+const EditProfilePage = lazy(() => import('../pages/EditProfilePage'))
+const LoginPage = lazy(() => import('../pages/LoginPage'))
+const OnboardingPage = lazy(() => import('../pages/OnboardingPage'))
+const BrowsePage = lazy(() => import('../pages/BrowsePage'))
+const NotInvitedPage = lazy(() => import('../pages/NotInvitedPage'))
 
 export const AppNavigator: React.FC = () => {
 
-  let history = useHistory()
   const { dispatch } = useAppContext()
 
   const [ loading, setLoading ] = useState(true)
@@ -27,82 +25,73 @@ export const AppNavigator: React.FC = () => {
   // on mount, handle auth checks
   useEffect(() => {
 
-    const user = cotter.getLoggedInUser()
-    
-    if (user !== null) {
-      PostProtectOnboardCheck()
-      .then(res => {
-        console.log('post protect get username', res)
-  
-        if (res.data.onboarded !== false) {
-          console.log('signed in with:', res.data.profile.username)
-          dispatch(setUsername(res.data.profile.username))
-          dispatch(setAuth(true))
-          dispatch(setOnboarded(true))
-          setLoading(false)
-        } else {
-          console.log('no user signed in')
-          dispatch(setAuth(true))
-          setLoading(false)
-        }
-  
-      })
-      .catch(err => {
+    const onMount = async () => {
+      const user = cotter.getLoggedInUser()
+
+      if (user === null) {
         setLoading(false)
-        console.log(err)
-      })
-    } else {
-      setLoading(false)
+        return
+      }
+
+      const res = await PostProtectOnboardCheck()
+
+      if (res.data.onboarded !== false) {
+        dispatch(setUsername(res.data.profile.username))
+        dispatch(setAuth(true))
+        dispatch(setOnboarded(true))
+        setLoading(false)
+      } else {
+        dispatch(setAuth(true))
+        setLoading(false)
+      }
     }
+
+    onMount()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (!loading) {
     return (
       <BrowserRouter>
-        <Switch>
-  
-          <Route exact path='/'>
-            <HomePage />
-          </Route>
-  
-          <Route exact path='/login'>
-            <LoginPage />
-          </Route>
-  
-          <Route exact path='/onboarding'>
-            <OnboardingProvider>
-              <OnboardingPage />
-            </OnboardingProvider>
-          </Route>
+        <Suspense fallback={<Fallback />}>
+          <Switch>
+    
+            <Route exact path='/' component={HomePage} />
+    
+            <Route exact path='/login' component={LoginPage} />
+    
+            <Route exact path='/onboarding'>
+              <OnboardingProvider>
+                <OnboardingPage />
+              </OnboardingProvider>
+            </Route>
 
-          <Route exact path='/browse'>
-            <BrowsePage />
-          </Route>
+            <Route exact path='/browse' component={BrowsePage} />
 
-          <Route path='/not-invited'>
-            <NotInvitedPage />
-          </Route>
-  
-          {/* if own profile, navigate to edit version of profile */}
-          <Route exact path='/edit/:username'>
-            <ProfileProvider>
-              <EditProfilePage />
-            </ProfileProvider>
-          </Route>
-  
-          {/* public version of profile */}
-          <Route path='/:username'>
-            <ProfilePage />
-          </Route>
-  
-        </Switch>
+            <Route path='/not-invited' component={NotInvitedPage} />
+    
+            {/* if own profile, navigate to edit version of profile */}
+            <Route exact path='/edit/:username'>
+              <ProfileProvider>
+                <EditProfilePage />
+              </ProfileProvider>
+            </Route>
+    
+            {/* public version of profile */}
+            <Route path='/:username'component={ProfilePage} />
+    
+          </Switch>
+        </Suspense>
       </BrowserRouter>
     )
   } else {
     return (
-      <div style={{height: '100vh', backgroundColor: 'white'}}/>
+      <Fallback />
     )
   }
   
+}
+
+const Fallback: React.FC = () => {
+  return <div style={{height: '100vh', backgroundColor: 'white'}}/>
 }

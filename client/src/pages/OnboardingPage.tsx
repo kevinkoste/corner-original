@@ -7,9 +7,8 @@ import { Div, Button } from '../components/BaseComponents'
 import { Header } from '../components/Header'
 import { Transition } from 'react-transition-group'
 
-import { useAppContext } from '../context/AppContext'
 import { GenerateOnboardingComponent } from '../components/OnboardingComponents'
-import { PostProtectOnboardCheck, PostProtectInviteCheck } from '../libs/apiLib'
+import { PostProtectInviteCheck } from '../libs/apiLib'
 
 
 export const OnboardingPage: React.FC = () => {
@@ -52,15 +51,18 @@ export const OnboardingPage: React.FC = () => {
 	
 	useEffect(() => {
 
-		// check if the user is invited
-		PostProtectInviteCheck()
-		.then(res => {
+		const onMount = async () => {
+			const res = await PostProtectInviteCheck()
 			if (!res.data) {
 				history.push('/not-invited')
 			}
-		})
-		.catch(err => console.log(err))
 
+			// could also check to see if user has already onboarded and redirect
+
+		}
+
+		onMount()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	const onBackClick = () => {
@@ -119,6 +121,7 @@ export const OnboardingPage: React.FC = () => {
     </PageContainer>
   )
 }
+export default OnboardingPage
 
 const PageContainer = styled(Div)`
 	max-width: 100vw;

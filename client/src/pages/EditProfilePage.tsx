@@ -20,7 +20,7 @@ export const EditProfilePage: React.FC = () => {
   const mobile: boolean = useDetectMobile()
 
   // not yet sure which we are using...
-  const { state, dispatch } = useAppContext()
+  const { state } = useAppContext()
   const { profileState, profileDispatch } = useProfileContext()
 
   // on mount, supply profileState with public profile data and add missing components if needed
@@ -31,8 +31,7 @@ export const EditProfilePage: React.FC = () => {
       const profile: Profile = response.data
 
       // add any missing components
-      let type: string
-      for (type of ['bio', 'bookshelf', 'experiences', 'integrations']) {
+      for (let type of ['bio', 'bookshelf', 'experiences', 'integrations']) {
         if (profile.components.find(comp => comp.type === type) === undefined) {
           if (type === 'bio') {
             profile.components.push({
@@ -141,6 +140,7 @@ export const EditProfilePage: React.FC = () => {
 		</PageContainer>
 	)
 }
+export default EditProfilePage
 
 
 const PageContainer = styled(Div)`

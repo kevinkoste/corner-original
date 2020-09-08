@@ -45,4 +45,9 @@ export const authMiddleware = (req: express.Request, res: express.Response, next
   })  
 }
 
+export const errorMiddleware = (err: any, req: express.Request, res: express.Response, next: any) => {
+  console.error(err.stack)
+  next(err)
+}
+
 

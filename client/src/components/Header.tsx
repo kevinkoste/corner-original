@@ -77,13 +77,26 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 					}
 
 					{ !state.onboarded && state.auth &&
-						<HeaderTitleText onClick={() => {
-							history.push(`/onboarding`)
-							onClick()
-					}}
-							style={{color: 'white', marginTop: '20px'}}>
-							Make Your Profile
-						</HeaderTitleText>
+						<React.Fragment>
+							<HeaderTitleText
+								style={{color: 'white', marginTop: '20px'}}
+								onClick={() => {
+									history.push(`/onboarding`)
+									onClick()
+								}}>
+								Make Your Profile
+							</HeaderTitleText>
+							<HeaderTitleText
+								style={{color: 'white', marginTop: '20px'}}
+								onClick={() => {
+									cotter.logOut()
+									dispatch(setAuth(false))
+									history.push('/')
+									onClick()
+								}}>
+								Log Out
+							</HeaderTitleText>
+						</React.Fragment>
 					}
 
 					{	state.onboarded && state.auth &&

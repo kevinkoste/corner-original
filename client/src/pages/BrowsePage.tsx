@@ -3,10 +3,9 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div, H1, H2, Img, GridMap } from '../components/BaseComponents'
+import { Div, H2 } from '../components/BaseComponents'
 import { Header } from '../components/Header'
 
-import { useAppContext } from '../context/AppContext'
 import { GetPublicAllProfiles } from '../libs/apiLib'
 import { Profile } from '../models/Profile'
 
@@ -18,12 +17,12 @@ export const BrowsePage: React.FC = () => {
   const [ profiles, setProfiles ] = useState<Profile[]>([])
   
   useEffect(() => {
-    GetPublicAllProfiles()
-    .then(res => {
-      console.log(res)
+    const onMount = async () => {
+      const res = await GetPublicAllProfiles()
       setProfiles(res.data)
-    })
-    .catch(err => console.log(err))
+    }
+    onMount()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 	
   return (
@@ -41,6 +40,7 @@ export const BrowsePage: React.FC = () => {
     </PageContainer>
   )
 }
+export default BrowsePage
 
 const PageContainer = styled(Div)`
   max-width: 100vw;
