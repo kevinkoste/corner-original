@@ -4,14 +4,14 @@ import { v4 as uuidv4 } from 'uuid'
 
 // presentation
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div, Button } from '../components/BaseComponents'
+import { Div, Button } from '../components/Base'
 import { Header } from '../components/Header'
 
 // logic
 import { useAppContext } from '../context/AppContext'
 import { Profile } from '../models/Profile'
 import { useProfileContext, updateProfile, setEditing } from '../context/ProfileContext'
-import { GenerateEditComponent } from '../components/EditProfileComponents'
+import { GenerateEditComponent } from '../components/ProfileEdit'
 import { GetPublicProfileData, PostProtectProfile } from '../libs/apiLib'
 
 

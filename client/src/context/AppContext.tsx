@@ -2,7 +2,7 @@ import React, { createContext, useReducer, useContext, Dispatch } from 'react'
 
 type StateType = {
   auth: boolean,
-  onboarded: boolean
+  onboarded: boolean,
   username: string,
 }
 

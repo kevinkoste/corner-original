@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { Div, H1, H2, Button } from '../components/BaseComponents'
+import { Div, H1, H2, Button } from '../components/Base'
 import { Header } from '../components/Header'
 
 import { useDetectMobile } from '../libs/hooksLib'

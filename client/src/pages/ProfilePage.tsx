@@ -4,15 +4,15 @@ import styled from 'styled-components'
 
 // presentation
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div, H1, Button } from '../components/BaseComponents'
+import { Div, H1, Button } from '../components/Base'
 import { Header } from '../components/Header'
-import { ProfileModal } from '../components/ProfileModal'
+import { ProfileModal } from '../components/Modal'
 
 // logic
 import { useAppContext } from '../context/AppContext'
 import { Profile, EmptyProfile } from '../models/Profile'
 import { GetPublicProfileData } from '../libs/apiLib'
-import { GenerateComponent } from '../components/ProfileComponents'
+import { GenerateComponent } from '../components/ProfilePublic'
 
 
 export const ProfilePage: React.FC = () => {

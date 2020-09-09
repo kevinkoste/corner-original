@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 // presentation
-import { Div } from '../components/BaseComponents'
+import { Div } from '../components/Base'
 import { Header } from '../components/Header'
 import { useDetectMobile } from '../libs/hooksLib'
 

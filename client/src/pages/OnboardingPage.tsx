@@ -3,11 +3,11 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div, Button } from '../components/BaseComponents'
+import { Div, Button } from '../components/Base'
 import { Header } from '../components/Header'
 import { Transition } from 'react-transition-group'
 
-import { GenerateOnboardingComponent } from '../components/OnboardingComponents'
+import { GenerateOnboardingComponent } from '../components/Onboarding'
 import { PostProtectInviteCheck } from '../libs/apiLib'
 
 

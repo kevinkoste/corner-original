@@ -54,9 +54,9 @@ router.post('/follow', async (req, res) => {
     TableName: 'social',
     Key: { id: followSocialId },
 
-    UpdateExpression: 'set #followed = list_append(if_not_exists(#followed, :empty_list), :follow)',
+    UpdateExpression: 'set #followed = list_append(if_not_exists(#followers, :empty_list), :follow)',
     ExpressionAttributeNames: {
-      '#followed': 'followedBy'
+      '#followers': 'followers'
     },
     ExpressionAttributeValues: {
       ':follow': [{
@@ -70,6 +70,8 @@ router.post('/follow', async (req, res) => {
   res.status(200)
 
 })
+
+
 
 
 export default router

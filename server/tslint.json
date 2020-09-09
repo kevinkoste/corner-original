@@ -4,6 +4,12 @@
         "tslint:recommended"
     ],
     "jsRules": {},
-    "rules": {},
-    "rulesDirectory": []
+    "rules": {
+        "object-literal-shorthand": false
+    },
+    "rulesDirectory": [],
+    "include": [
+		"src/*.ts",
+		"src/**/*.ts"
+	]
 }

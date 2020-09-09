@@ -1,7 +1,7 @@
 import axios from './axiosLib'
 
 import { Profile } from '../models/Profile'
-import { cotter, GetCotterToken } from '../libs/cotterLib'
+import { cotter, GetCotterToken, GetCotterEmail } from '../libs/cotterLib'
 
 // PUBLIC ROUTES //
 export const GetPublicProfileData = (username: string): Promise<any> => {
@@ -149,8 +149,7 @@ export const PostProtectInviteNewEmail = (invitedEmail: string): Promise<any> =>
     .then(res => res.token)
     .then(token => {
 
-      const user = cotter.getLoggedInUser()
-      const senderEmail = user.identifier
+      const senderEmail = GetCotterEmail()
 
       return axios({
         method: 'post',
@@ -201,4 +200,23 @@ export const FetchSubstack = (substackUrl: string): Promise<any> => {
     .catch(err => {
       console.log(err)
     })
+}
+
+
+// SOCIAL //
+
+export const PostProtectFollow = async (username: string) => {
+  const email = GetCotterEmail()
+  const res = await GetCotterToken()
+  const token = res.token
+
+  await axios({
+    method: 'post',
+    url: '/social/follow',
+    headers: { 'authorization': `Bearer ${token}` },
+    data: {
+      email: email,
+      username: username
+    }
+  })
 }

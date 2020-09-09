@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
+import { CSSTransition } from 'react-transition-group'
 
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div, Button } from '../components/BaseComponents'
+import { Div, Button } from '../components/Base'
 
 import { Profile } from '../models/Profile'
-import { CSSTransition } from 'react-transition-group';
-
+import { PostProtectFollow } from '../libs/apiLib'
 
 function useOutsideAlerter(ref: any, setShowing: any) {
   useEffect(() => {
@@ -64,9 +64,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ profile }) => {
 }
 
 type ButtonsProps = {inProp: any, profile: Profile}
-const Buttons: React.FC<ButtonsProps> = ({inProp, profile}) => {
-  const onFollowClick = () => {
+const Buttons: React.FC<ButtonsProps> = ({ inProp, profile }) => {
 
+  const onFollowClick = () => {
+    PostProtectFollow(profile.username)
   }
 
   const onEndorseClick = () => {

@@ -27,3 +27,7 @@ export const GetCotterToken = (): Promise<any> => {
   return cotter.tokenHandler.getAccessToken()
 }
 
+export const GetCotterEmail = (): string => {
+  return cotter.getLoggedInUser().identifier
+}
+

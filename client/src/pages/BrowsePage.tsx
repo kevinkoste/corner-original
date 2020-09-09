@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div, H2 } from '../components/BaseComponents'
+import { Div, H2 } from '../components/Base'
 import { Header } from '../components/Header'
 
 import { GetPublicAllProfiles } from '../libs/apiLib'

@@ -75,7 +75,6 @@ router.post('/upload-image/:username', async (req, res) => {
       Bucket: process.env.AWS_S3_BUCKET,
       Key: `${image}`,
     })
-    console.log('just deleted image with name:', image)
   }
 
 
@@ -92,6 +91,7 @@ router.post('/upload-image/:username', async (req, res) => {
       Key: `images/${imageId}.${type.ext}`,
       ACL: 'public-read',
       Body: buffer,
+      CacheControl: 'max-age=604800'
     })
 
     res.status(200).json({ image: data.Key })

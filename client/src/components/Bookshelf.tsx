@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import ExitIcon from '../icons/delete.svg'
 
 // presentation/types
-import { Div, H1, H2, ExternalImg, Button, InlineInput } from '../components/BaseComponents'
+import { Div, H1, H2, ExternalImg, Button, InlineInput } from './Base'
 import { Book, BookshelfComponent } from '../models/Profile'
 
 // logic
@@ -12,7 +12,7 @@ import { GetBookData } from '../libs/bookLib'
 import { useProfileContext, setEditing, updateComponent, deleteBookById } from '../context/ProfileContext'
 
 
-export const Bookshelf: React.FC<BookshelfComponent> = ({ id, props }) => {
+export const EditBookshelf: React.FC<BookshelfComponent> = ({ id, props }) => {
 
   const { profileState, profileDispatch } = useProfileContext()
   
@@ -297,6 +297,26 @@ const BookAddRow: React.FC<BookAddRowProps> = ({ id }) => {
 }
 
 
+// building the public version here:
+export const Bookshelf: React.FC<BookshelfComponent> = ({ id, props }) => {
+  
+	return (
+		<ComponentContainer column width={12}>
+			<H1>
+				Bookshelf
+			</H1>
+			{ props.books.map((book: any, idx: number) => 
+				<BookRow
+					withLink={true}
+					key={idx}
+					book={book}
+				/>
+			)}
+		</ComponentContainer>
+	)
+}
+
+
 const BookInput = styled(InlineInput)`
 	border-bottom: 1px solid black;
 	height: 20px;
@@ -347,24 +367,3 @@ const AddButton = styled(Button)`
 
 
 
-// building the public version here:
-
-export const PublicBookshelf: React.FC<BookshelfComponent> = ({ id, props }) => {
-  
-	return (
-		<ComponentContainer column width={12}>
-			<H1>
-				Bookshelf
-			</H1>
-
-			{ props.books.map((book: any, idx: number) => 
-				<BookRow
-					withLink={true}
-					key={idx}
-					book={book}
-				/>
-			)}
-
-		</ComponentContainer>
-	)
-}

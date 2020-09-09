@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 // presentation
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div, H1 } from '../components/BaseComponents'
+import { Div, H1 } from '../components/Base'
 import { Header } from '../components/Header'
 
 

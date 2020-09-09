@@ -8,7 +8,7 @@ import ClipLoader from "react-spinners/ClipLoader"
 import { useDetectMobile } from '../libs/hooksLib'
 import { useAppContext, setUsername } from '../context/AppContext'
 import { useOnboardingContext, updateUsername, updateComponent } from '../context/OnboardingContext'
-import { Div, H1, H2, TextArea, Img, Button } from './BaseComponents'
+import { Div, H1, H2, TextArea, Img, Button } from './Base'
 
 import { PostProtectProfileImage, GetPublicUsernameAvailability, PostProtectProfile } from '../libs/apiLib'
 import { NameComponent, HeadlineComponent, HeadshotComponent } from '../models/Profile'

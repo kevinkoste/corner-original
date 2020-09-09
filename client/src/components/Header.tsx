@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
 
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div, H1, H2, Button, TextArea } from '../components/BaseComponents'
+import { Div, H1, H2, Button, TextArea } from './Base'
 import BurgerIcon from '../icons/burger.svg'
 import ExitIcon from '../icons/exit.png'
 
@@ -41,7 +41,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 					Corner
 				</AnimatedTitle>
 
-				<BurgerButton onClick={onClick} src={BurgerIcon} />
+				<BurgerButton onClick={onClick} src={BurgerIcon} alt='burger button'/>
 
 			</HeaderContainer>
 		)
@@ -53,7 +53,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 					<HeaderTitleText style={{color: 'white'}}>
 						Corner
 					</HeaderTitleText>
-					<ExitButton onClick={onClick} src={ExitIcon} />
+					<ExitButton onClick={onClick} src={ExitIcon} alt='exit burger button'/>
 				</HeaderContainer>
 
 				<BodyContainer column width={mobile ? 11 : 10}>
