@@ -183,7 +183,7 @@ const IntegrationSection: React.FC<IntegrationSectionProps> = ({ integration, co
 					</LogoWrapper>
 
 					<IntegrationText column width={12} style={{color: color||'black' }}>
-						<a href={post.link}>
+						<a href={post.link} style={{color:'unset'}}>
 							<H2>
 								{post.title}
 							</H2>

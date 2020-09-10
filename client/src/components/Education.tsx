@@ -55,6 +55,7 @@ export const EditEducation: React.FC<EducationComponent> = ({ id, props }) => {
 			type: 'education',
 			props: { education: [...profileState.profile.components.find(comp => comp.type === 'education')?.props.education, education] }
 		}))
+		setDomainInput('')
 	}
 
 	// enter key advances form
@@ -98,17 +99,22 @@ export const EditEducation: React.FC<EducationComponent> = ({ id, props }) => {
 				{/* this is the domain input form */}
 				<Div column width={12} style={{ alignItems:'top', marginTop:'15px' }}>
 					<H2>
-						Enter your company domain name
+						Enter your schools domain name
 					</H2>
 					<EducationInput
 						placeholder={'e.g. yale.edu'}
 						onChange={(event: any) => setDomainInput(event.target.value)}
 						onKeyDown={onKeyDown}
 						value={domainInput}
+						style={{ height: '26px' }}
 					/>
-					<DomainButton onClick={onDomainClick}>
-						Add Education &#62;
-					</DomainButton>
+					{ (domainInput !== '') &&
+						<Div column width={12} style={{ alignItems:'center' }}>
+							<DomainButton onClick={onDomainClick}>
+								Add Education &#62;
+							</DomainButton>
+						</Div>
+					}
 				</Div>
 
 				{/* the education edit row */}
@@ -118,8 +124,6 @@ export const EditEducation: React.FC<EducationComponent> = ({ id, props }) => {
 						education={edu}
 					/>
 				)}
-
-
 
 			</ComponentContainer>
 		)
@@ -307,14 +311,6 @@ const DomainButton = styled(Button)`
 	color: black;
 	border: 1px solid darkgrey;
 	margin: 10px 0px;
-	/* font-size: 16px; */
-	/* font-family: 'inter'; */
-  /* line-height: 24px; */
-	/* padding: 0; */
-	/* @media (max-width: 768px) {
-		position: absolute;
-		right: 0;
-  } */
 `
 
 const AddButton = styled(Button)`

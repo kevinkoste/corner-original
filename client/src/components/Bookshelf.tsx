@@ -27,11 +27,11 @@ export const EditBookshelf: React.FC<BookshelfComponent> = ({ id, props }) => {
 		},
 		{
       id: '2',
-      title: 'The Dream Machine',
-      author: 'J.C.R. Licklider',
-      date: '2002',
-      link: 'https://books.google.com/books?id=7HpQAAAAMAAJ&dq=thedreammachine&hl=&source=gbs_api',
-      image: 'https://books.google.com/books/content?id=7HpQAAAAMAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api'
+      title: 'Little Women',
+      author: 'Louisa May Alcott',
+      date: '1880',
+      link: 'https://play.google.com/store/books/details?id=xHbaFO0ow3kC&source=gbs_api',
+      image: 'https://books.google.com/books/content?id=xHbaFO0ow3kC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api'
 		}
 	]
 
@@ -68,7 +68,9 @@ export const EditBookshelf: React.FC<BookshelfComponent> = ({ id, props }) => {
   else if (profileState.editing) {
 		return (
 			<ComponentContainer column width={12}>
-				<H1>
+				<H1 style={{
+					color: (profileState.profile.components.find(comp => comp.type === 'bookshelf')?.props.books.length === 0) ? 'lightgray' : ''
+				}}>
           Bookshelf
 				</H1>
 
@@ -271,14 +273,11 @@ const BookAddRow: React.FC<BookAddRowProps> = ({ id }) => {
         <H2>
           Enter the title of a book
         </H2>
-        <Div width={12} style={{ position:'relative' }}>
-          <BookInput
-            placeholder={'e.g. Lean In'}
-            onChange={(event: any) => setBookInput(event.target.value)}
-            value={bookInput}
-            style={{borderBottom: 'none', height: 'auto', marginLeft: '0px'}}
-          />
-        </Div>
+				<BookInput
+					placeholder={'e.g. Great Expectations'}
+					onChange={(event: any) => setBookInput(event.target.value)}
+					value={bookInput}
+				/>
 
 				{/* this is the preview row */}
 				{ (bookInput !== '') &&
@@ -299,21 +298,25 @@ const BookAddRow: React.FC<BookAddRowProps> = ({ id }) => {
 
 // building the public version here:
 export const Bookshelf: React.FC<BookshelfComponent> = ({ id, props }) => {
-  
-	return (
-		<ComponentContainer column width={12}>
-			<H1>
-				Bookshelf
-			</H1>
-			{ props.books.map((book: any, idx: number) => 
-				<BookRow
-					withLink={true}
-					key={idx}
-					book={book}
-				/>
-			)}
-		</ComponentContainer>
-	)
+	
+	if (props.books.length !== 0) {
+		return (
+			<ComponentContainer column width={12}>
+				<H1>
+					Bookshelf
+				</H1>
+				{ props.books.map((book: any, idx: number) => 
+					<BookRow
+						withLink={true}
+						key={idx}
+						book={book}
+					/>
+				)}
+			</ComponentContainer>
+		)
+	} else {
+		return <React.Fragment />
+	}
 }
 
 
@@ -322,10 +325,8 @@ const ComponentContainer = styled(Div)`
 `
 
 const BookInput = styled(InlineInput)`
-	border-bottom: 1px solid black;
-	height: 20px;
-	margin-right: 5px;
-	margin-left: 5px;
+	border-bottom: 1px solid darkgrey;
+	height: 26px;
 `
 
 const ExperienceText = styled(Div)`
@@ -349,13 +350,12 @@ const LogoWrapper = styled(Div)`
 const DeleteIcon = styled.img`
 	position: absolute;
 	background-size: 50%;
-	left:0;
+	left: -10px;
+	right: 0;
 	z-index: 2;
-	height: 51px;
-	width: 51px;
+	height: 72px;
+	width: 72px;
 `
-
-
 
 const AddButton = styled(Button)`
 	position: absolute;

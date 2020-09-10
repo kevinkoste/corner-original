@@ -70,6 +70,7 @@ export const EditExperience: React.FC<ExperienceComponent> = ({ id, props }) => 
 			type: 'experiences',
 			props: { experiences: [...profileState.profile.components.find(comp => comp.type === 'experiences')?.props.experiences, experience] }
 		}))
+		setDomainInput('')
 	}
 
 	// enter key advances form
@@ -110,6 +111,27 @@ export const EditExperience: React.FC<ExperienceComponent> = ({ id, props }) => 
 					Experience
 				</H1>
 
+				{/* this is the domain input form */}
+				<Div column width={12} style={{ alignItems:'top', marginTop:'15px' }}>
+					<H2>
+						Enter your company domain name
+					</H2>
+					<ExperienceInput
+						placeholder={'e.g. google.com'}
+						onChange={(event: any) => setDomainInput(event.target.value)}
+						onKeyDown={onKeyDown}
+						value={domainInput}
+						style={{ height: '26px' }}
+					/>
+					{ (domainInput !== '') &&
+						<Div column width={12} style={{ alignItems:'center' }}>
+							<DomainButton onClick={onDomainClick}>
+								Add Experience &#62;
+							</DomainButton>
+						</Div>
+					}
+				</Div>
+
 				{/* the experiences edit row */}
 				{ profileState.profile.components.find(comp => comp.type === 'experiences')?.props.experiences.map((exp: ExperienceType, idx: number) => 
 					<ExperienceEditRow
@@ -117,29 +139,6 @@ export const EditExperience: React.FC<ExperienceComponent> = ({ id, props }) => 
 						experience={exp}
 					/>
 				)}
-
-				{/* this is the domain input form */}
-				<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
-			
-					<Div column width={12}>
-						<H2>
-							Enter your company domain name
-						</H2>
-						<Div width={12} style={{ position:'relative' }}>
-							<ExperienceInput
-								placeholder={'e.g. google.com'}
-								onChange={(event: any) => setDomainInput(event.target.value)}
-								onKeyDown={onKeyDown}
-								value={domainInput}
-								style={{borderBottom: 'none', height: 'auto', marginLeft: '0px'}}
-							/>
-							<DomainButton onClick={onDomainClick}>
-								Add Experience &#62;
-							</DomainButton>
-						</Div>
-					</Div>
-
-				</Div>
 
 			</ComponentContainer>
 		)
@@ -279,16 +278,17 @@ export const Experiences: React.FC<ExperienceComponent> = ({ id, props }) => {
 
 			</ComponentContainer>
 		)
-	}
-	else {
-		return (
-			<span></span>
-		)
+	} else {
+		return <React.Fragment />
 	}
 }
 
+const ComponentContainer = styled(Div)`
+	margin-bottom: 30px;
+`
+
 const ExperienceInput = styled(InlineInput)`
-	border-bottom: 1px solid black;
+	border-bottom: 1px solid darkgrey;
 	height: 23px;
 	margin: 0px;
 `
@@ -307,8 +307,9 @@ const LogoWrapper = styled(Div)`
 
 const DeleteIcon = styled.img`
 	position: absolute;
+	top: 0;
+	left: 0;
 	background-size: 50%;
-	left:0;
 	z-index: 2;
 	height: 72px;
 	width: 64px;
@@ -317,18 +318,8 @@ const DeleteIcon = styled.img`
 const DomainButton = styled(Button)`
 	background-color: white;
 	color: black;
-	font-size: 16px;
-	font-family: 'inter';
-  line-height: 24px;
-	padding: 0;
-	@media (max-width: 768px) {
-		position: absolute;
-		right: 0;
-	}`
-
-
-const ComponentContainer = styled(Div)`
-	margin-bottom: 30px;
+	border: 1px solid darkgrey;
+	margin: 10px 0px;
 `
 
 const AddButton = styled(Button)`

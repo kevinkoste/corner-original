@@ -135,7 +135,7 @@ const HeaderContainer = styled(Div)`
 	position: fixed;
 	align-items: center;
 	background-color: white;
-	z-index: 1;
+	z-index: 10;
 	
 	padding-top: 15px;
 	padding-bottom: 5px;
