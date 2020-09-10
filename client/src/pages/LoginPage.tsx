@@ -22,39 +22,32 @@ export const LoginPage: React.FC = () => {
 	
 	useEffect(() => {
 
-		if (state.auth && state.onboarded) {
-			history.push(`/edit/${state.username}`)
+		const onMount = async () => {
+
+			// if authed and onboarded, redirect to profile
+			if (state.auth && state.onboarded) {
+				history.push(`/edit/${state.username}`)
+			}
+
+			// prompt and complete cotter login flow
+			const data = await cotter.signInWithLink().showEmailForm()
+
+			// post data to backend and set authenticated
+			await PostPublicLoginData(data)
+			dispatch(setAuth(true))
+
+			// check if user is onboarded, if yes set username & redirect to profile
+			const onboardRes = await PostProtectOnboardCheck()
+			if (onboardRes.data.onboarded) {
+				dispatch(setOnboarded(true))
+				dispatch(setUsername(onboardRes.data.profile.username))
+				history.push(`/edit/${onboardRes.data.profile.username}`)
+			} else {
+				history.push('/onboarding')
+			}
 		}
 
-		cotter.signInWithLink().showEmailForm()
-		.then(data => {
-
-			// send cotter signup success data to the backend
-			PostPublicLoginData(data)
-			.then(res => {
-
-				dispatch(setAuth(true))
-
-				// check if onboarded, push to either onboarding or profile
-				PostProtectOnboardCheck()
-				.then(res => {
-					console.log('response from onboard check:', res)
-					if (res.data.onboarded) {
-						dispatch(setOnboarded(true))
-						dispatch(setUsername(res.data.profile.username))
-						history.push(`/edit/${res.data.profile.username}`)
-					} else {
-						history.push('/onboarding')
-					}
-				})
-				.catch(err => console.log(err)) 
-
-			})
-			.catch(err => console.log('post login data server error', err))
-
-		})
-		.catch(err => console.log('cotter login error', err))
-
+		onMount()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 	
@@ -68,7 +61,6 @@ export const LoginPage: React.FC = () => {
 				{ !state.auth &&
 					<div id="cotter-form-container" style={{ width: '100%', height: 200 }} />
 				}
-
 
 			</BodyContainer>
 

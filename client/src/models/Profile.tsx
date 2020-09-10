@@ -57,18 +57,19 @@ export type BookshelfComponent = {
   }
 }
 
-export type Experience = {
+export type ExperienceType = {
+  id: string,
   domain: string,
   title: string,
   company: string,
   date: string
 }
 
-export type ExperiencesComponent = {
+export type ExperienceComponent = {
   id: string,
   type: 'experiences',
   props: {
-    experiences: Experience[],
+    experiences: ExperienceType[],
   }
 }
 
@@ -94,7 +95,8 @@ export type IntegrationsComponent = {
 }
 
 
-export type Education = {
+export type EducationType = {
+  id: string,
   domain: string,
   degree: string,
   school: string,
@@ -105,6 +107,6 @@ export type EducationComponent = {
   id: string,
   type: 'experiences',
   props: {
-    education: Education[],
+    education: EducationType[],
   }
 }

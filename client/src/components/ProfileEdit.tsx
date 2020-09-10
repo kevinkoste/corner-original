@@ -5,7 +5,8 @@ import { Component } from '../models/Profile'
 import { EditHeadline } from './Headline'
 import { EditBio } from './Bio'
 import { EditHeadshot } from './Headshot'
-import { EditExperiences } from './Experiences'
+import { EditExperience } from './Experiences'
+import { EditEducation } from '../components/Education'
 import { EditBookshelf } from './Bookshelf'
 import { EditIntegrations } from './Integrations'
 
@@ -20,7 +21,8 @@ const Components: ComponentIndex  = {
 	bio: EditBio,
 	bookshelf: EditBookshelf,
 	headshot: EditHeadshot,
-	experiences: EditExperiences,
+	experiences: EditExperience,
+	education: EditEducation,
   integrations: EditIntegrations
 }
 

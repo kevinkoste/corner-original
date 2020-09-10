@@ -81,7 +81,6 @@ export const Headline: React.FC<HeadlineComponent> = ({ id, props }) => {
 
 
 const HeadlineText = styled(H1)`
-	margin-bottom: 15px;
 	margin-top: 20px;
 `
 

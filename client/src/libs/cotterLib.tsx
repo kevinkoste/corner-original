@@ -23,11 +23,18 @@ export const cotter = new Cotter({
   ButtonBorderColor: "#000000", // don't specify for no border
 })
 
-export const GetCotterToken = (): Promise<any> => {
-  return cotter.tokenHandler.getAccessToken()
+export const GetCotterToken = async () => {
+  const res = await cotter.tokenHandler.getAccessToken()
+  if (res === null) {
+    return null
+  }
+  return res.token
 }
 
-export const GetCotterEmail = (): string => {
-  return cotter.getLoggedInUser().identifier
+export const GetCotterUser = () => {
+  const user = cotter.getLoggedInUser()
+  return {
+    email: user.identifier,
+    authId: user.client_user_id
+  }
 }
-

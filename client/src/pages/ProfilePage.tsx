@@ -105,9 +105,8 @@ export const ProfilePage: React.FC = () => {
         { state.auth &&
           <ProfileModal profile={profile} />
         }
-        { mobile &&
-        <Div style={{height:'60px'}}/>
-        }
+
+        <Div style={{height:'54px'}}/>
   
       </PageContainer>
     )

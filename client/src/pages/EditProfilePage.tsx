@@ -31,7 +31,7 @@ export const EditProfilePage: React.FC = () => {
       const profile: Profile = response.data
 
       // add any missing components
-      for (let type of ['bio', 'bookshelf', 'experiences', 'integrations']) {
+      for (let type of ['bio', 'bookshelf', 'experiences', 'education', 'integrations']) {
         if (profile.components.find(comp => comp.type === type) === undefined) {
           if (type === 'bio') {
             profile.components.push({
@@ -51,8 +51,13 @@ export const EditProfilePage: React.FC = () => {
               type: 'experiences',
               props: { experiences: [] }
             })
-          }
-          else if (type === 'integrations') {
+          } else if (type === 'education') {
+            profile.components.push({
+              id: uuidv4().toString(),
+              type: 'education',
+              props: { education: [] }
+            })
+          } else if (type === 'integrations') {
             profile.components.push({
               id: uuidv4().toString(),
               type: 'integrations',
@@ -61,6 +66,21 @@ export const EditProfilePage: React.FC = () => {
           }
         }
       }
+
+      // sort components
+      const sortMap: { [index: string]: any } = {
+        name: 0,
+        headshot: 1,
+        headline: 2,
+        bio: 3,
+        experiences: 4,
+        education: 5,
+        integrations: 6,
+        bookshelf: 7
+      }
+      profile.components.sort((a, b) => {
+        return sortMap[a.type] - sortMap[b.type]
+      })
 
       // dispatch to profile context
       profileDispatch(updateProfile(profile))
@@ -89,32 +109,29 @@ export const EditProfilePage: React.FC = () => {
         <CenteredContainer column width={12}>
           <FrontPageWrapper>
             { profileState.profile.components
-              .filter(comp => comp.type === 'headshot' )
+              .filter(comp => comp.type === 'headshot')
               .map(comp => GenerateEditComponent(comp))
             }
           </FrontPageWrapper>
           <FrontPageWrapper>
             { profileState.profile.components
-              .filter(comp => comp.type === 'headline' )
+              .filter(comp => comp.type === 'headline')
               .map(comp => GenerateEditComponent(comp))
             }
             { !mobile && profileState.profile.components
-              .filter(comp => comp.type === 'bio' )
-              .map(comp => GenerateEditComponent(comp))
-            }
-            { !mobile && profileState.profile.components
-              .filter(comp => comp.type === 'experiences' )
+              .filter(comp => comp.type === 'bio')
               .map(comp => GenerateEditComponent(comp))
             }
           </FrontPageWrapper>
         </CenteredContainer>
+
         <Div column width={12}>
           { mobile && profileState.profile.components
             .filter(comp => comp.type !== 'headshot' && comp.type !== 'headline' )
             .map(comp => GenerateEditComponent(comp))
           }
           { !mobile && profileState.profile.components
-            .filter(comp => comp.type !== 'headshot' && comp.type !== 'headline' && comp.type !== 'bio' && comp.type !== 'experiences' )
+            .filter(comp => comp.type !== 'headshot' && comp.type !== 'headline' && comp.type !== 'bio' )
             .map(comp => GenerateEditComponent(comp))
           }
         </Div>
@@ -127,9 +144,7 @@ export const EditProfilePage: React.FC = () => {
         </EditButton>
       </ButtonContainer>
 
-      { mobile &&
-        <Div style={{height:'60px'}}/>
-      }
+      <Div style={{height:'54px'}}/>
 
 		</PageContainer>
 	)

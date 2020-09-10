@@ -29,6 +29,8 @@ const UPDATE_COMPONENT = "UPDATE_COMPONENT"
 const DELETE_COMPONENT = "DELETE_COMPONENT"
 const UPDATE_EXPERIENCE = "UPDATE_EXPERIENCE"
 const DELETE_EXPERIENCE = "DELETE_EXPERIENCE"
+const UPDATE_EDUCATION = "UPDATE_EDUCATION"
+const DELETE_EDUCATION = "DELETE_EDUCATION"
 const DELETE_BOOK_BY_ID = "DELETE_BOOK_BY_ID"
 
 
@@ -37,9 +39,11 @@ type Action =
  | { type: "UPDATE_PROFILE", profile: Profile }
  | { type: "SET_EDITING", editing: boolean }
  | { type: "UPDATE_COMPONENT", component: any }
+ | { type: "DELETE_COMPONENT", id: string }
  | { type: "UPDATE_EXPERIENCE", experience: any }
  | { type: "DELETE_EXPERIENCE", experience: any }
- | { type: "DELETE_COMPONENT", id: string }
+ | { type: "UPDATE_EDUCATION", education: any }
+ | { type: "DELETE_EDUCATION", education: any }
  | { type: "DELETE_BOOK_BY_ID", id: string }
 
 
@@ -66,6 +70,14 @@ export const updateExperience = (experience: any): Action => {
 
 export const deleteExperience = (experience: any): Action => {
   return { type: DELETE_EXPERIENCE, experience: experience}
+}
+
+export const updateEducation = (education: any): Action => {
+  return { type: UPDATE_EDUCATION, education: education}
+}
+
+export const deleteEducation = (education: any): Action => {
+  return { type: DELETE_EDUCATION, education: education}
 }
 
 export const deleteBookById = (id: string): Action => {
@@ -122,14 +134,6 @@ const ProfileReducer = (state: StateType, action: Action) => {
       }
 
     case UPDATE_EXPERIENCE:
-      console.log('handling update experience with experience:', action.experience)
-
-      console.log('updating experiences to', 
-        state.profile.components
-          .find(comp => comp.type === 'experiences')?.props.experiences
-          .map((exp: any) => exp.id === action.experience.id ? action.experience : exp)
-      )
-
       return {
         ...state,
         profile: {
@@ -148,14 +152,6 @@ const ProfileReducer = (state: StateType, action: Action) => {
       }
 
       case DELETE_EXPERIENCE:
-        console.log('handling delete experience with experience:', action.experience)
-  
-        console.log('deleting experience', 
-          state.profile.components
-            .find(comp => comp.type === 'experiences')?.props.experiences
-            .map((exp: any) => exp.id === action.experience.id ? action.experience : exp)
-        )
-        
         return {
           ...state,
           profile: {
@@ -167,7 +163,42 @@ const ProfileReducer = (state: StateType, action: Action) => {
                   experiences: state.profile.components
                     .find(comp => comp.type === 'experiences')?.props.experiences
                     .filter((exp:any) => exp.id !== action.experience.id)
-                    // .map((exp: any) => exp.id === action.experience.id ? action.experience : exp)
+                }
+              }
+            )
+          }
+        }
+
+      case UPDATE_EDUCATION:
+        return {
+          ...state,
+          profile: {
+            ...state.profile,
+            components: state.profile.components.map(comp => comp.type !== 'education' ? comp : 
+              {
+                ...state.profile.components.find(comp => comp.type === 'education'),
+                props: {
+                  education: state.profile.components
+                    .find(comp => comp.type === 'education')?.props.education
+                    .map((edu: any) => edu.id === action.education.id ? action.education : edu)
+                }
+              }
+            )
+          }
+        }
+
+      case DELETE_EDUCATION:
+        return {
+          ...state,
+          profile: {
+            ...state.profile,
+            components: state.profile.components.map(comp => comp.type !== 'education' ? comp : 
+              {
+                ...state.profile.components.find(comp => comp.type === 'education'),
+                props: {
+                  education: state.profile.components
+                    .find(comp => comp.type === 'education')?.props.education
+                    .filter((edu: any) => edu.id !== action.education.id)
                 }
               }
             )

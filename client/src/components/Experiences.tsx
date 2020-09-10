@@ -5,14 +5,14 @@ import ExitIcon from '../icons/delete.svg'
 
 // presentation/types
 import { Div, H1, H2, ExternalImg, Button, InlineInput } from '../components/Base'
-import { ExperiencesComponent } from '../models/Profile'
+import { ExperienceType, ExperienceComponent } from '../models/Profile'
 
 // logic
 import { useProfileContext, setEditing, updateComponent, updateExperience, deleteExperience } from '../context/ProfileContext'
 import { GetPublicCompanyFromDomain } from '../libs/apiLib'
 
 
-export const EditExperiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
+export const EditExperience: React.FC<ExperienceComponent> = ({ id, props }) => {
 
   const { profileState, profileDispatch } = useProfileContext()
 
@@ -57,7 +57,7 @@ export const EditExperiences: React.FC<ExperiencesComponent> = ({ id, props }) =
 			company = ''
 		}
 
-		const experience = {
+		const experience: ExperienceType = {
 			id: uuidv4().toString(),
 			domain: domainInput,
 			title: '',
@@ -85,7 +85,7 @@ export const EditExperiences: React.FC<ExperiencesComponent> = ({ id, props }) =
 			<ComponentContainer column width={12}>
 
 				<H1 style={{color: 'lightgray'}}>
-					Experiences
+					Experience
 				</H1>
 
 				<Div column width={12} style={{position: 'relative'}}>
@@ -107,11 +107,11 @@ export const EditExperiences: React.FC<ExperiencesComponent> = ({ id, props }) =
 		return (
 			<ComponentContainer column width={12}>
 				<H1>
-					Experiences
+					Experience
 				</H1>
 
 				{/* the experiences edit row */}
-				{ profileState.profile.components.find(comp => comp.type === 'experiences')?.props.experiences.map((exp: any, idx: number) => 
+				{ profileState.profile.components.find(comp => comp.type === 'experiences')?.props.experiences.map((exp: ExperienceType, idx: number) => 
 					<ExperienceEditRow
 						key={idx}
 						experience={exp}
@@ -147,10 +147,10 @@ export const EditExperiences: React.FC<ExperiencesComponent> = ({ id, props }) =
 		return (
 			<ComponentContainer column width={12}>
 				<H1>
-					Experiences
+					Experience
 				</H1>
 
-				{ profileState.profile.components.find(comp => comp.type === 'experiences')?.props.experiences.map((exp: any, idx: number) => 
+				{ profileState.profile.components.find(comp => comp.type === 'experiences')?.props.experiences.map((exp: ExperienceType, idx: number) => 
 					<ExperienceRow
 						key={idx}
 						experience={exp}
@@ -163,7 +163,7 @@ export const EditExperiences: React.FC<ExperiencesComponent> = ({ id, props }) =
 }
 
 
-type ExperienceRowProps = { experience: any, color?: string }
+type ExperienceRowProps = { experience: ExperienceType, color?: string }
 export const ExperienceRow: React.FC<ExperienceRowProps> = ({ experience, color }) => {
 
 	const { domain, title, company, date } = experience
@@ -173,18 +173,15 @@ export const ExperienceRow: React.FC<ExperienceRowProps> = ({ experience, color 
 			<LogoWrapper style={{position: 'relative'}}>
 			<ExternalImg
 				src={`//logo.clearbit.com/${domain}`}
-				style={{ minWidth:'51px', minHeight:'51px', backgroundSize:'contain' }}
+				style={{ minWidth:'64px', minHeight:'64px', backgroundSize:'contain' }}
 			/>
 			</LogoWrapper>
 
-			<ExperienceText column width={12} style={{color: color||'black' }}>
-				<H2>
-					{title} at {company}
-				</H2>
-				<H2>
-					{date}
-				</H2>
-			</ExperienceText>
+			<ExperienceTextContainer column width={12} style={{ color: color||'black' }}>
+				<H2>{title}</H2>
+				<H2>{company}</H2>
+				<H2>{date}</H2>
+			</ExperienceTextContainer>
 
 		</Div>
 	)
@@ -228,55 +225,49 @@ const ExperienceEditRow: React.FC<ExperienceRowProps> = ({ experience, color }) 
 			<LogoWrapper style={{position: 'relative'}}>
 			<ExternalImg
 				src={`//logo.clearbit.com/${domain}`}
-				style={{ minWidth:'51px', minHeight:'51px', backgroundSize:'contain' }}>
+				style={{ minWidth:'64px', minHeight:'64px', backgroundSize:'contain' }}>
 			</ExternalImg>
 			<DeleteIcon 
 					src={ExitIcon}
 					onClick={handleDeleteExperience}/>
 			</LogoWrapper>
 
-			<ExperienceText column width={12} style={{ color: color||'black' }}>
-				<Div row width={12}>
-					<ExperienceInput
-						placeholder={'Software Engineer'}
-						onChange={(event: any) => setTitleInput(event.target.value)}
-						value={titleInput}
-						style={{width: '40%'}}
-						// style={(titleInput==='')? {width: Math.ceil('Software Engineer'.length * .95) + "ex"} : {width: Math.ceil(titleInput.length * .95) + "ex"}}
-						onBlur={handleClickAway}
-					/>
-					<H2>&nbsp;at&nbsp;</H2> 
-					<ExperienceInput
-						placeholder={'Google'}
-						onChange={(event: any) => setCompanyInput(event.target.value)}
-						value={companyInput}
-						style={{width: '40%'}}
-						// style={(companyInput==='')? {width: Math.ceil('Google'.length * 1.1) + "ex"} : {width: Math.ceil(companyInput.length * 1.1) + "ex"}}
-						onBlur={handleClickAway}
-					/>
-				</Div>
+			<ExperienceTextContainer column width={12} style={{ color: color||'black' }}>
+				<ExperienceInput
+					placeholder={'Software Engineer'}
+					onChange={(event: any) => setTitleInput(event.target.value)}
+					value={titleInput}
+					style={{width: 'calc(80% + 37px)'}}
+					onBlur={handleClickAway}
+				/>
+				<ExperienceInput
+					placeholder={'Google'}
+					onChange={(event: any) => setCompanyInput(event.target.value)}
+					value={companyInput}
+					style={{width: 'calc(80% + 37px)'}}
+					onBlur={handleClickAway}
+				/>
 				<ExperienceInput
 					placeholder={'August 2019 - Present'}
 					onChange={(event: any) => setDateInput(event.target.value)}
 					value={dateInput}
 					style={{width: 'calc(80% + 37px)'}}
-					// style={(dateInput==='')? {width: Math.ceil('August 2019 - Present'.length * 1) + "ex"} : {width: Math.ceil(dateInput.length * 1) + "ex"}}
 					onBlur={handleClickAway}
 				/>
-			</ExperienceText>
+			</ExperienceTextContainer>
 
 		</Div>
 	)
 }
 
 // public version
-export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
+export const Experiences: React.FC<ExperienceComponent> = ({ id, props }) => {
 
   if (props.experiences.length !== 0) {
 		return (
 			<ComponentContainer column width={12}>
 				<H1>
-					Experiences
+					Experience
 				</H1>
 
 				{ props.experiences.map((exp: any, idx: number) => 
@@ -298,14 +289,12 @@ export const Experiences: React.FC<ExperiencesComponent> = ({ id, props }) => {
 
 const ExperienceInput = styled(InlineInput)`
 	border-bottom: 1px solid black;
-	height: 20px;
-	margin-right: 5px;
-	margin-left: 5px;
-	border-radius: 0px;
+	height: 23px;
+	margin: 0px;
 `
 
-const ExperienceText = styled(Div)`
-	display: inline-block;
+const ExperienceTextContainer = styled(Div)`
+	justify-content: center;
 	margin-left: 15px;
 `
 
@@ -321,8 +310,8 @@ const DeleteIcon = styled.img`
 	background-size: 50%;
 	left:0;
 	z-index: 2;
-	height: 51px;
-	width: 51px;
+	height: 72px;
+	width: 64px;
 `
 
 const DomainButton = styled(Button)`

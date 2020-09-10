@@ -28,7 +28,7 @@ export const AppNavigator: React.FC = () => {
     const onMount = async () => {
       const user = cotter.getLoggedInUser()
 
-      if (user === null) {
+      if (user === undefined || user === null) {
         setLoading(false)
         return
       }

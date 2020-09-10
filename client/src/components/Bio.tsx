@@ -108,7 +108,6 @@ const ComponentContainer = styled(Div)`
 
 const BioText = styled(H2)`
 	margin-top: 10px;
-	margin-bottom: 15px;
 	white-space: pre-wrap;
 `
 

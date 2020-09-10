@@ -168,13 +168,13 @@ export const EditIntegrations: React.FC<IntegrationsComponent> = ({ id, props })
 }
 
 // todo: conditionally render latest post + "see more"
-type IntegrationSectionProps = { integration: any, color?: string }
+type IntegrationSectionProps = { integration: Integration, color?: string }
 const IntegrationSection: React.FC<IntegrationSectionProps> = ({ integration, color }) => {
 	const { type, posts } = integration
 	return (
 		<React.Fragment>
-			{ posts.map((post: Post) =>
-				<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }}>
+			{ posts.map((post: Post, idx: number) =>
+				<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }} key={idx}>
 					<LogoWrapper style={{position: 'relative'}}>
 					<ExternalImg
 						src={`//logo.clearbit.com/${type}.com`}

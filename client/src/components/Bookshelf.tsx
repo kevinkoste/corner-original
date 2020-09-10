@@ -317,6 +317,10 @@ export const Bookshelf: React.FC<BookshelfComponent> = ({ id, props }) => {
 }
 
 
+const ComponentContainer = styled(Div)`
+	margin-bottom: 30px;
+`
+
 const BookInput = styled(InlineInput)`
 	border-bottom: 1px solid black;
 	height: 20px;
@@ -351,12 +355,7 @@ const DeleteIcon = styled.img`
 	width: 51px;
 `
 
-const ComponentContainer = styled(Div)`
-	margin-top: 20px;
-	@media (max-width: 768px) {
-		margin-top: 20px;
-	}
-`
+
 
 const AddButton = styled(Button)`
 	position: absolute;

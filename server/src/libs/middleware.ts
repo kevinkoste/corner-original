@@ -40,14 +40,14 @@ export const authMiddleware = (req: express.Request, res: express.Response, next
     next()
   })
   .catch(err => {
-    console.log(err)
+    console.log('catching cotterValidateJWT error:', err)
     res.status(403).end(err)
-  })  
+  })
 }
 
-export const errorMiddleware = (err: any, req: express.Request, res: express.Response, next: any) => {
-  console.error(err.stack)
-  next(err)
-}
+// export const errorMiddleware = (err: any, req: express.Request, res: express.Response, next: any) => {
+//   console.error(err.stack)
+//   next(err)
+// }
 
 
