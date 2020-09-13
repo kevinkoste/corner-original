@@ -32,6 +32,7 @@ const DELETE_EXPERIENCE = "DELETE_EXPERIENCE"
 const UPDATE_EDUCATION = "UPDATE_EDUCATION"
 const DELETE_EDUCATION = "DELETE_EDUCATION"
 const DELETE_BOOK_BY_ID = "DELETE_BOOK_BY_ID"
+const DELETE_INTEGRATION = "DELETE_INTEGRATION"
 
 
 // Valid action types
@@ -45,6 +46,7 @@ type Action =
  | { type: "UPDATE_EDUCATION", education: any }
  | { type: "DELETE_EDUCATION", education: any }
  | { type: "DELETE_BOOK_BY_ID", id: string }
+ | { type: "DELETE_INTEGRATION", id: string }
 
 
 // Action creators
@@ -84,6 +86,9 @@ export const deleteBookById = (id: string): Action => {
   return { type: DELETE_BOOK_BY_ID, id: id }
 }
 
+export const deleteIntegration = (id: string): Action => {
+  return { type: DELETE_INTEGRATION, id: id }
+}
 
 
 // Reducer
@@ -217,6 +222,24 @@ const ProfileReducer = (state: StateType, action: Action) => {
                   books: state.profile.components
                     .find(comp => comp.type === 'bookshelf')?.props.books
                     .filter((book: any) => book.id !== action.id)
+                }
+              }
+            )
+          }
+        }
+
+        case DELETE_INTEGRATION:
+        return {
+          ...state,
+          profile: {
+            ...state.profile,
+            components: state.profile.components.map(comp => comp.type !== 'integrations' ? comp : 
+              {
+                ...state.profile.components.find(comp => comp.type === 'integrations'),
+                props: {
+                  integrations: state.profile.components
+                    .find(comp => comp.type === 'integrations')?.props.integrations
+                    .filter((integration: any) => integration.id !== action.id)
                 }
               }
             )

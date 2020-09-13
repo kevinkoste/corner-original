@@ -1,14 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import styled from 'styled-components'
 import { v4 as uuidv4 } from 'uuid'
-// import ExitIcon from '../icons/delete.svg'
+import ExitIcon from '../icons/delete.svg'
 
 // presentation/types
 import { Div, H1, H2, ExternalImg, Button } from '../components/Base'
 import { IntegrationsComponent, Integration, Post } from '../models/Profile'
 
 // logic
-import { useProfileContext, setEditing, updateComponent } from '../context/ProfileContext'
+import { useProfileContext, setEditing, updateComponent, deleteIntegration } from '../context/ProfileContext'
 import { FetchSubstack, FetchMedium } from '../libs/apiLib'
 
 
@@ -82,11 +82,8 @@ export const EditIntegrations: React.FC<IntegrationsComponent> = ({ id, props })
 			type: 'integrations',
 			props: { integrations: [...profileState.profile.components.find(comp => comp.type === 'integrations')?.props.integrations, integration] }
 		}))
+		setIntegrationUrl("")
 	}
-	
-	// const onDeleteIntegration = (event: any) => {
-	// 	// todo: implement
-	// }
 
 	const onAddClick = () => {
 		profileDispatch(setEditing(true))
@@ -124,12 +121,10 @@ export const EditIntegrations: React.FC<IntegrationsComponent> = ({ id, props })
 
 				{/* the integrations edit row */}
 				{ profileState.profile.components.find(comp => comp.type === 'integrations')?.props.integrations.map((integration: Integration, idx: number) => 
-					<div>
-						<IntegrationSection
-							key={idx}
-							integration={integration}
-						/>
-					</div>
+					<IntegrationSection
+						key={idx}
+						integration={integration}
+					/>
 				)}
 
 				{/* this is the integration input form */}
@@ -167,38 +162,100 @@ export const EditIntegrations: React.FC<IntegrationsComponent> = ({ id, props })
 	}
 }
 
-// todo: conditionally render latest post + "see more"
 type IntegrationSectionProps = { integration: Integration, color?: string }
 const IntegrationSection: React.FC<IntegrationSectionProps> = ({ integration, color }) => {
-	const { type, posts } = integration
-	return (
-		<React.Fragment>
-			{ posts.map((post: Post, idx: number) =>
-				<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }} key={idx}>
-					<LogoWrapper style={{position: 'relative'}}>
+	const { profileState, profileDispatch } = useProfileContext()
+	const { id, type, posts } = integration
+	const [ numPostsVisible, setNumPostsVisible ] = useState(1)
+
+	const renderDelete = () => {
+		if (profileState.editing) {
+			return (<DeleteIcon 
+				src={ExitIcon}
+				onClick={onDeleteIntegration}
+			/>)
+		}
+	}
+
+	const onDeleteIntegration = () => {
+		profileDispatch(deleteIntegration(id))
+	}
+
+	const renderLogoOrPlaceholder = (idx: number) => {
+		if (idx === 0) {
+			return (
+				<LogoWrapper style={{position: 'relative'}}>
 					<ExternalImg
 						src={`//logo.clearbit.com/${type}.com`}
 						style={{ minWidth:'51px', minHeight:'51px', backgroundSize:'contain' }}
 					/>
-					</LogoWrapper>
+					{renderDelete()}
+				</LogoWrapper>
+			)
+		} else {
+			return (
+				// TODO: Match width to width of logo
+				<div style={{width: '51px'}}></div>
+			)
+		}
+	}
 
-					<IntegrationText column width={12} style={{color: color||'black' }}>
-						<a href={post.link} style={{color:'unset'}}>
-							<H2>
-								{post.title}
-							</H2>
-						</a>
-						<H2>
-							{post.subtitle}
-						</H2>
-						<H2>
-							{post.timestamp}
-						</H2>
-					</IntegrationText>
-				</Div>
-			)}
-		</React.Fragment>
-	)
+	const renderSeeMore = () => {
+		if (numPostsVisible < posts.length && !profileState.editing) {
+			return (
+				<button onClick={onSeeMore}>See more</button>
+			)
+		}
+	}
+
+	const onSeeMore = useCallback(() => {
+		setNumPostsVisible(prevState => prevState + 3)
+	}, []);
+
+	const renderCollapse = () => {
+		if (numPostsVisible > 1 && !profileState.editing) {
+			return (
+				<button onClick={onCollapse}>Collapse</button>
+			)
+		}
+	}
+
+	const onCollapse = useCallback(() => {
+		setNumPostsVisible(1)
+	}, []);
+
+	const postsToRender = useMemo(() => {
+		return (
+			<React.Fragment>
+				{ posts.map((post: Post, idx: number) => {
+					if ((profileState.editing && idx === 0) || (!profileState.editing && idx < numPostsVisible)) {
+						return (
+							<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }} key={idx}>
+								{renderLogoOrPlaceholder(idx)}
+								<IntegrationText column width={12} style={{color: color||'black' }}>
+									<a href={post.link} target="_blank" style={{color:'unset'}}>
+										<H2>
+											{post.title}
+										</H2>
+									</a>
+									<H2>
+										{post.subtitle}
+									</H2>
+									<H2>
+										{post.timestamp}
+									</H2>
+								</IntegrationText>
+							</Div>
+						)
+					}
+				})}
+				{renderSeeMore()}
+				{renderCollapse()}
+			</React.Fragment>
+		)
+	}, [numPostsVisible, profileState.editing]);
+
+	return postsToRender;
 }
 
 const LogoWrapper = styled(Div)`
@@ -222,4 +279,14 @@ const AddButton = styled(Button)`
 	top: 50%;
 	left: 50%;
   transform: translate(-50%,-50%);
+`
+
+const DeleteIcon = styled.img`
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-size: 50%;
+	z-index: 2;
+	height: 72px;
+	width: 64px;
 `

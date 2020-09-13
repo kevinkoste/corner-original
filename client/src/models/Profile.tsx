@@ -80,6 +80,7 @@ export type Post = {
   link: string
 }
 export type Integration = {
+  id: string,
   type: string,
   title: string,
   description: string,
