@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useHistory } from "react-router-dom"
 import { v4 as uuidv4 } from 'uuid'
 import imageCompression from 'browser-image-compression'
-import ClipLoader from "react-spinners/ClipLoader"
+import ClipLoader from 'react-spinners/ClipLoader'
 
 import { useDetectMobile } from '../libs/hooksLib'
 import { useAppContext, setUsername } from '../context/AppContext'
@@ -331,7 +331,7 @@ export const OnboardingHeadshot: React.FC<OnboardingHeadshotProps> = ({ id, titl
 		const formData = new FormData()
 		formData.append('file', compressedFile)
 
-		const res = await PostProtectProfileImage(onboardingState.profile.username, formData)
+		const res = await PostProtectProfileImage(formData)
 		const uploadedImage = res.data.image
 
 		// maintain local component for display

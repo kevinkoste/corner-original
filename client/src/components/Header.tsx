@@ -2,14 +2,13 @@ import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
 
-import { useDetectMobile } from '../libs/hooksLib'
 import { Div, H1, H2, Button, TextArea } from './Base'
 import BurgerIcon from '../icons/burger.svg'
 import ExitIcon from '../icons/exit.png'
 
-import { cotter } from '../libs/cotterLib'
 import { useAppContext, setAuth } from '../context/AppContext'
-import { PostProtectInviteNewEmail } from '../libs/apiLib'
+import { useDetectMobile } from '../libs/hooksLib'
+import { PostProtectInviteNewEmail, PostAuthLogout } from '../libs/apiLib'
 
 type HeaderProps = { title: string }
 export const Header: React.FC<HeaderProps> = ({ title }) => {
@@ -27,6 +26,13 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 		else {
 			history.push('/')
 		}
+	}
+
+	const handleLogOut = async () => {
+		await PostAuthLogout()
+		dispatch(setAuth(false))
+		history.push('/')
+		onClick()
 	}
 
 	if (!showingBurger) {
@@ -88,12 +94,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 							</HeaderTitleText>
 							<HeaderTitleText
 								style={{color: 'white', marginTop: '20px'}}
-								onClick={() => {
-									cotter.logOut()
-									dispatch(setAuth(false))
-									history.push('/')
-									onClick()
-								}}>
+								onClick={handleLogOut}>
 								Log Out
 							</HeaderTitleText>
 						</React.Fragment>
@@ -110,12 +111,9 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 								My Profile
 							</HeaderTitleText>
 
-							<HeaderTitleText onClick={() => {
-									cotter.logOut()
-									dispatch(setAuth(false))
-									history.push('/')
-									onClick()
-								}} style={{color: 'white', marginTop: '20px'}}>
+							<HeaderTitleText
+								onClick={handleLogOut}
+								style={{color: 'white', marginTop: '20px'}}>
 								Log Out
 							</HeaderTitleText>
 

@@ -1,6 +1,7 @@
 import express from 'express'
 import { v4 as uuidv4 } from 'uuid'
 
+import { User } from '../models/User'
 import { authMiddleware } from '../libs/middleware'
 import db from '../libs/dynamo'
 
@@ -11,9 +12,8 @@ router.use(authMiddleware)
 
 // POST /social/follow - follow a new user
 router.post('/follow', async (req, res) => {
+  const { userId, email, lastLogin } = req.user as User
 
-  // body: {email, username}
-  const email = req.body.email // email of current user
   const username = req.body.username // this is the username to be followed
 
   // get socialId of calling user

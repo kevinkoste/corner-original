@@ -26,13 +26,13 @@ export const EditHeadshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 		const imageFile = event.target.files[0]
 		const compressedFile = await imageCompression(imageFile, {
 			maxSizeMB: 0.3,
-			useWebWorker: true
+			maxWidthOrHeight: 720,
 		})
 
 		const formData = new FormData()
 		formData.append('file', compressedFile)
 
-		const res = await PostProtectProfileImage(profileState.profile.username, formData)
+		const res = await PostProtectProfileImage(formData)
 		const uploadedImage = res.data.image
 
 		profileDispatch(updateComponent({
@@ -63,6 +63,7 @@ export const EditHeadshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 								Choose Photo
 								<ProfileImageUploadInput
 									type='file'
+									accept='image/*'
 									onChange={handleFileUpload}
 								/>
 							</ProfileImageUploadWrapper>

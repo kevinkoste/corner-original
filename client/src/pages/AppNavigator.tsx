@@ -1,12 +1,13 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react'
 import { Route, Switch, BrowserRouter } from 'react-router-dom'
+import PacmanLoader from "react-spinners/PacmanLoader"
 
-import { useAppContext, setAuth, setOnboarded, setUsername } from '../context/AppContext'
+import { useAppContext, setAuth, setOnboarded, setUserId, setEmail, setUsername, setProfile } from '../context/AppContext'
 import { OnboardingProvider } from '../context/OnboardingContext'
 import { ProfileProvider } from '../context/ProfileContext'
 
-import { cotter } from '../libs/cotterLib'
-import { PostProtectOnboardCheck } from '../libs/apiLib'
+import { GetProtectProfile, PostAuthLogin } from '../libs/apiLib'
+import magic from '../libs/magicLib'
 
 const HomePage = lazy(() => import('../pages/HomePage'))
 const ProfilePage = lazy(() => import('../pages/ProfilePage'))
@@ -26,24 +27,28 @@ export const AppNavigator: React.FC = () => {
   useEffect(() => {
 
     const onMount = async () => {
-      const user = cotter.getLoggedInUser()
 
-      if (user === undefined || user === null) {
+      const isLoggedIn = await magic.user.isLoggedIn()
+      if (isLoggedIn) {
+        dispatch(setAuth(true))
+        await PostAuthLogin(await magic.user.getIdToken())
+      } else {
         setLoading(false)
         return
       }
 
-      const res = await PostProtectOnboardCheck()
+      const profileRes = await GetProtectProfile()
+      const { userId, email, username, profile } = profileRes.data
+      console.log('userId:', userId, 'email:', email, 'profile:', profile)
 
-      if (res.data.onboarded !== false) {
-        dispatch(setUsername(res.data.profile.username))
-        dispatch(setAuth(true))
+      if (username) {
+        dispatch(setUserId(username))
+        dispatch(setEmail(username))
+        dispatch(setUsername(username))
+        dispatch(setProfile(profile))
         dispatch(setOnboarded(true))
-        setLoading(false)
-      } else {
-        dispatch(setAuth(true))
-        setLoading(false)
       }
+      setLoading(false)
     }
 
     onMount()
@@ -53,7 +58,7 @@ export const AppNavigator: React.FC = () => {
   if (!loading) {
     return (
       <BrowserRouter>
-        <Suspense fallback={<Fallback />}>
+        <Suspense fallback={<Fallback loading={loading}/>}>
           <Switch>
     
             <Route exact path='/' component={HomePage} />
@@ -86,12 +91,21 @@ export const AppNavigator: React.FC = () => {
     )
   } else {
     return (
-      <Fallback />
+      <Fallback loading={loading} />
     )
   }
   
 }
 
-const Fallback: React.FC = () => {
-  return <div style={{height: '100vh', backgroundColor: 'white'}}/>
+type FallbackProps = { loading: boolean }
+const Fallback: React.FC<FallbackProps> = ({ loading }) => {
+  return (
+    <div style={{height: '100vh', width: '100vw', backgroundColor: 'white'}}>
+      <PacmanLoader
+        css={'height: 300px; width: 300px;'}
+        loading={loading}
+        color={'#000000'}
+      />
+    </div>
+  )
 }

@@ -233,7 +233,7 @@ const IntegrationSection: React.FC<IntegrationSectionProps> = ({ integration, co
 							<Div row width={12} style={{ alignItems:'top', marginTop:'15px' }} key={idx}>
 								{renderLogoOrPlaceholder(idx)}
 								<IntegrationText column width={12} style={{color: color||'black' }}>
-									<a href={post.link} target="_blank" style={{color:'unset'}}>
+									<a href={post.link} target="_blank" rel="noopener noreferrer" style={{color:'unset'}}>
 										<H2>
 											{post.title}
 										</H2>
@@ -247,12 +247,15 @@ const IntegrationSection: React.FC<IntegrationSectionProps> = ({ integration, co
 								</IntegrationText>
 							</Div>
 						)
+					} else {
+						return <React.Fragment />
 					}
 				})}
 				{renderSeeMore()}
 				{renderCollapse()}
 			</React.Fragment>
 		)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [numPostsVisible, profileState.editing]);
 
 	return postsToRender;

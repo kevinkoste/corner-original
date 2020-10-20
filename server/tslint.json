@@ -5,7 +5,8 @@
     ],
     "jsRules": {},
     "rules": {
-        "object-literal-shorthand": false
+        "object-literal-shorthand": false,
+        "no-console": false
     },
     "rulesDirectory": [],
     "include": [

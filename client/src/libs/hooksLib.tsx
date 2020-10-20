@@ -1,4 +1,3 @@
-// base imports
 import { useState, useEffect } from 'react'
 
 const getWidth = () => window.innerWidth 

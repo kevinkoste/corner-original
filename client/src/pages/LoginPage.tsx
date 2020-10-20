@@ -1,16 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
-// presentation
-import { Div } from '../components/Base'
+import { Div, TextArea, Button } from '../components/Base'
 import { Header } from '../components/Header'
 import { useDetectMobile } from '../libs/hooksLib'
-
-// logic
-import { useAppContext, setAuth, setOnboarded, setUsername } from '../context/AppContext'
-import { PostPublicLoginData, PostProtectOnboardCheck } from '../libs/apiLib'
-import { cotter } from '../libs/cotterLib'
+import { useAppContext, setAuth, setOnboarded, setUserId, setEmail, setUsername, setProfile } from '../context/AppContext'
+import { PostAuthLogin, GetProtectProfile } from '../libs/apiLib'
+import magic from '../libs/magicLib'
 
 
 export const LoginPage: React.FC = () => {
@@ -19,37 +16,50 @@ export const LoginPage: React.FC = () => {
 	const mobile: boolean = useDetectMobile()
 
 	const { state, dispatch } = useAppContext()
+
+	const [ emailInput, setEmailInput ] = useState<string>('') 
 	
 	useEffect(() => {
-
 		const onMount = async () => {
-
 			// if authed and onboarded, redirect to profile
 			if (state.auth && state.onboarded) {
 				history.push(`/edit/${state.username}`)
 			}
-
-			// prompt and complete cotter login flow
-			const data = await cotter.signInWithLink().showEmailForm()
-
-			// post data to backend and set authenticated
-			await PostPublicLoginData(data)
-			dispatch(setAuth(true))
-
-			// check if user is onboarded, if yes set username & redirect to profile
-			const onboardRes = await PostProtectOnboardCheck()
-			if (onboardRes.data.onboarded) {
-				dispatch(setOnboarded(true))
-				dispatch(setUsername(onboardRes.data.profile.username))
-				history.push(`/edit/${onboardRes.data.profile.username}`)
-			} else {
-				history.push('/onboarding')
-			}
 		}
-
 		onMount()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
+
+	const handleLogin = async () => {
+		const didToken = await magic.auth.loginWithMagicLink({ email: emailInput })
+		if (didToken === null) {
+			console.log('oh no! your auth token isnt working, redirect to "oh no" screen?')
+			return
+		}
+
+		const loginRes = await PostAuthLogin(didToken)
+		if (loginRes.status !== 200) {
+			console.log('oh no! couldnt find your user, redirect to "oh no" screen?')
+			return
+		}
+
+		dispatch(setAuth(true))
+
+		const profileRes = await GetProtectProfile()
+		const { userId, email, username, profile } = profileRes.data
+		console.log('userId:', userId, 'email:', email, 'profile:', profile)
+
+		if (username) {
+			dispatch(setUserId(username))
+			dispatch(setEmail(username))
+			dispatch(setUsername(username))
+			dispatch(setProfile(profile))
+			dispatch(setOnboarded(true))
+			history.push(`/edit/${profile.username}`)
+		} else {
+			history.push('/onboarding')
+		}
+	}
 	
 	return (
 		<PageContainer column width={12}>
@@ -58,15 +68,30 @@ export const LoginPage: React.FC = () => {
 
 			<BodyContainer column width={mobile ? 11 : 6}>
 
-				{ !state.auth &&
+					{ true &&
+						<Div row width={12} style={{position: 'relative', maxWidth: '400px'}}>
+							<EmailTextInput 
+								placeholder={'you@example.com'}
+								onChange={(event: any) => setEmailInput(event.target.value)}
+								value={emailInput}
+								autoCapitalize="none"
+							/>
+							<SubmitButton onClick={handleLogin}>
+								Join &#62;
+							</SubmitButton>
+						</Div>
+					}
+
+				{/* { !state.auth &&
 					<div id="cotter-form-container" style={{ width: '100%', height: 200 }} />
-				}
+				} */}
 
 			</BodyContainer>
 
 		</PageContainer>
 	)
 }
+
 export default LoginPage
 
 const PageContainer = styled(Div)`
@@ -82,4 +107,29 @@ const BodyContainer = styled(Div)`
   margin: auto;
 	padding-top: 51px;
 	max-width: 1150px;
+`
+
+const EmailTextInput = styled(TextArea)`
+	font-size: 18px;
+	font-family: 'inter';
+  line-height: 24px;
+	text-transform: lowercase;
+	@media (max-width: 768px) {
+		font-size: 16px;
+	}
+`
+
+const SubmitButton = styled(Button)`
+	/* font-size: 18px;
+	font-family: 'inter';
+  line-height: 24px;
+	padding: 0;
+	@media (max-width: 768px) {
+		position: absolute;
+		right: 0;
+		font-size: 16px;
+	}
+	:hover {
+		cursor: pointer;
+	} */
 `

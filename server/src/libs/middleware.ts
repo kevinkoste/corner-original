@@ -1,15 +1,17 @@
 import express from 'express'
-import CotterNode from "cotter-node"
 import cors from 'cors'
+
+
+export const loggerMiddleware = (req: express.Request, res: express.Response, next: any) => {
+  console.log(`${req.method.padEnd(8, ' ')} ${req.path}`)
+  next()
+}
 
 export const corsMiddleware = cors({
   credentials: true,
   origin: (origin, callback) => {
     if (!origin) {
-      return callback(
-        null,
-        true
-      )
+      return callback(null, true)
     }
     if (process.env.ALLOWED_ORIGINS.indexOf(origin) === -1) {
       return callback(
@@ -21,33 +23,12 @@ export const corsMiddleware = cors({
   }
 })
 
-export const loggerMiddleware = (req: express.Request, res: express.Response, next: any) => {
-  console.log(`${req.method} ${req.path}`)
-  next()
-}
-
+// short-circuits the request and sends 401 if not authenticated
 export const authMiddleware = (req: express.Request, res: express.Response, next: any) => {
 
-  if (!('authorization' in req.headers)) {
-    res.status(401).end('Authorization header missing')
-  }
-  const auth = req.headers.authorization
-  const accessToken = auth.split(' ')[1]
-
-  CotterNode.CotterValidateJWT(accessToken)
-  .then(valid => {
-    if (!valid) throw Error('Invalid access token')
+  if (req.isAuthenticated()) {
     next()
-  })
-  .catch(err => {
-    console.log('catching cotterValidateJWT error:', err)
-    res.status(403).end(err)
-  })
+  } else {
+    res.status(401).end(`Unable to authenticate request`)
+  }
 }
-
-// export const errorMiddleware = (err: any, req: express.Request, res: express.Response, next: any) => {
-//   console.error(err.stack)
-//   next(err)
-// }
-
-

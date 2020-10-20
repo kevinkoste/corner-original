@@ -1,37 +1,26 @@
 import axios from 'axios'
+import magic from '../libs/magicLib'
 
-export default axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL
+const axiosPublic = axios.create({
+  baseURL: process.env.REACT_APP_API_BASE_URL,
+  withCredentials: true
 })
 
-export const axiosPublic = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL
+const axiosProtect = axios.create({
+  baseURL: process.env.REACT_APP_API_BASE_URL,
+  withCredentials: true
 })
 
-// export const axiosProtect = () => {
-//   return GetCotterToken()
-//   .then(res => res.token)
-//   .then(token => {
-//     return axios.create({
-//       baseURL: process.env.REACT_APP_API_BASE_URL,
-//       headers: {
-//         common: {
-//           authorization: `Bearer ${token}`
-//         }
-//       }
-//     })
-//   })
-// }
+// Add a request interceptor to include the authorization header
+axiosProtect.interceptors.request.use(async (config) => {
 
-// axios.create({
-//   baseURL: process.env.REACT_APP_API_BASE_URL,
-//   headers: {
-//     common: {
-//       authorization: `Bearer ${GetCotterToken()}`
-//     }
-//   }
-// })
+  const token = await magic.user.getIdToken()
 
+  console.log('executing axios interceptor with token:', token)
 
-// can also add interceptors, etc here
-// instance.defaults.headers.common['Authorization'] = 'AUTH TOKEN FROM INSTANCE'
+  config.headers.authorization = `Bearer ${token}`
+  
+  return config
+})
+
+export { axiosPublic, axiosProtect }
