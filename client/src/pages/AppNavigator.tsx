@@ -1,12 +1,13 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react'
 import { Route, Switch, BrowserRouter } from 'react-router-dom'
-import PacmanLoader from "react-spinners/PacmanLoader"
+import BeatLoader from 'react-spinners/BeatLoader'
 
+import { Div } from '../components/Base'
 import { useAppContext, setAuth, setOnboarded, setUserId, setEmail, setUsername, setProfile } from '../context/AppContext'
 import { OnboardingProvider } from '../context/OnboardingContext'
 import { ProfileProvider } from '../context/ProfileContext'
 
-import { GetProtectProfile, PostAuthLogin } from '../libs/apiLib'
+import { PostAuthLogin } from '../libs/apiLib'
 import magic from '../libs/magicLib'
 
 const HomePage = lazy(() => import('../pages/HomePage'))
@@ -29,21 +30,26 @@ export const AppNavigator: React.FC = () => {
     const onMount = async () => {
 
       const isLoggedIn = await magic.user.isLoggedIn()
-      if (isLoggedIn) {
-        dispatch(setAuth(true))
-        await PostAuthLogin(await magic.user.getIdToken())
-      } else {
+      console.log('isLoggedIn: ', isLoggedIn)
+      if (!isLoggedIn) {
         setLoading(false)
         return
       }
 
-      const profileRes = await GetProtectProfile()
-      const { userId, email, username, profile } = profileRes.data
-      console.log('userId:', userId, 'email:', email, 'profile:', profile)
+      const didToken = await magic.user.getIdToken()
+      console.log('didToken: ', didToken)
 
-      if (username) {
-        dispatch(setUserId(username))
-        dispatch(setEmail(username))
+      const authRes = await PostAuthLogin(didToken)
+      console.log('authRes is:', authRes)
+
+      dispatch(setAuth(true))
+
+      const { userId, email, username, profile, onboarded } = authRes.data
+      console.log('userId:', userId, 'email:', email, 'profile:', profile, 'onboarded:', onboarded)
+
+      if (onboarded) {
+        dispatch(setUserId(userId))
+        dispatch(setEmail(email))
         dispatch(setUsername(username))
         dispatch(setProfile(profile))
         dispatch(setOnboarded(true))
@@ -55,10 +61,12 @@ export const AppNavigator: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (!loading) {
+  if (loading) {
+    return <Fallback />
+  } else {
     return (
       <BrowserRouter>
-        <Suspense fallback={<Fallback loading={loading}/>}>
+        <Suspense fallback={<Fallback/>}>
           <Switch>
     
             <Route exact path='/' component={HomePage} />
@@ -89,23 +97,18 @@ export const AppNavigator: React.FC = () => {
         </Suspense>
       </BrowserRouter>
     )
-  } else {
-    return (
-      <Fallback loading={loading} />
-    )
   }
-  
 }
 
-type FallbackProps = { loading: boolean }
-const Fallback: React.FC<FallbackProps> = ({ loading }) => {
+const Fallback: React.FC = () => {
   return (
-    <div style={{height: '100vh', width: '100vw', backgroundColor: 'white'}}>
-      <PacmanLoader
-        css={'height: 300px; width: 300px;'}
-        loading={loading}
+    <Div row width={12} style={{height: '100vh', backgroundColor: 'white', alignItems: 'center'}}>
+      <BeatLoader
+        css={'margin: auto;'}
+        size={20}
+        loading={true}
         color={'#000000'}
       />
-    </div>
+    </Div>
   )
 }

@@ -1,5 +1,4 @@
 import express from 'express'
-import { v4 as uuidv4 } from 'uuid'
 
 import { User } from '../models/User'
 import { authMiddleware } from '../libs/middleware'
@@ -10,68 +9,61 @@ router.use(authMiddleware)
 
 // SOCIAL ROUTES //
 
-// POST /social/follow - follow a new user
+// POST /social/follow - follow a user by username
 router.post('/follow', async (req, res) => {
   const { userId, email, lastLogin } = req.user as User
 
-  const username = req.body.username // this is the username to be followed
+  // this is the username to be followed
+  const username = req.body.username
 
-  // get socialId of calling user
-  const profileRes = await db.get({ TableName: 'profiles', Key: { email } })
-  const socialId = profileRes.Item.socialId
-
-  // get socialId of user to be followed
-  const followProfileRes = await db.query({
-    TableName: "profiles",
+  // first get userId associated with that username
+  const followUserRes = await db.query({
+    TableName: "users",
     IndexName: "username-index",
     KeyConditionExpression: "username = :key",
     ExpressionAttributeValues: {
       ":key": username
     }
   })
-  const followSocialId = followProfileRes.Items[0].socialId
+  const followedUserId = followUserRes.Items[0].userId
 
-  // update calling user row in social
-  await db.update({
-    TableName: 'social',
-    Key: { id: socialId },
+  // add both follows to db
+  await Promise.all([
+    db.update({
+      TableName: 'users',
+      Key: { userId: userId },
+      UpdateExpression: 'set #following = list_append(if_not_exists(#following, :empty_list), :follow)',
+      ExpressionAttributeNames: {
+        '#following': 'following'
+      },
+      ExpressionAttributeValues: {
+        ':follow': [{
+          userId: followedUserId,
+          timestamp: Date.now()
+        }],
+        ':empty_list': []
+      }
+    }),
+    await db.update({
+      TableName: 'users',
+      Key: { userId: followedUserId },
+      UpdateExpression: 'set #followers = list_append(if_not_exists(#followers, :empty_list), :follow)',
+      ExpressionAttributeNames: {
+        '#followers': 'followers'
+      },
+      ExpressionAttributeValues: {
+        ':follow': [{
+          userId: userId,
+          timestamp: Date.now()
+        }],
+        ':empty_list': []
+      }
+    })
+  ])
 
-    UpdateExpression: 'set #following = list_append(if_not_exists(#following, :empty_list), :follow)',
-    ExpressionAttributeNames: {
-      '#following': 'following'
-    },
-    ExpressionAttributeValues: {
-      ':follow': [{
-        socialId: followSocialId,
-        timestamp: Date.now()
-      }],
-      ':empty_list': []
-    }
-  })
-
-  // update followed user row in social
-  await db.update({
-    TableName: 'social',
-    Key: { id: followSocialId },
-
-    UpdateExpression: 'set #followed = list_append(if_not_exists(#followers, :empty_list), :follow)',
-    ExpressionAttributeNames: {
-      '#followers': 'followers'
-    },
-    ExpressionAttributeValues: {
-      ':follow': [{
-        socialId: socialId,
-        timestamp: Date.now()
-      }],
-      ':empty_list': []
-    }
-  })
-
-  res.status(200)
+  return res.status(200).send(true)
 
 })
-
-
 
 
 export default router

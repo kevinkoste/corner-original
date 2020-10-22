@@ -1,7 +1,7 @@
 // top-level type defining a profile
 export type Profile = {
   username: string,
-  components: Component[]
+  components: Component[],
 }
 
 export const EmptyProfile: Profile = {

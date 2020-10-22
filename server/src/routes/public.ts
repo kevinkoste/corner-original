@@ -13,11 +13,10 @@ router.get('/profile', async (req, res, next) => {
   if (!('username' in req.query)) {
     return res.status(200).send(false)
   }
-
   const username = req.query.username
 
   const data = await db.query({
-    TableName: "profiles",
+    TableName: "users",
     IndexName: "username-index",
     KeyConditionExpression: "username = :key",
     ExpressionAttributeValues: {
@@ -37,18 +36,18 @@ router.get('/profile', async (req, res, next) => {
   }
 })
 
-// GET /public/all-profiles - public route to access all profiles
-router.get('/all-profiles', async (req, res) => {
+// GET /public/profile/all - public route to access all profiles
+router.get('/profile/all', async (req, res) => {
 
   const data = await db.scan({
-    TableName: 'profiles',
+    TableName: 'users',
     ProjectionExpression: "username, components"
   })
 
   if (data.Items) {
     res.status(200).send(data.Items)
   } else {
-    res.status(500)
+    res.status(200).send(false)
   }
 })
 
@@ -61,7 +60,7 @@ router.get('/availability', async (req, res) => {
   const username = req.query.username
 
   const data = await db.query({
-    TableName: "profiles",
+    TableName: "users",
     IndexName: "username-index",
     KeyConditionExpression: "username = :key",
     ExpressionAttributeValues: {

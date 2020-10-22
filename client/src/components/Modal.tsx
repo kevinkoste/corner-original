@@ -38,6 +38,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ profile }) => {
 
   const wrapperRef = useRef(null)
   useOutsideAlerter(wrapperRef, setShowing)
+  
   return (
     <BodyContainer column width={mobile ? 11 : 10}>
       

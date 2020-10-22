@@ -9,7 +9,7 @@ import { Img } from '../components/Base'
 import { HeadshotComponent } from '../models/Profile'
 
 // logic
-import { useProfileContext, updateComponent } from '../context/ProfileContext'
+import { useProfileContext, updateComponent, postProfile } from '../context/ProfileContext'
 import { PostProtectProfileImage } from '../libs/apiLib'
 
 export const EditHeadshot: React.FC<HeadshotComponent> = ({ id, props }) => {
@@ -43,11 +43,13 @@ export const EditHeadshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 			}
 		}))
 
+		profileDispatch(postProfile())
+
 		setUploading(false)
 	}
 	
 	return (
-		<ProfileImage size={mobile? 12 : 10} src={props.image}>
+		<ProfileImage size={mobile? 12 : 10} src={'large/' + props.image}>
 
 			{ (profileState.editing) &&
 				<ProfileImageUploadTopWrapper>
@@ -79,7 +81,7 @@ export const EditHeadshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 	const mobile: boolean = useDetectMobile()
 	return (
-			<ProfileImage size={mobile ? 12 : 10} style={{marginTop:''}} src={props.image} />
+			<ProfileImage size={mobile ? 12 : 10} style={{marginTop:''}} src={'large/' + props.image} />
 	)
 }
 

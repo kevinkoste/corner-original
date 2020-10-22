@@ -1,15 +1,11 @@
 import express from 'express'
 import fs from 'fs'
-import multiparty from 'multiparty'
-import fileType from 'file-type'
-import sharp from 'sharp'
-import { v4 as uuidv4 } from 'uuid'
 
 import { User } from '../models/User'
 import { authMiddleware } from '../libs/middleware'
 import { fetchSubstack, fetchMedium } from '../libs/integrations'
+import { parseForm, deleteImagesForUser, uploadImagesForUser } from '../libs/images'
 import db from '../libs/dynamo'
-import s3 from '../libs/s3'
 import sg from '../libs/sg'
 
 
@@ -68,16 +64,15 @@ router.get('/profile', async (req, res) => {
 // POST /protect/profile - update profile data for auth'd user
 router.post('/profile', async (req, res) => {
   const { userId, email, lastLogin } = req.user as User
-
-  // body: { profile: Profile }
+  const profile = req.body.profile
 
   await db.update({
     TableName: 'users',
     Key: { userId: userId },
     UpdateExpression: "set username = :x, components = :y",
     ExpressionAttributeValues: {
-      ":x": req.body.profile.username,
-      ":y": req.body.profile.components
+      ":x": profile.username,
+      ":y": profile.components
     }
   })
 
@@ -89,53 +84,16 @@ router.post('/profile', async (req, res) => {
 router.post('/profile/image', async (req, res) => {
   const { userId, email, lastLogin } = req.user as User
 
-  // first delete the existing headshot image
-  const profile = await db.get({
-    TableName: 'users',
-    Key: { userId: userId }
-  })
-  // const profile = await db.get({
-  //   TableName: "users",
-  //   IndexName: "username-index",
-  //   KeyConditionExpression: "username = :key",
-  //   ExpressionAttributeValues: {
-  //     ":key": username
-  //   },
-  //   ProjectionExpression: "username, components"
-  // })
+  const [fields, files] = await parseForm(req)
+  const buffer = fs.readFileSync(files.file[0].path)
 
-  if (profile.Item) {
-    const image = profile.Item.components.find((comp: any) => comp.type === 'headshot').props.image
-    await s3.delete({
-      Bucket: process.env.AWS_S3_BUCKET,
-      Key: `${image}`,
-    })
-  }
+  const [ _, imageId ] = await Promise.all([
+    deleteImagesForUser(userId),
+    uploadImagesForUser(buffer)
+  ])
 
-  const imageId = uuidv4()
-  const form = new multiparty.Form()
+  res.status(200).json({ image: imageId })
 
-  form.parse(req, async (err, fields, files) => {
-
-    const buffer = fs.readFileSync(files.file[0].path)
-    // const type = await fileType.fromBuffer(buffer)
-
-    const img = await sharp(buffer)
-      .resize(480, 480, { fit: 'inside' })
-      .jpeg({ quality: 75 })
-      .toBuffer()
-
-    const resS3 = await s3.upload({
-      Bucket: process.env.AWS_S3_BUCKET,
-      Key: `images/${imageId}.jpg`,
-      ACL: 'public-read',
-      Body: img,
-      CacheControl: 'max-age=604800'
-    })
-
-    res.status(200).json({ image: resS3.Key })
-
-  })
 })
 
 router.post('/fetch-substack', async (req, res) => {
@@ -171,14 +129,14 @@ router.post('/onboard/check', async (req, res) => {
 
 // POST /protect/invite/check - checks if email has been invited
 router.post('/invite/check', async (req, res) => {
-  const { userId, email, lastLogin } = req.user as User
+  const { email } = req.user as User
 
   const data = await db.get({
     TableName: 'invites',
     Key: { email: email }
   })
 
-  if (data.Item !== undefined && data.Item !== null) {
+  if (data.Item) {
     res.status(200).send(true) // this email has been invited
   } else {
     res.status(200).send(false) // this email has not been invited
@@ -198,10 +156,12 @@ router.post('/invite', async (req, res) => {
     Key: { email: invitedEmail }
   })
 
-  // email has already been invited, end
-  if (inviteData.Item !== undefined && inviteData.Item !== null) {
-    res.status(200).json({ status: 'email already invited' })
-    return
+  if (inviteData.Item) {
+    // email has already been invited
+    return res.status(200).send(false)
+  } else {
+    // successful invite, send response then continue below
+    res.status(200).send(true)
   }
 
   // put to invites table async
@@ -210,23 +170,37 @@ router.post('/invite', async (req, res) => {
     Item: { email: invitedEmail }
   })
 
-  // get sender data from profiles table
-  const senderData = await db.get({
-    TableName: 'profiles',
-    Key: { email: email }
+  // update invited list for sender, and get name in response
+  const senderData = await db.update({
+    TableName: 'users',
+    Key: { userId: userId },
+    UpdateExpression: 'set #invited = list_append(if_not_exists(#invited, :empty_list), :invite)',
+    ExpressionAttributeNames: {
+      '#invited': 'invited'
+    },
+    ExpressionAttributeValues: {
+      ':invite': [{
+        email: invitedEmail,
+        timestamp: Date.now()
+      }],
+      ':empty_list': []
+    },
+    ReturnValues: "ALL_NEW"
   })
 
-  const name = senderData.Item.components.find((component: any ) => component.type === 'name').props.name
+  const name = senderData.Attributes.components.find((component: any ) => component.type === 'name').props.name
 
   await sg.send({
     to: invitedEmail,
     from: {'email': 'hello@corner.so', 'name' : 'Corner'},
     subject: `${name} invited you to join Corner`,
-    text: 'Grab your own Corner of the Internet',
-    html: `Your friend ${name} has invited you to join Corner, a place for young people with big ideas on the internet. <br/> <br/> Create your account by visiting <a href="https://corner.so">corner.so</a>.`,
+    text: `Curate your internet presence`,
+    html: `
+      Your friend ${name} has invited you to join Corner.
+      <br/><br/>
+      Visit <a href="https://corner.so">corner.so</a> to start.
+    `
   })
-
-  res.status(200).json({ status: 'email sent' })
 
 })
 

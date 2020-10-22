@@ -6,7 +6,7 @@ import { Div, TextArea, Button } from '../components/Base'
 import { Header } from '../components/Header'
 import { useDetectMobile } from '../libs/hooksLib'
 import { useAppContext, setAuth, setOnboarded, setUserId, setEmail, setUsername, setProfile } from '../context/AppContext'
-import { PostAuthLogin, GetProtectProfile } from '../libs/apiLib'
+import { PostAuthLogin } from '../libs/apiLib'
 import magic from '../libs/magicLib'
 
 
@@ -37,28 +37,40 @@ export const LoginPage: React.FC = () => {
 			return
 		}
 
-		const loginRes = await PostAuthLogin(didToken)
-		if (loginRes.status !== 200) {
+		const authRes = await PostAuthLogin(didToken)
+    console.log('authRes.data is:', authRes.data)
+
+		if (authRes.status !== 200) {
 			console.log('oh no! couldnt find your user, redirect to "oh no" screen?')
 			return
 		}
 
 		dispatch(setAuth(true))
 
-		const profileRes = await GetProtectProfile()
-		const { userId, email, username, profile } = profileRes.data
-		console.log('userId:', userId, 'email:', email, 'profile:', profile)
+		const { userId, email, username, profile, onboarded } = authRes.data
+		console.log('userId:', userId, 'email:', email, 'profile:', profile, 'onboarded:', onboarded)
 
-		if (username) {
-			dispatch(setUserId(username))
-			dispatch(setEmail(username))
+		if (onboarded) {
+			dispatch(setUserId(userId))
+			dispatch(setEmail(email))
 			dispatch(setUsername(username))
 			dispatch(setProfile(profile))
 			dispatch(setOnboarded(true))
-			history.push(`/edit/${profile.username}`)
+			history.push(`/edit/${username}`)
 		} else {
 			history.push('/onboarding')
 		}
+
+		// if (username) {
+		// 	dispatch(setUserId(username))
+		// 	dispatch(setEmail(username))
+		// 	dispatch(setUsername(username))
+		// 	dispatch(setProfile(profile))
+		// 	dispatch(setOnboarded(true))
+		// 	history.push(`/edit/${profile.username}`)
+		// } else {
+		// 	history.push('/onboarding')
+		// }
 	}
 	
 	return (

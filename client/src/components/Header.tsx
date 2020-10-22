@@ -31,8 +31,8 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 	const handleLogOut = async () => {
 		await PostAuthLogout()
 		dispatch(setAuth(false))
-		history.push('/')
 		onClick()
+		history.push('/')
 	}
 
 	if (!showingBurger) {

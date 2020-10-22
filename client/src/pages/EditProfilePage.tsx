@@ -92,9 +92,10 @@ export const EditProfilePage: React.FC = () => {
 
 
   // on save profile, post new profile data to server
-  const onSave = async () => {
+  // NOT async
+  const onSave = () => {
     if (profileState.editing) {
-      await PostProtectProfile(profileState.profile)
+      PostProtectProfile(profileState.profile)
     }
     profileDispatch(setEditing(!profileState.editing))
   }

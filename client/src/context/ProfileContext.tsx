@@ -1,6 +1,7 @@
 import React, { createContext, useReducer, useContext, Dispatch } from 'react'
 
 import { Profile, EmptyProfile } from '../models/Profile'
+import { PostProtectProfile } from '../libs/apiLib'
 
 type StateType = {
   profile: Profile,
@@ -24,6 +25,7 @@ const ProfileContext = createContext<ProfileContextType>({
 
 // Action constants
 const UPDATE_PROFILE = "UPDATE_PROFILE"
+const POST_PROFILE = "POST_PROFILE"
 const SET_EDITING = "SET_EDITING"
 const UPDATE_COMPONENT = "UPDATE_COMPONENT"
 const DELETE_COMPONENT = "DELETE_COMPONENT"
@@ -38,6 +40,7 @@ const DELETE_INTEGRATION = "DELETE_INTEGRATION"
 // Valid action types
 type Action =
  | { type: "UPDATE_PROFILE", profile: Profile }
+ | { type: "POST_PROFILE" }
  | { type: "SET_EDITING", editing: boolean }
  | { type: "UPDATE_COMPONENT", component: any }
  | { type: "DELETE_COMPONENT", id: string }
@@ -52,6 +55,10 @@ type Action =
 // Action creators
 export const updateProfile = (profile: Profile): Action => {
   return { type: UPDATE_PROFILE, profile: profile}
+}
+
+export const postProfile = (): Action => {
+  return { type: POST_PROFILE }
 }
 
 export const setEditing = (editing: boolean): Action => {
@@ -100,6 +107,10 @@ const ProfileReducer = (state: StateType, action: Action) => {
         ...state,
         profile: action.profile
       }
+    
+    case POST_PROFILE:
+      PostProtectProfile(state.profile)
+      return {...state}
 
     case SET_EDITING:
       return {

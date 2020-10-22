@@ -3,7 +3,9 @@ import cors from 'cors'
 
 
 export const loggerMiddleware = (req: express.Request, res: express.Response, next: any) => {
-  console.log(`${req.method.padEnd(8, ' ')} ${req.path}`)
+  if (req.method !== 'OPTIONS') {
+    console.log(`${req.method.padEnd(7, ' ')} ${req.path.padEnd(23, ' ')} ${JSON.stringify(req.query)}`)
+  }
   next()
 }
 

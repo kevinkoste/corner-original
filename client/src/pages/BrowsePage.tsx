@@ -72,7 +72,7 @@ const ProfileRow: React.FC<ProfileRowProps> = ({ profile }) => {
 
   return (
     <RowContainer onClick={onClick} row width={12}>
-      <ProfileImage size={3} src={image}/>
+      <ProfileImage size={3} src={'small/' + image}/>
 
       <ProfileName>
         <u>{name}</u><br/>
