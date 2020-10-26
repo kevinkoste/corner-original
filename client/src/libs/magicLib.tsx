@@ -1,5 +1,10 @@
 import { Magic } from 'magic-sdk'
 
-const magic = new Magic(process.env.MAGIC_PUBLISHABLE_KEY || 'pk_test_0282C246359FA8D2')
+console.log(
+  'init magic with pub key:',
+  process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY
+)
+
+const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY || '')
 
 export default magic
