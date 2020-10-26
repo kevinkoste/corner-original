@@ -1,6 +1,6 @@
-import magicAdmin from '@magic-sdk/admin'
+import { Magic } from '@magic-sdk/admin'
 
-const { Magic } = magicAdmin
+console.log('init magic sdk with secret key:', process.env.MAGIC_SECRET_KEY)
 
 const magic = new Magic(process.env.MAGIC_SECRET_KEY)
 

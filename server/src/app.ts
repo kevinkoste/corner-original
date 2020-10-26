@@ -15,7 +15,7 @@ import socialRouter from './routes/social'
 try {
   await connectDb()
 } catch (err) {
-  console.log(err)
+  console.error(err)
 }
 
 const app = express()
