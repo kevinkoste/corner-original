@@ -25,27 +25,27 @@ export const OnboardingPage: React.FC = () => {
 	const items: OnboardingItem[] = [
     { id: 1,
 			type: 'username',
-			buttons: {forward: 'Add Name', backward: ''},
+			buttons: { forward: 'Add Name', backward: '' },
 			props: { title: 'Your Unique Username', placeholder: 'johnkauber' }
 		},
     { id: 2, 
 			type: 'name',
-			buttons: {forward: 'Add Headline', backward: 'Edit Username'},
+			buttons: { forward: 'Add Headline', backward: 'Edit Username' },
 			props: { title: 'Your Name', placeholder: 'John Kauber' }
 		},
 		{ id: 3, 
 			type: 'headline',
-			buttons: {forward: 'Add Headshot', backward: 'Edit Name'},
+			buttons: { forward: 'Add Headshot', backward: 'Edit Name' },
 			props: { title: 'Your One Liner', placeholder: 'John Kauber is a Security Engineer and Analyst passionate about protecting critical systems from threat of attack.' }
     },
     { id: 4, 
 			type: 'headshot',
-			buttons: {forward: 'Generate Profile', backward: 'Edit Headline'},
-			props: { title: 'Your Headshot', placeholder: 'images/pg.jpg' }
+			buttons: { forward: 'Generate Profile', backward: 'Edit Headline' },
+			props: { title: 'Your Headshot', placeholder: 'pg.jpg'}
 		},
 		{ id: 5,
-			buttons: {forward: 'Go to Your Profile', backward: ''},
-			type: 'done'
+			type: 'done',
+			buttons: { forward: 'Go to Your Profile', backward: '' },
 		}
 	]
 	

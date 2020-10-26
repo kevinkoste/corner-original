@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import imageCompression from 'browser-image-compression'
-import ClipLoader from "react-spinners/ClipLoader"
+import ClipLoader from 'react-spinners/ClipLoader'
 
 // presentation/types
 import { useDetectMobile } from '../libs/hooksLib'
@@ -9,106 +9,114 @@ import { Img } from '../components/Base'
 import { HeadshotComponent } from '../models/Profile'
 
 // logic
-import { useProfileContext, updateComponent, postProfile } from '../context/ProfileContext'
+import {
+  useProfileContext,
+  updateComponent,
+  postComponents,
+} from '../context/ProfileContext'
 import { PostProtectProfileImage } from '../libs/apiLib'
 
 export const EditHeadshot: React.FC<HeadshotComponent> = ({ id, props }) => {
-
-	const mobile: boolean = useDetectMobile()
+  const mobile: boolean = useDetectMobile()
 
   const { profileState, profileDispatch } = useProfileContext()
 
-	const [ uploading, setUploading ] = useState(false)
+  const [uploading, setUploading] = useState(false)
 
-	const handleFileUpload = async (event: any) => {
-		setUploading(true)
+  const handleFileUpload = async (event: any) => {
+    setUploading(true)
 
-		const imageFile = event.target.files[0]
-		const compressedFile = await imageCompression(imageFile, {
-			maxSizeMB: 0.3,
-			maxWidthOrHeight: 720,
-		})
+    const imageFile = event.target.files[0]
+    const compressedFile = await imageCompression(imageFile, {
+      maxSizeMB: 0.3,
+      maxWidthOrHeight: 720,
+    })
 
-		const formData = new FormData()
-		formData.append('file', compressedFile)
+    const formData = new FormData()
+    formData.append('file', compressedFile)
 
-		const res = await PostProtectProfileImage(formData)
-		const uploadedImage = res.data.image
+    const { data } = await PostProtectProfileImage(formData)
+    const uploadedImage = data.image
 
-		profileDispatch(updateComponent({
-			id: id,
-			type: 'headshot',
-			props: {
-				image: uploadedImage
-			}
-		}))
+    console.log('uploaded image has imageId:', uploadedImage)
 
-		profileDispatch(postProfile())
+    profileDispatch(
+      updateComponent({
+        id: id,
+        type: 'headshot',
+        props: {
+          image: uploadedImage,
+        },
+      })
+    )
 
-		setUploading(false)
-	}
-	
-	return (
-		<ProfileImage size={mobile? 12 : 10} src={'large/' + props.image}>
+    profileDispatch(postComponents())
 
-			{ (profileState.editing) &&
-				<ProfileImageUploadTopWrapper>
-						{	uploading &&
-							<ClipLoader
-								css={'position: relative; left: -50%; text-align: center;'}
-								loading={uploading}
-								color={'#000000'}
-							/>
-						}
-						{ !uploading &&
-							<ProfileImageUploadWrapper>
-								Choose Photo
-								<ProfileImageUploadInput
-									type='file'
-									accept='image/*'
-									onChange={handleFileUpload}
-								/>
-							</ProfileImageUploadWrapper>
-						}
-				</ProfileImageUploadTopWrapper>
-			}
+    setUploading(false)
+  }
 
-		</ProfileImage>
-	)
+  return (
+    <ProfileImage size={mobile ? 12 : 10} src={'large/' + props.image}>
+      {profileState.editing && (
+        <ProfileImageUploadTopWrapper>
+          {uploading && (
+            <ClipLoader
+              css={'position: relative; left: -50%; text-align: center;'}
+              loading={uploading}
+              color={'#000000'}
+            />
+          )}
+          {!uploading && (
+            <ProfileImageUploadWrapper>
+              Choose Photo
+              <ProfileImageUploadInput
+                type="file"
+                accept="image/*"
+                onChange={handleFileUpload}
+              />
+            </ProfileImageUploadWrapper>
+          )}
+        </ProfileImageUploadTopWrapper>
+      )}
+    </ProfileImage>
+  )
 }
 
 // public profile version
 export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
-	const mobile: boolean = useDetectMobile()
-	return (
-			<ProfileImage size={mobile ? 12 : 10} style={{marginTop:''}} src={'large/' + props.image} />
-	)
+  const mobile: boolean = useDetectMobile()
+  return (
+    <ProfileImage
+      size={mobile ? 12 : 10}
+      style={{ marginTop: '' }}
+      src={'large/' + props.image}
+    />
+  )
 }
 
-
 const ProfileImage = styled(Img)`
-	margin-top: 20px;
-` 
+  margin-top: 20px;
+`
 
 const ProfileImageUploadInput = styled.input`
-	display: none;
-	width: unset;
+  display: none;
+  width: unset;
 `
 
 const ProfileImageUploadTopWrapper = styled.div`
-	position: absolute;
-	top: 50%;
-	left: 50%;
-  transform: translate(0,-50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(0, -50%);
 `
 
 const ProfileImageUploadWrapper = styled.label`
-	position: relative;
-	left: -50%;
-	text-align: center;
-	width: unset;
+  position: relative;
+  left: -50%;
+  text-align: center;
+  width: unset;
 
-	border: none;
+  border: none;
   padding: 0;
   margin: 0;
   text-decoration: none;
@@ -122,4 +130,3 @@ const ProfileImageUploadWrapper = styled.label`
   cursor: pointer;
   border-radius: 30px;
 `
-

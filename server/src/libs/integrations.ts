@@ -1,38 +1,9 @@
 import axios from 'axios'
 
-export const fetchSubstack = (substackUrl: string) => {
-  return axios.get("https://api.rss2json.com/v1/api.json", {
-    params: {
-      rss_url: substackUrl + "feed"
-    }
-  })
-  .then(response => {
-    return parseRss(substackUrl, response.data)
-  }).catch(error => {
-    console.error(error)
-    return error
-  });
-}
-
-export const fetchMedium = (mediumUrl: string) => {
-  return axios.get("https://api.rss2json.com/v1/api.json", {
-    params: {
-      rss_url: mediumUrl.replace("medium.com/", "medium.com/feed/")
-    }
-  })
-  .then(response => {
-    return parseRss(mediumUrl, response.data)
-  }).catch(error => {
-    console.error(error)
-    return error
-  });
-}
-
-
 type Rss = {
-  url: string,
-  title: string,
-  description: string,
+  url: string
+  title: string
+  description: string
   posts: any[]
 }
 
@@ -41,15 +12,35 @@ const parseRss = (url: string, rss: any) => {
     url: url,
     title: rss.feed.title,
     description: rss.feed.description,
-    posts: []
+    posts: [],
   }
   rss.items.forEach((post: any) => {
     parsedRss.posts.push({
       title: post.title,
       timestamp: post.pubDate,
       subtitle: post.description,
-      link: post.link
+      link: post.link,
     })
-  });
-  return parsedRss;
+  })
+  return parsedRss
+}
+
+export const fetchSubstack = async (substackUrl: string) => {
+  const res = await axios.get('https://api.rss2json.com/v1/api.json', {
+    params: {
+      rss_url: `${substackUrl}feed`,
+    },
+  })
+
+  return parseRss(substackUrl, res.data)
+}
+
+export const fetchMedium = async (mediumUrl: string) => {
+  const res = await axios.get('https://api.rss2json.com/v1/api.json', {
+    params: {
+      rss_url: mediumUrl.replace('medium.com/', 'medium.com/feed/'),
+    },
+  })
+
+  return parseRss(mediumUrl, res.data)
 }

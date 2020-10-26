@@ -5,8 +5,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "ci-build": "CI= react-scripts build",
-    "deploy": "react-scripts build && aws s3 sync ./build/ s3://xyzcom --delete",
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -37,10 +36,17 @@
     "@types/styled-components": "^5.1.2",
     "@types/uuid": "^8.3.0",
     "react-scripts": "3.4.3",
+    "source-map-explorer": "^2.5.0",
     "typescript": "^3.9.7"
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true
   },
   "browserslist": {
     "production": [

@@ -5,8 +5,7 @@ type StateType = {
   onboarded: boolean,
   userId: string,
   email: string,
-  username: string,
-  profile: any
+  username: string
 }
 
 const initialState: StateType = {
@@ -14,8 +13,7 @@ const initialState: StateType = {
   onboarded: false,
   userId: "",
   email: "",
-  username: "",
-  profile: {},
+  username: ""
 }
 
 type AppContextType = {
@@ -34,7 +32,6 @@ const SET_ONBOARDED = "SET_ONBOARDED"
 const SET_USERID = "SET_USERID"
 const SET_EMAIL = "SET_EMAIL"
 const SET_USERNAME = "SET_USERNAME"
-const SET_PROFILE = "SET_PROFILE"
 
 // Valid action types
 type Action =
@@ -43,7 +40,6 @@ type Action =
  | { type: "SET_USERID", userId: string }
  | { type: "SET_EMAIL", email: string }
  | { type: "SET_USERNAME", username: string }
- | { type: "SET_PROFILE", profile: string }
 
 // Action creators
 export const setAuth = (auth: boolean): Action => {
@@ -64,10 +60,6 @@ export const setEmail = (email: string): Action => {
 
 export const setUsername = (username: string): Action => {
   return { type: SET_USERNAME, username: username }
-}
-
-export const setProfile = (profile: any): Action => {
-  return { type: SET_PROFILE, profile: profile }
 }
 
 // Reducer
@@ -102,12 +94,6 @@ const AppReducer = (state: StateType, action: Action) => {
       return {
         ...state,
         username: action.username
-      }
-
-    case SET_PROFILE:
-      return {
-        ...state,
-        profile: action.profile
       }
 
     default:

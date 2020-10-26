@@ -1,7 +1,10 @@
 import express from 'express'
 import session from 'express-session'
+import mongoose from 'mongoose'
+import connectMongo from 'connect-mongo'
 
 import passport from './libs/passport'
+import connectDb from './libs/mongo'
 import { corsMiddleware, loggerMiddleware } from './libs/middleware'
 
 import authRouter from './routes/auth'
@@ -9,20 +12,33 @@ import protectRouter from './routes/protect'
 import publicRouter from './routes/public'
 import socialRouter from './routes/social'
 
+try {
+  await connectDb()
+} catch (err) {
+  console.log(err)
+}
+
 const app = express()
+const MongoStore = connectMongo(session)
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-    secure: false, // Change to true to enforce HTTPS protocol.
-    sameSite: true
-  }
-}))
+app.use(
+  session({
+    name: 'corner-sid',
+    secret: process.env.SESSION_SECRET || 'xyz',
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+      secure: false, // Change to true to enforce HTTPS protocol.
+      sameSite: false,
+      httpOnly: false,
+    },
+  })
+)
+
 app.use(passport.initialize())
 app.use(passport.session())
 
@@ -30,7 +46,10 @@ app.use(loggerMiddleware)
 app.use(corsMiddleware)
 
 app.get('/', (req, res) => {
-  res.send(`Corner API accepting requests from origins: ${process.env.ALLOWED_ORIGINS}`)
+  return res.send(`
+    Corner API accepting requests from origins:
+    ${process.env.ALLOWED_ORIGINS!}
+  `)
 })
 
 app.use('/static', express.static('static'))

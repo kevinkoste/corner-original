@@ -1,14 +1,20 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react'
-import { Route, Switch, BrowserRouter } from 'react-router-dom'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import BeatLoader from 'react-spinners/BeatLoader'
 
 import { Div } from '../components/Base'
-import { useAppContext, setAuth, setOnboarded, setUserId, setEmail, setUsername, setProfile } from '../context/AppContext'
+import {
+  useAppContext,
+  setAuth,
+  setOnboarded,
+  setUserId,
+  setEmail,
+  setUsername,
+} from '../context/AppContext'
 import { OnboardingProvider } from '../context/OnboardingContext'
 import { ProfileProvider } from '../context/ProfileContext'
 
-import { PostAuthLogin } from '../libs/apiLib'
-import magic from '../libs/magicLib'
+import { PostAuthCheck } from '../libs/apiLib'
 
 const HomePage = lazy(() => import('../pages/HomePage'))
 const ProfilePage = lazy(() => import('../pages/ProfilePage'))
@@ -19,41 +25,33 @@ const BrowsePage = lazy(() => import('../pages/BrowsePage'))
 const NotInvitedPage = lazy(() => import('../pages/NotInvitedPage'))
 
 export const AppNavigator: React.FC = () => {
-
   const { dispatch } = useAppContext()
 
-  const [ loading, setLoading ] = useState(true)
+  const [loading, setLoading] = useState(true)
 
-  // on mount, handle auth checks
   useEffect(() => {
-
+    // on mount, handle auth checks
     const onMount = async () => {
+      // attempt to retrieve existing session
+      try {
+        const auth = await PostAuthCheck()
+        console.log('auth response', auth)
+        dispatch(setAuth(true))
 
-      const isLoggedIn = await magic.user.isLoggedIn()
-      console.log('isLoggedIn: ', isLoggedIn)
-      if (!isLoggedIn) {
-        setLoading(false)
-        return
-      }
+        const { userId, email, onboarded, username } = auth.data
+        console.log('userId:', userId, 'email:', email, 'onboarded:', onboarded)
 
-      const didToken = await magic.user.getIdToken()
-      console.log('didToken: ', didToken)
-
-      const authRes = await PostAuthLogin(didToken)
-      console.log('authRes is:', authRes)
-
-      dispatch(setAuth(true))
-
-      const { userId, email, username, profile, onboarded } = authRes.data
-      console.log('userId:', userId, 'email:', email, 'profile:', profile, 'onboarded:', onboarded)
-
-      if (onboarded) {
         dispatch(setUserId(userId))
         dispatch(setEmail(email))
-        dispatch(setUsername(username))
-        dispatch(setProfile(profile))
-        dispatch(setOnboarded(true))
+
+        if (onboarded) {
+          dispatch(setOnboarded(true))
+          dispatch(setUsername(username))
+        }
+      } catch {
+        console.log('unauthorized')
       }
+
       setLoading(false)
     }
 
@@ -66,33 +64,31 @@ export const AppNavigator: React.FC = () => {
   } else {
     return (
       <BrowserRouter>
-        <Suspense fallback={<Fallback/>}>
+        <Suspense fallback={<Fallback />}>
           <Switch>
-    
-            <Route exact path='/' component={HomePage} />
-    
-            <Route exact path='/login' component={LoginPage} />
-    
-            <Route exact path='/onboarding'>
+            <Route exact path="/" component={HomePage} />
+
+            <Route exact path="/login" component={LoginPage} />
+
+            <Route exact path="/onboarding">
               <OnboardingProvider>
                 <OnboardingPage />
               </OnboardingProvider>
             </Route>
 
-            <Route exact path='/browse' component={BrowsePage} />
+            <Route exact path="/browse" component={BrowsePage} />
 
-            <Route path='/not-invited' component={NotInvitedPage} />
-    
+            <Route path="/not-invited" component={NotInvitedPage} />
+
             {/* if own profile, navigate to edit version of profile */}
-            <Route exact path='/edit/:username'>
+            <Route exact path="/edit/:username">
               <ProfileProvider>
                 <EditProfilePage />
               </ProfileProvider>
             </Route>
-    
+
             {/* public version of profile */}
-            <Route path='/:username'component={ProfilePage} />
-    
+            <Route path="/:username" component={ProfilePage} />
           </Switch>
         </Suspense>
       </BrowserRouter>
@@ -102,7 +98,15 @@ export const AppNavigator: React.FC = () => {
 
 const Fallback: React.FC = () => {
   return (
-    <Div row width={12} style={{height: '100vh', backgroundColor: 'white', alignItems: 'center'}}>
+    <Div
+      row
+      width={12}
+      style={{
+        height: '100vh',
+        backgroundColor: 'white',
+        alignItems: 'center',
+      }}
+    >
       <BeatLoader
         css={'margin: auto;'}
         size={20}
