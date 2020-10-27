@@ -71,6 +71,7 @@ const ProfileRow: React.FC<ProfileRowProps> = ({ profile }) => {
 const RowContainer = styled(Div)`
   align-items: top;
   margin-top: 20px;
+  height: 60px;
 `
 
 type ImageProps = { src: string; size: number }
