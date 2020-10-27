@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div, H2 } from '../components/Base'
+import { PageContainer, BodyContainer, Div, H2 } from '../components/Base'
 import { Header } from '../components/Header'
 
 import { GetPublicAllProfiles } from '../libs/apiLib'
@@ -38,20 +38,6 @@ export const BrowsePage: React.FC = () => {
   )
 }
 export default BrowsePage
-
-const PageContainer = styled(Div)`
-  max-width: 100vw;
-  min-height: ${window.innerHeight + 'px'};
-  align-items: center;
-  position: relative;
-`
-
-const BodyContainer = styled(Div)`
-  align-items: center;
-  padding-top: 51px;
-  margin-bottom: 60px;
-  max-width: 1150px;
-`
 
 type ProfileRowProps = { profile: Profile }
 const ProfileRow: React.FC<ProfileRowProps> = ({ profile }) => {

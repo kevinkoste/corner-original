@@ -8,10 +8,9 @@ export const loggerMiddleware = (
 ) => {
   if (req.method !== 'OPTIONS') {
     console.log(
-      `${req.method.padEnd(7, ' ')} ${req.path.padEnd(
-        23,
-        ' '
-      )} ${JSON.stringify(req.query)}`
+      `${req.method.padEnd(8, ' ')}${req.path.padEnd(24, ' ')}${JSON.stringify(
+        req.query
+      )}`
     )
   }
   next()
@@ -44,6 +43,7 @@ export const authMiddleware = (
   if (req.isAuthenticated()) {
     next()
   } else {
+    console.log('Rejecting unauthenticated request')
     res.status(401).end(`Unable to authenticate request`)
   }
 }

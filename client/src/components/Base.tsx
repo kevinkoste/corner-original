@@ -1,6 +1,7 @@
+import React from 'react'
 import styled from 'styled-components'
 import TextareaAutosize from 'react-textarea-autosize'
-
+import BeatLoader from 'react-spinners/BeatLoader'
 
 // minimal Div component
 type GridMapType = { [index: number]: string }
@@ -16,24 +17,25 @@ export const GridMap: GridMapType = {
   9: '75%',
   10: '83.33%',
   11: '91.66%',
-  12: '100%'
+  12: '100%',
 }
 type DivProps = {
-  column?: boolean,
-  row?: boolean,
+  column?: boolean
+  row?: boolean
   width?: number
 }
 export const Div = styled.div<DivProps>`
   display: flex;
-  flex-direction: ${props => props.column ? 'column' : props.row ? 'row' : 'unset'};
-  width: ${props => props.width ? GridMap[props.width] : 'unset'};
+  flex-direction: ${(props) =>
+    props.column ? 'column' : props.row ? 'row' : 'unset'};
+  width: ${(props) => (props.width ? GridMap[props.width] : 'unset')};
 `
 
 // text defaults
 export const H1 = styled.h1`
   font-family: 'source-serif';
   font-size: 36px;
-	text-align: left;
+  text-align: left;
   font-weight: unset;
   margin: unset;
   padding: 0px;
@@ -45,7 +47,7 @@ export const H2 = styled.h2`
   font-family: 'inter';
   font-size: 18px;
   line-height: 24px;
-	text-align: left;
+  text-align: left;
   font-weight: unset;
   margin: unset;
   padding: 0px;
@@ -57,24 +59,25 @@ export const H2 = styled.h2`
 // default image using background-image
 type ImageProps = {
   src: string
-  size?: number,
+  size?: number
 }
 export const Img = styled.div<ImageProps>`
   background-color: unset;
-  background-image: ${props => `url(${process.env.REACT_APP_S3_BUCKET + props.src})`};
+  background-image: ${(props) =>
+    `url(${process.env.REACT_APP_S3_BUCKET + props.src})`};
   background-position: center;
   background-size: cover;
-  background-repeat:no-repeat;
+  background-repeat: no-repeat;
   image-orientation: from-image;
   position: relative;
   text-align: center;
   max-height: 0px;
-  padding-bottom: ${props => props.size ? GridMap[props.size] : 'unset'};
-  width: ${props => props.size ? GridMap[props.size] : 'unset'};
+  padding-bottom: ${(props) => (props.size ? GridMap[props.size] : 'unset')};
+  width: ${(props) => (props.size ? GridMap[props.size] : 'unset')};
 `
 
 export const ExternalImg = styled.div<ImageProps>`
-  background-image: ${props => `url(${props.src})`};
+  background-image: ${(props) => `url(${props.src})`};
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -82,19 +85,18 @@ export const ExternalImg = styled.div<ImageProps>`
   position: relative;
   text-align: center;
   background-color: white;
-  padding-bottom: ${props => props.size ? GridMap[props.size] : 'unset'};
-  width: ${props => props.size ? GridMap[props.size] : 'unset'};
+  padding-bottom: ${(props) => (props.size ? GridMap[props.size] : 'unset')};
+  width: ${(props) => (props.size ? GridMap[props.size] : 'unset')};
 `
-
 
 // resizeable textarea using external lib
 export const TextArea = styled(TextareaAutosize)`
-	outline: none;
-	box-shadow: none;
-	border: none;
-	overflow: hidden;
-	resize: none;
-	padding: 0px;
+  outline: none;
+  box-shadow: none;
+  border: none;
+  overflow: hidden;
+  resize: none;
+  padding: 0px;
   text-align: left;
   white-space: pre-wrap;
   font-family: 'source-serif';
@@ -102,12 +104,12 @@ export const TextArea = styled(TextareaAutosize)`
 `
 
 export const Input = styled.input`
-	outline: none;
-	box-shadow: none;
-	border: none;
-	overflow: hidden;
-	resize: none;
-	padding: 0px;
+  outline: none;
+  box-shadow: none;
+  border: none;
+  overflow: hidden;
+  resize: none;
+  padding: 0px;
   text-align: left;
   white-space: pre-wrap;
   font-family: 'source-serif';
@@ -115,15 +117,15 @@ export const Input = styled.input`
 `
 
 export const InlineInput = styled.input`
-	outline: none;
-	box-shadow: none;
-	border: none;
-	overflow: hidden;
-	padding: 0px;
+  outline: none;
+  box-shadow: none;
+  border: none;
+  overflow: hidden;
+  padding: 0px;
   margin: 0px;
   font-family: 'inter';
   font-size: 18px;
-  line-height: 24px;
+  /* line-height: 24px; */
   @media (max-width: 768px) {
     font-size: 16px;
   }
@@ -146,9 +148,35 @@ export const Button = styled.button`
   padding: 10px 20px 12px 20px;
   cursor: pointer;
   border-radius: 30px;
-  
+
   @media (max-width: 768px) {
     font-size: 16px;
   }
 `
 
+export const Loader: React.FC = () => {
+  return (
+    <BeatLoader
+      css={
+        'height: 24px; width: 72px; overflow: auto; margin: auto; position: absolute; top: 0; left: 0; bottom: 0; right: 0;'
+      }
+      size={20}
+      loading={true}
+      color={'#000000'}
+    />
+  )
+}
+
+export const PageContainer = styled(Div)`
+  max-width: 100vw;
+  height: ${window.innerHeight + 'px'};
+  align-items: center;
+  position: relative;
+`
+
+export const BodyContainer = styled(Div)`
+  align-items: center;
+  padding-top: 51px;
+  margin-bottom: 60px;
+  max-width: 1150px;
+`

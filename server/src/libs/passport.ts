@@ -6,11 +6,10 @@ import magic from './magic'
 import AuthModel, { Auth } from '../models/Auth'
 
 const strategy = new Strategy(async (user, done) => {
-  console.log('in magic strategy with user:', user)
+  console.log('in magic strategy')
 
   let userMetadata = null
   try {
-    console.log('calling getMetaDataByIssuer')
     userMetadata = await magic.users.getMetadataByIssuer(user.issuer)
   } catch (err) {
     console.log('error while calling getMetaDataByIssuer', err, err?.data)

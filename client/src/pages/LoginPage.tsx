@@ -2,7 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { Div, TextArea, Button } from '../components/Base'
+import {
+  PageContainer,
+  BodyContainer,
+  Div,
+  InlineInput,
+  Button,
+  Loader,
+} from '../components/Base'
 import { Header } from '../components/Header'
 import { useDetectMobile } from '../libs/hooksLib'
 import {
@@ -22,6 +29,7 @@ export const LoginPage: React.FC = () => {
 
   const { state, dispatch } = useAppContext()
 
+  const [loading, setLoading] = useState<boolean>(false)
   const [emailInput, setEmailInput] = useState<string>('')
 
   useEffect(() => {
@@ -36,35 +44,33 @@ export const LoginPage: React.FC = () => {
   }, [])
 
   const handleLogin = async () => {
-    const didToken = await magic.auth.loginWithMagicLink({ email: emailInput })
-    if (didToken === null) {
-      console.log(
-        'oh no! your auth token isnt working, redirect to "oh no" screen?'
-      )
-      return
-    }
+    try {
+      setLoading(true)
+      const didToken = await magic.auth.loginWithMagicLink({
+        email: emailInput,
+      })
+      if (!didToken) {
+        throw Error('Magic API error')
+      }
 
-    const authRes = await PostAuthLogin(didToken)
-    console.log('authRes.data is:', authRes.data)
+      const { data } = await PostAuthLogin(didToken)
+      const { userId, email, onboarded, username } = data
 
-    if (authRes.status !== 200) {
-      console.log('oh no! couldnt find your user, redirect to "oh no" screen?')
-      return
-    }
+      dispatch(setAuth(true))
+      setLoading(false)
 
-    dispatch(setAuth(true))
-
-    const { userId, email, onboarded, username } = authRes.data
-    console.log('userId:', userId, 'email:', email, 'onboarded:', onboarded)
-
-    if (onboarded) {
-      dispatch(setUserId(userId))
-      dispatch(setEmail(email))
-      dispatch(setUsername(username))
-      dispatch(setOnboarded(true))
-      history.push(`/edit/${username}`)
-    } else {
-      history.push('/onboarding')
+      if (onboarded) {
+        dispatch(setUserId(userId))
+        dispatch(setEmail(email))
+        dispatch(setUsername(username))
+        dispatch(setOnboarded(true))
+        history.push(`/edit/${username}`)
+      } else {
+        history.push('/onboarding')
+      }
+    } catch (err) {
+      console.log('login error')
+      history.push('/')
     }
   }
 
@@ -73,9 +79,10 @@ export const LoginPage: React.FC = () => {
       <Header title="Login" />
 
       <BodyContainer column width={mobile ? 11 : 6}>
-        {true && (
+        {loading && <Loader />}
+        {!loading && (
           <Div
-            row
+            column
             width={12}
             style={{ position: 'relative', maxWidth: '400px' }}
           >
@@ -85,13 +92,9 @@ export const LoginPage: React.FC = () => {
               value={emailInput}
               autoCapitalize="none"
             />
-            <SubmitButton onClick={handleLogin}>Join &#62;</SubmitButton>
+            <SubmitButton onClick={handleLogin}>Log In or Sign Up</SubmitButton>
           </Div>
         )}
-
-        {/* { !state.auth &&
-					<div id="cotter-form-container" style={{ width: '100%', height: 200 }} />
-				} */}
       </BodyContainer>
     </PageContainer>
   )
@@ -99,42 +102,13 @@ export const LoginPage: React.FC = () => {
 
 export default LoginPage
 
-const PageContainer = styled(Div)`
-  max-width: 100vw;
-  height: ${window.innerHeight + 'px'};
-  align-items: center;
-  overflow: hidden;
-  position: relative;
-`
-
-const BodyContainer = styled(Div)`
-  align-items: center;
-  margin: auto;
-  padding-top: 51px;
-  max-width: 1150px;
-`
-
-const EmailTextInput = styled(TextArea)`
-  font-size: 18px;
-  font-family: 'inter';
-  line-height: 24px;
-  text-transform: lowercase;
-  @media (max-width: 768px) {
-    font-size: 16px;
-  }
+const EmailTextInput = styled(InlineInput)`
+  padding: 10px 20px 12px 20px;
+  border-radius: 30px;
+  border: 1px solid black;
 `
 
 const SubmitButton = styled(Button)`
-  /* font-size: 18px;
-	font-family: 'inter';
-  line-height: 24px;
-	padding: 0;
-	@media (max-width: 768px) {
-		position: absolute;
-		right: 0;
-		font-size: 16px;
-	}
-	:hover {
-		cursor: pointer;
-	} */
+  margin-top: 12px;
+  border: 1px solid black;
 `

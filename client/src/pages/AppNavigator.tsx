@@ -1,8 +1,7 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
-import BeatLoader from 'react-spinners/BeatLoader'
 
-import { Div } from '../components/Base'
+import { Loader } from '../components/Base'
 import {
   useAppContext,
   setAuth,
@@ -60,11 +59,11 @@ export const AppNavigator: React.FC = () => {
   }, [])
 
   if (loading) {
-    return <Fallback />
+    return <Loader />
   } else {
     return (
       <BrowserRouter>
-        <Suspense fallback={<Fallback />}>
+        <Suspense fallback={<Loader />}>
           <Switch>
             <Route exact path="/" component={HomePage} />
 
@@ -94,25 +93,4 @@ export const AppNavigator: React.FC = () => {
       </BrowserRouter>
     )
   }
-}
-
-const Fallback: React.FC = () => {
-  return (
-    <Div
-      row
-      width={12}
-      style={{
-        height: '100vh',
-        backgroundColor: 'white',
-        alignItems: 'center',
-      }}
-    >
-      <BeatLoader
-        css={'margin: auto;'}
-        size={20}
-        loading={true}
-        color={'#000000'}
-      />
-    </Div>
-  )
 }
