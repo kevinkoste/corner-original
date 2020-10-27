@@ -169,7 +169,7 @@ export const Loader: React.FC = () => {
 
 export const PageContainer = styled(Div)`
   max-width: 100vw;
-  height: ${window.innerHeight + 'px'};
+  min-height: ${window.innerHeight + 'px'};
   align-items: center;
   position: relative;
 `

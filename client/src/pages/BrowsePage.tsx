@@ -37,6 +37,7 @@ export const BrowsePage: React.FC = () => {
     </PageContainer>
   )
 }
+
 export default BrowsePage
 
 type ProfileRowProps = { profile: Profile }
@@ -71,7 +72,6 @@ const ProfileRow: React.FC<ProfileRowProps> = ({ profile }) => {
 const RowContainer = styled(Div)`
   align-items: top;
   margin-top: 20px;
-  height: 60px;
 `
 
 type ImageProps = { src: string; size: number }
@@ -86,7 +86,6 @@ const ProfileImage = styled.div<ImageProps>`
 
 const ProfileName = styled(H2)`
   margin-left: 10px;
-
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

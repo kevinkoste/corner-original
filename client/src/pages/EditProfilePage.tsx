@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 // presentation
 import { useDetectMobile } from '../libs/hooksLib'
-import { Div, Button } from '../components/Base'
+import { PageContainer, BodyContainer, Div, Button } from '../components/Base'
 import { Header } from '../components/Header'
 
 // logic
@@ -165,18 +165,6 @@ export const EditProfilePage: React.FC = () => {
   )
 }
 export default EditProfilePage
-
-const PageContainer = styled(Div)`
-  max-width: 100vw;
-  align-items: center;
-  position: relative;
-  min-height: ${window.innerHeight + 'px'};
-`
-
-const BodyContainer = styled(Div)`
-  padding-top: 51px;
-  max-width: 1150px;
-`
 
 const CenteredContainer = styled(Div)`
   justify-content: center;
