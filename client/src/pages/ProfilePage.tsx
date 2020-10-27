@@ -3,7 +3,7 @@ import { useParams, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 // presentation
-import { useDetectMobile } from '../libs/hooksLib'
+import { useDetectMobile } from '../libs/hooks'
 import { Div, H1, Button } from '../components/Base'
 import { Header } from '../components/Header'
 import { ProfileModal } from '../components/Modal'
@@ -11,24 +11,21 @@ import { ProfileModal } from '../components/Modal'
 // logic
 import { useAppContext } from '../context/AppContext'
 import { Profile, EmptyProfile } from '../models/Profile'
-import { GetPublicProfileData } from '../libs/apiLib'
+import { GetPublicProfileData } from '../libs/api'
 import { GenerateComponent } from '../components/ProfilePublic'
 
-
 export const ProfilePage: React.FC = () => {
-
   let history = useHistory()
-  const mobile: boolean = useDetectMobile()
+  const mobile = useDetectMobile()
   const { state } = useAppContext()
 
   const { username } = useParams()
-  const [ loading, setLoading ] = useState<boolean>(true)
-  const [ profileExists, setProfileExists ] = useState<boolean>(false)
-  const [ profile, setProfile ] = useState<Profile>(EmptyProfile)
+  const [loading, setLoading] = useState<boolean>(true)
+  const [profileExists, setProfileExists] = useState<boolean>(false)
+  const [profile, setProfile] = useState<Profile>(EmptyProfile)
 
   // on component mount, get profile data from server
   useEffect(() => {
-
     const onMount = async () => {
       if (state.username === username) {
         history.push(`/edit/${state.username}`)
@@ -52,103 +49,98 @@ export const ProfilePage: React.FC = () => {
   if (!loading && profileExists) {
     return (
       <PageContainer column width={12}>
-  
-        <Header title={profile.components.find(component => component.type === 'name')?.props.name} />
-  
-        <BodyContainer column width={mobile ? 11 : 8}>
+        <Header
+          title={
+            profile.components.find((component) => component.type === 'name')
+              ?.props.name
+          }
+        />
 
+        <BodyContainer column width={mobile ? 11 : 8}>
           <CenteredContainer column width={12}>
             <FrontPageWrapper>
-            { profile.components
-              .filter(comp => comp.type === 'headshot' )
-              .map(comp => GenerateComponent(comp, profile))
-            }
+              {profile.components
+                .filter((comp) => comp.type === 'headshot')
+                .map((comp) => GenerateComponent(comp, profile))}
             </FrontPageWrapper>
             <FrontPageWrapper>
-            { profile.components
-              .filter(comp => comp.type === 'headline' )
-              .map(comp => GenerateComponent(comp, profile))
-            }
-            { !mobile && profile.components
-              .filter(comp => comp.type === 'bio' )
-              .map(comp => GenerateComponent(comp, profile))
-            }
-            { !mobile && profile.components
-              .filter(comp => comp.type === 'experiences' )
-              .map(comp => GenerateComponent(comp, profile))
-            }
+              {profile.components
+                .filter((comp) => comp.type === 'headline')
+                .map((comp) => GenerateComponent(comp, profile))}
+              {!mobile &&
+                profile.components
+                  .filter((comp) => comp.type === 'bio')
+                  .map((comp) => GenerateComponent(comp, profile))}
+              {!mobile &&
+                profile.components
+                  .filter((comp) => comp.type === 'experiences')
+                  .map((comp) => GenerateComponent(comp, profile))}
             </FrontPageWrapper>
           </CenteredContainer>
-          
+
           <Div column width={12}>
-          { mobile && profile.components
-            .filter(comp => comp.type !== 'headshot' && comp.type !== 'headline' )
-            .map(comp => GenerateComponent(comp, profile))
-          }
-          { !mobile && profile.components
-            .filter(comp => comp.type !== 'headshot' && comp.type !== 'headline' && comp.type !== 'bio' && comp.type !== 'experiences' )
-            .map(comp => GenerateComponent(comp, profile))
-          }
+            {mobile &&
+              profile.components
+                .filter(
+                  (comp) => comp.type !== 'headshot' && comp.type !== 'headline'
+                )
+                .map((comp) => GenerateComponent(comp, profile))}
+            {!mobile &&
+              profile.components
+                .filter(
+                  (comp) =>
+                    comp.type !== 'headshot' &&
+                    comp.type !== 'headline' &&
+                    comp.type !== 'bio' &&
+                    comp.type !== 'experiences'
+                )
+                .map((comp) => GenerateComponent(comp, profile))}
           </Div>
-
-
         </BodyContainer>
 
-        { !state.auth &&
+        {!state.auth && (
           <ButtonContainer row width={12}>
-            <EditButton onClick={() => history.push('/login')} >
+            <EditButton onClick={() => history.push('/login')}>
               Join Corner
             </EditButton>
           </ButtonContainer>
-        }
+        )}
 
-        { state.auth &&
-          <ProfileModal profile={profile} />
-        }
+        {state.auth && <ProfileModal profile={profile} />}
 
-        <Div style={{height:'54px'}}/>
-  
+        <Div style={{ height: '54px' }} />
       </PageContainer>
     )
   } else if (!loading && !profileExists) {
     return (
       <PageContainer column width={12}>
-
         <Header title={'Profile Not Found'} />
 
         <NotFoundContainer width={mobile ? 11 : 6}>
-          <H1>
-            This profile doesn't exist!
-          </H1>
+          <H1>This profile doesn't exist!</H1>
         </NotFoundContainer>
 
-        { !state.auth &&
+        {!state.auth && (
           <ButtonContainer row width={12}>
-            <EditButton onClick={() => history.push('/login')} >
+            <EditButton onClick={() => history.push('/login')}>
               Join Corner
             </EditButton>
           </ButtonContainer>
-        }
-        { mobile &&
-        <Div style={{height:'60px'}}/>
-        }
-
-
+        )}
+        {mobile && <Div style={{ height: '60px' }} />}
       </PageContainer>
     )
   } else {
-    return (
-      <div style={{height: '100vh', backgroundColor: 'white'}}/>
-    )
+    return <div style={{ height: '100vh', backgroundColor: 'white' }} />
   }
 }
 export default ProfilePage
 
 const PageContainer = styled(Div)`
   max-width: 100vw;
-	align-items: center;
+  align-items: center;
   position: relative;
-  min-height: ${window.innerHeight+"px"};
+  min-height: ${window.innerHeight + 'px'};
 `
 
 const BodyContainer = styled(Div)`
@@ -159,20 +151,20 @@ const BodyContainer = styled(Div)`
 const CenteredContainer = styled(Div)`
   justify-content: center;
   flex-direction: row;
-  min-height: ${(window.innerHeight - 51)+"px"};
+  min-height: ${window.innerHeight - 51 + 'px'};
   @media (max-width: 768px) {
     flex-direction: column;
-	}
+  }
 `
 
 const FrontPageWrapper = styled(Div)`
-	width: 50%;
-	flex-direction: column;
-	justify-content: center;
-	display: flex;
-	@media (max-width: 768px) {
-		width: unset;
-	}
+  width: 50%;
+  flex-direction: column;
+  justify-content: center;
+  display: flex;
+  @media (max-width: 768px) {
+    width: unset;
+  }
 `
 
 const NotFoundContainer = styled(Div)`
@@ -181,13 +173,13 @@ const NotFoundContainer = styled(Div)`
 `
 
 const ButtonContainer = styled(Div)`
-	display: flex;
-	position: fixed;
-	justify-content: space-between;
-	max-width: 350px;
-	@media (max-width: 768px) {
-		margin: 0;
-	}
+  display: flex;
+  position: fixed;
+  justify-content: space-between;
+  max-width: 350px;
+  @media (max-width: 768px) {
+    margin: 0;
+  }
 `
 
 const EditButton = styled(Button)`
@@ -195,9 +187,10 @@ const EditButton = styled(Button)`
   bottom: 10px;
   right: 8.34vw;
   @media (max-width: 768px) {
-		right: 4.17vw;
-	}
+    right: 4.17vw;
+  }
   @media (min-width: 1560px) {
-    right: ${parseInt(((window.innerWidth-1300)*0.5).toString(),10) + "px"}
+    right: ${parseInt(((window.innerWidth - 1300) * 0.5).toString(), 10) +
+    'px'};
   }
 `

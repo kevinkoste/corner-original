@@ -1,16 +1,16 @@
-import { axiosPublic, axiosProtect } from '../libs/axiosLib'
+import axios from './axios'
 
 // AUTH ROUTES //
 
 export const PostAuthCheck = (): Promise<any> => {
-  return axiosPublic({
+  return axios({
     method: 'post',
     url: `/auth/check`,
   })
 }
 
 export const PostAuthLogin = (authToken: string): Promise<any> => {
-  return axiosPublic({
+  return axios({
     method: 'post',
     url: `/auth/login`,
     headers: { authorization: `Bearer ${authToken}` },
@@ -18,7 +18,7 @@ export const PostAuthLogin = (authToken: string): Promise<any> => {
 }
 
 export const PostAuthLogout = (): Promise<any> => {
-  return axiosProtect({
+  return axios({
     method: 'post',
     url: `/auth/logout`,
   })
@@ -26,7 +26,7 @@ export const PostAuthLogout = (): Promise<any> => {
 
 // PUBLIC ROUTES //
 export const GetPublicProfileData = (username: string): Promise<any> => {
-  return axiosPublic({
+  return axios({
     method: 'get',
     url: `/public/profile`,
     params: {
@@ -36,7 +36,7 @@ export const GetPublicProfileData = (username: string): Promise<any> => {
 }
 
 export const GetPublicAllProfiles = (): Promise<any> => {
-  return axiosPublic({
+  return axios({
     method: 'get',
     url: `/public/profile/all`,
   })
@@ -45,7 +45,7 @@ export const GetPublicAllProfiles = (): Promise<any> => {
 export const GetPublicUsernameAvailability = (
   username: string
 ): Promise<any> => {
-  return axiosPublic({
+  return axios({
     method: 'get',
     url: `/public/availability`,
     params: {
@@ -55,7 +55,7 @@ export const GetPublicUsernameAvailability = (
 }
 
 export const GetPublicCompanyFromDomain = (domain: string): Promise<any> => {
-  return axiosPublic({
+  return axios({
     method: 'get',
     url: `/public/employer`,
     params: {
@@ -67,28 +67,28 @@ export const GetPublicCompanyFromDomain = (domain: string): Promise<any> => {
 // PROTECTED ROUTES //
 
 export const GetProtectProfile = (): Promise<any> => {
-  return axiosProtect({
+  return axios({
     method: 'get',
     url: `/protect/profile`,
   })
 }
 
 export const PostProtectOnboardCheck = (): Promise<any> => {
-  return axiosProtect({
+  return axios({
     method: 'post',
     url: `/protect/onboard/check`,
   })
 }
 
 export const PostProtectInviteCheck = (): Promise<any> => {
-  return axiosProtect({
+  return axios({
     method: 'post',
     url: `/protect/invite/check`,
   })
 }
 
 export const PostProtectUsername = (username: string): Promise<any> => {
-  return axiosProtect({
+  return axios({
     method: 'post',
     url: `/protect/username`,
     data: {
@@ -98,7 +98,7 @@ export const PostProtectUsername = (username: string): Promise<any> => {
 }
 
 export const PostProtectComponents = (components: any[]): Promise<any> => {
-  return axiosProtect({
+  return axios({
     method: 'post',
     url: `/protect/components`,
     data: {
@@ -108,7 +108,7 @@ export const PostProtectComponents = (components: any[]): Promise<any> => {
 }
 
 export const PostProtectProfileImage = (formData: FormData): Promise<any> => {
-  return axiosProtect({
+  return axios({
     method: 'post',
     url: `/protect/profile/image`,
     headers: {
@@ -121,7 +121,7 @@ export const PostProtectProfileImage = (formData: FormData): Promise<any> => {
 export const PostProtectInviteNewEmail = (
   invitedEmail: string
 ): Promise<any> => {
-  return axiosProtect({
+  return axios({
     method: 'post',
     url: `/protect/invite`,
     data: {
@@ -131,7 +131,7 @@ export const PostProtectInviteNewEmail = (
 }
 
 export const FetchMedium = (mediumUrl: string): Promise<any> => {
-  return axiosProtect({
+  return axios({
     method: 'post',
     url: '/protect/fetch-medium',
     data: {
@@ -141,7 +141,7 @@ export const FetchMedium = (mediumUrl: string): Promise<any> => {
 }
 
 export const FetchSubstack = (substackUrl: string): Promise<any> => {
-  return axiosProtect({
+  return axios({
     method: 'post',
     url: '/protect/fetch-substack',
     data: {
@@ -153,7 +153,7 @@ export const FetchSubstack = (substackUrl: string): Promise<any> => {
 // SOCIAL //
 
 export const PostProtectFollow = (username: string): Promise<any> => {
-  return axiosProtect({
+  return axios({
     method: 'post',
     url: '/social/follow',
     data: {

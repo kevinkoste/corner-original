@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const instance = axios.create({
-  baseURL: 'https://www.googleapis.com'
+  baseURL: 'https://www.googleapis.com',
 })
 
 export const GetBookData = (bookInput: string): Promise<any> => {
@@ -9,7 +9,7 @@ export const GetBookData = (bookInput: string): Promise<any> => {
     method: 'get',
     url: `/books/v1/volumes`,
     params: {
-      q: bookInput
-    }
+      q: bookInput,
+    },
   })
 }

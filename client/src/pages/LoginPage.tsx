@@ -11,7 +11,7 @@ import {
   Loader,
 } from '../components/Base'
 import { Header } from '../components/Header'
-import { useDetectMobile } from '../libs/hooksLib'
+import { useDetectMobile } from '../libs/hooks'
 import {
   useAppContext,
   setAuth,
@@ -20,12 +20,12 @@ import {
   setEmail,
   setUsername,
 } from '../context/AppContext'
-import { PostAuthLogin } from '../libs/apiLib'
-import magic from '../libs/magicLib'
+import { PostAuthLogin } from '../libs/api'
+import magic from '../libs/magic'
 
 export const LoginPage: React.FC = () => {
   let history = useHistory()
-  const mobile: boolean = useDetectMobile()
+  const mobile = useDetectMobile()
 
   const { state, dispatch } = useAppContext()
 

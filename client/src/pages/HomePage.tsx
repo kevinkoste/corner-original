@@ -5,20 +5,18 @@ import styled from 'styled-components'
 import { Div, H1, H2, Button } from '../components/Base'
 import { Header } from '../components/Header'
 
-import { useDetectMobile } from '../libs/hooksLib'
+import { useDetectMobile } from '../libs/hooks'
 import { useAppContext } from '../context/AppContext'
 
-
 export const HomePage: React.FC = () => {
-
   let history = useHistory()
-	const mobile: boolean = useDetectMobile()
-	const { state } = useAppContext()
+  const mobile = useDetectMobile()
+  const { state } = useAppContext()
 
-	const onClick = () => {
+  const onClick = () => {
     history.push('/login')
-	}
-  
+  }
+
   useEffect(() => {
     if (state.auth) {
       history.push('/browse')
@@ -28,24 +26,18 @@ export const HomePage: React.FC = () => {
 
   return (
     <PageContainer column width={12}>
-
-      <Header title='Home' />
+      <Header title="Home" />
 
       <BodyContainer column width={mobile ? 11 : 6}>
-        <TitleText>
-          Welcome to Your Corner of the Internet
-        </TitleText>
+        <TitleText>Welcome to Your Corner of the Internet</TitleText>
 
         <SubtitleText>
-        Corner is a platform to meet young people with big ideas. It’s part website builder, part professional network, and part portfolio site.
+          Corner is a platform to meet young people with big ideas. It’s part
+          website builder, part professional network, and part portfolio site.
         </SubtitleText>
 
-        <LoginButton onClick={onClick} >
-          Join Corner
-        </LoginButton>
-
+        <LoginButton onClick={onClick}>Join Corner</LoginButton>
       </BodyContainer>
-
     </PageContainer>
   )
 }
@@ -54,9 +46,9 @@ export default HomePage
 
 const PageContainer = styled(Div)`
   max-width: 100vw;
-  height: ${window.innerHeight+"px"};
-	align-items: center;
-	overflow: hidden;
+  height: ${window.innerHeight + 'px'};
+  align-items: center;
+  overflow: hidden;
   position: relative;
 `
 

@@ -2,11 +2,11 @@ import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import { CSSTransition } from 'react-transition-group'
 
-import { useDetectMobile } from '../libs/hooksLib'
+import { useDetectMobile } from '../libs/hooks'
 import { Div, Button } from '../components/Base'
 
 import { Profile } from '../models/Profile'
-import { PostProtectFollow } from '../libs/apiLib'
+import { PostProtectFollow } from '../libs/api'
 
 function useOutsideAlerter(ref: any, setShowing: any) {
   useEffect(() => {
@@ -18,11 +18,11 @@ function useOutsideAlerter(ref: any, setShowing: any) {
     }
 
     // Bind the event listener
-    document.addEventListener("mousedown", handleClickOutside)
+    document.addEventListener('mousedown', handleClickOutside)
     window.addEventListener('scroll', handleClickOutside, true)
     return () => {
       // Unbind the event listener on clean up
-      document.removeEventListener("mousedown", handleClickOutside)
+      document.removeEventListener('mousedown', handleClickOutside)
       window.removeEventListener('scroll', handleClickOutside, true)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -31,70 +31,70 @@ function useOutsideAlerter(ref: any, setShowing: any) {
 
 type ProfileModalProps = { profile: Profile }
 export const ProfileModal: React.FC<ProfileModalProps> = ({ profile }) => {
+  const mobile = useDetectMobile()
 
-	const mobile: boolean = useDetectMobile()
-
-  const [ showing, setShowing ] = useState<boolean>(false)
+  const [showing, setShowing] = useState<boolean>(false)
 
   const wrapperRef = useRef(null)
   useOutsideAlerter(wrapperRef, setShowing)
-  
+
   return (
     <BodyContainer column width={mobile ? 11 : 10}>
-      
-      {showing && 
-      <ButtonContainer row width={12} ref={wrapperRef}>
-        <ModalButton onClick={() => setShowing(false)}>
-          Done
-        </ModalButton>
-      </ButtonContainer>
-      }
+      {showing && (
+        <ButtonContainer row width={12} ref={wrapperRef}>
+          <ModalButton onClick={() => setShowing(false)}>Done</ModalButton>
+        </ButtonContainer>
+      )}
 
-      {!showing && 
-      <ButtonContainer row width={12}>
-        <ModalButton onClick={() => setShowing(true)}>
-          Social
-        </ModalButton>
-      </ButtonContainer>
-      }
+      {!showing && (
+        <ButtonContainer row width={12}>
+          <ModalButton onClick={() => setShowing(true)}>Social</ModalButton>
+        </ButtonContainer>
+      )}
 
       <Buttons inProp={showing} profile={profile} />
-
     </BodyContainer>
   )
 }
 
-type ButtonsProps = {inProp: any, profile: Profile}
+type ButtonsProps = { inProp: any; profile: Profile }
 const Buttons: React.FC<ButtonsProps> = ({ inProp, profile }) => {
-
   const onFollowClick = () => {
     PostProtectFollow(profile.username)
   }
 
-  const onEndorseClick = () => {
-
-  }
+  const onEndorseClick = () => {}
   return (
-    <CSSTransition       
+    <CSSTransition
       unmountOnExit
       in={inProp}
       classNames="fade"
       timeout={{ appear: 0, enter: 500, exit: 500 }}
-      appear>
+      appear
+    >
       <TransitionContainer>
-        <FollowButton onClick={onFollowClick} >
-          Follow {profile.components.find(component => component.type === 'name')?.props.name.split(' ')[0]}
+        <FollowButton onClick={onFollowClick}>
+          Follow{' '}
+          {
+            profile.components
+              .find((component) => component.type === 'name')
+              ?.props.name.split(' ')[0]
+          }
         </FollowButton>
 
-        <EndorseButton onClick={onEndorseClick} >
-          Add {profile.components.find(component => component.type === 'name')?.props.name.split(' ')[0]} to Your Corner
+        <EndorseButton onClick={onEndorseClick}>
+          Add{' '}
+          {
+            profile.components
+              .find((component) => component.type === 'name')
+              ?.props.name.split(' ')[0]
+          }{' '}
+          to Your Corner
         </EndorseButton>
       </TransitionContainer>
     </CSSTransition>
   )
 }
-
-
 
 const ButtonContainer = styled(Div)`
   display: flex;
@@ -107,7 +107,7 @@ const ButtonContainer = styled(Div)`
 `
 
 const TransitionContainer = styled(Div)`
-  transition: opacity .5s;
+  transition: opacity 0.5s;
 
   /* enter from */
   &.fade-enter {
@@ -128,7 +128,6 @@ const TransitionContainer = styled(Div)`
   &.fade-exit-active {
     opacity: 0;
   }
-  
 `
 
 const ModalButton = styled(Button)`
@@ -139,7 +138,8 @@ const ModalButton = styled(Button)`
     right: 4.17vw;
   }
   @media (min-width: 1560px) {
-    right: ${parseInt(((window.innerWidth-1300)*0.5).toString(),10) + "px"}
+    right: ${parseInt(((window.innerWidth - 1300) * 0.5).toString(), 10) +
+    'px'};
   }
 `
 
@@ -154,7 +154,8 @@ const EndorseButton = styled(Button)`
     right: 4.17vw;
   }
   @media (min-width: 1560px) {
-    right: ${parseInt(((window.innerWidth-1300)*0.5).toString(),10) + "px"}
+    right: ${parseInt(((window.innerWidth - 1300) * 0.5).toString(), 10) +
+    'px'};
   }
 `
 
@@ -164,5 +165,5 @@ const FollowButton = styled(EndorseButton)`
 `
 
 const BodyContainer = styled(Div)`
-	max-width: 1300px;
+  max-width: 1300px;
 `

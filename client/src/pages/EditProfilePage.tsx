@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { v4 as uuidv4 } from 'uuid'
 
 // presentation
-import { useDetectMobile } from '../libs/hooksLib'
+import { useDetectMobile } from '../libs/hooks'
 import { PageContainer, BodyContainer, Div, Button } from '../components/Base'
 import { Header } from '../components/Header'
 
@@ -17,10 +17,10 @@ import {
   postComponents,
 } from '../context/ProfileContext'
 import { GenerateEditComponent } from '../components/ProfileEdit'
-import { GetPublicProfileData } from '../libs/apiLib'
+import { GetPublicProfileData } from '../libs/api'
 
 export const EditProfilePage: React.FC = () => {
-  const mobile: boolean = useDetectMobile()
+  const mobile = useDetectMobile()
 
   // not yet sure which we are using...
   const { state } = useAppContext()

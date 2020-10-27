@@ -13,7 +13,7 @@ import {
 import { OnboardingProvider } from '../context/OnboardingContext'
 import { ProfileProvider } from '../context/ProfileContext'
 
-import { PostAuthCheck } from '../libs/apiLib'
+import { PostAuthCheck } from '../libs/api'
 
 const HomePage = lazy(() => import('../pages/HomePage'))
 const ProfilePage = lazy(() => import('../pages/ProfilePage'))

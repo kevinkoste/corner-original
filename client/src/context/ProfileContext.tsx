@@ -1,7 +1,7 @@
 import React, { createContext, useReducer, useContext, Dispatch } from 'react'
 
 import { Profile, EmptyProfile } from '../models/Profile'
-import { PostProtectUsername, PostProtectComponents } from '../libs/apiLib'
+import { PostProtectUsername, PostProtectComponents } from '../libs/api'
 
 type StateType = {
   profile: Profile

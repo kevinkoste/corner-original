@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react'
 
-const getWidth = () => window.innerWidth 
-  || document.documentElement.clientWidth 
-  || document.body.clientWidth
+const getWidth = (): number => {
+  return (
+    window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth
+  )
+}
 
-const useCurrentWidth = ( timeout=150 ) => {
+const useCurrentWidth = (timeout = 150) => {
   // save current window width in the state object
   let [width, setWidth] = useState(getWidth())
 
@@ -31,20 +35,18 @@ const useCurrentWidth = ( timeout=150 ) => {
   return width
 }
 
-export const useDetectMobile = ( breakpoint=768 ) => {
-
-  const [mobile, setMobile] = useState(true)
+export const useDetectMobile = (breakpoint = 768) => {
+  const [mobile, setMobile] = useState<boolean>(true)
 
   let width = useCurrentWidth()
 
   useEffect(() => {
     if (width <= breakpoint && !mobile) {
       setMobile(true)
-    } else if (width > breakpoint && mobile){
+    } else if (width > breakpoint && mobile) {
       setMobile(false)
     }
   }, [width, breakpoint, mobile])
 
   return mobile
 }
-

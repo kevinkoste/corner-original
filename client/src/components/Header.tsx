@@ -7,15 +7,15 @@ import BurgerIcon from '../icons/burger.svg'
 import ExitIcon from '../icons/exit.png'
 
 import { useAppContext, setAuth } from '../context/AppContext'
-import { useDetectMobile } from '../libs/hooksLib'
-import { PostProtectInviteNewEmail, PostAuthLogout } from '../libs/apiLib'
+import { useDetectMobile } from '../libs/hooks'
+import { PostProtectInviteNewEmail, PostAuthLogout } from '../libs/api'
 
 type HeaderProps = { title: string }
 export const Header: React.FC<HeaderProps> = ({ title }) => {
   let history = useHistory()
   const { state, dispatch } = useAppContext()
   const [showingBurger, setShowingBurger] = useState<boolean>(false)
-  const mobile: boolean = useDetectMobile()
+  const mobile = useDetectMobile()
 
   const onClick = () => setShowingBurger(!showingBurger)
   const takeHome = () => {
@@ -338,7 +338,7 @@ const InviteButton = styled(Button)`
 `
 
 export const StaticHeader: React.FC = () => {
-  const mobile: boolean = useDetectMobile()
+  const mobile = useDetectMobile()
 
   return (
     <HeaderContainer row width={mobile ? 11 : 10}>

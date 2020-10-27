@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 import imageCompression from 'browser-image-compression'
 import ClipLoader from 'react-spinners/ClipLoader'
 
-import { useDetectMobile } from '../libs/hooksLib'
+import { useDetectMobile } from '../libs/hooks'
 import { useAppContext, setUsername, setOnboarded } from '../context/AppContext'
 import {
   useOnboardingContext,
@@ -19,7 +19,7 @@ import {
   GetPublicUsernameAvailability,
   PostProtectComponents,
   PostProtectUsername,
-} from '../libs/apiLib'
+} from '../libs/api'
 import {
   NameComponent,
   HeadlineComponent,

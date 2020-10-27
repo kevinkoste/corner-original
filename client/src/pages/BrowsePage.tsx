@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { useDetectMobile } from '../libs/hooksLib'
+import { useDetectMobile } from '../libs/hooks'
 import { PageContainer, BodyContainer, Div, H2 } from '../components/Base'
 import { Header } from '../components/Header'
 
-import { GetPublicAllProfiles } from '../libs/apiLib'
+import { GetPublicAllProfiles } from '../libs/api'
 import { Profile } from '../models/Profile'
 
 export const BrowsePage: React.FC = () => {
-  const mobile: boolean = useDetectMobile()
+  const mobile = useDetectMobile()
 
   const [profiles, setProfiles] = useState<Profile[]>([])
 
