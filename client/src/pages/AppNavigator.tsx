@@ -34,11 +34,9 @@ export const AppNavigator: React.FC = () => {
       // attempt to retrieve existing session
       try {
         const auth = await PostAuthCheck()
-        console.log('auth response', auth)
         dispatch(setAuth(true))
 
         const { userId, email, onboarded, username } = auth.data
-        console.log('userId:', userId, 'email:', email, 'onboarded:', onboarded)
 
         dispatch(setUserId(userId))
         dispatch(setEmail(email))
@@ -47,8 +45,8 @@ export const AppNavigator: React.FC = () => {
           dispatch(setOnboarded(true))
           dispatch(setUsername(username))
         }
-      } catch {
-        console.log('unauthorized')
+      } catch (err) {
+        // user is not logged in
       }
 
       setLoading(false)

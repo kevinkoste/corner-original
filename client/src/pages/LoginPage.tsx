@@ -78,14 +78,10 @@ export const LoginPage: React.FC = () => {
     <PageContainer column width={12}>
       <Header title="Login" />
 
-      <BodyContainer column width={mobile ? 11 : 6}>
+      <BodyContainer column width={mobile ? 11 : 6} style={{ margin: 'auto' }}>
         {loading && <Loader />}
         {!loading && (
-          <Div
-            column
-            width={12}
-            style={{ position: 'relative', maxWidth: '400px' }}
-          >
+          <Div column width={12} style={{ maxWidth: '400px' }}>
             <EmailTextInput
               placeholder={'you@example.com'}
               onChange={(event: any) => setEmailInput(event.target.value)}
