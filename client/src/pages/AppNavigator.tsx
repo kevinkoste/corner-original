@@ -75,7 +75,7 @@ export const AppNavigator: React.FC = () => {
 
             <Route exact path="/browse" component={BrowsePage} />
 
-            <Route path="/not-invited" component={NotInvitedPage} />
+            <Route exact path="/not-invited" component={NotInvitedPage} />
 
             {/* if own profile, navigate to edit version of profile */}
             <Route exact path="/edit/:username">

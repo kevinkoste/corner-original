@@ -177,6 +177,6 @@ export const PageContainer = styled(Div)`
 export const BodyContainer = styled(Div)`
   align-items: center;
   padding-top: 51px;
-  margin-bottom: 60px;
+  padding-bottom: 60px;
   max-width: 1150px;
 `

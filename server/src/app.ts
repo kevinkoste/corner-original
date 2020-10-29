@@ -15,10 +15,11 @@ import socialRouter from './routes/social'
 try {
   await connectDb()
 } catch (err) {
-  console.error(err)
+  console.log('mongo error', err)
 }
 
 const app = express()
+
 const MongoStore = connectMongo(session)
 
 app.use(express.json())

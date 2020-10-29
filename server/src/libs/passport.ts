@@ -39,12 +39,7 @@ const strategy = new Strategy(async (user, done) => {
     email: userMetadata?.email || '',
     lastLogin: user.claim.iat,
   }
-
-  await AuthModel.findOneAndUpdate({ authId: user.issuer }, newUser, {
-    upsert: true,
-    new: true,
-    useFindAndModify: true,
-  }).exec()
+  await AuthModel.updateOne({ authId: user.issuer }, newUser).exec()
 
   return done(null, newUser)
 })

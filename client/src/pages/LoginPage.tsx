@@ -26,7 +26,6 @@ import magic from '../libs/magic'
 export const LoginPage: React.FC = () => {
   let history = useHistory()
   const mobile = useDetectMobile()
-
   const { state, dispatch } = useAppContext()
 
   const [loading, setLoading] = useState<boolean>(false)

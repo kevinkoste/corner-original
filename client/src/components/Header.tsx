@@ -336,14 +336,3 @@ const InviteButton = styled(Button)`
     cursor: pointer;
   }
 `
-
-export const StaticHeader: React.FC = () => {
-  const mobile = useDetectMobile()
-
-  return (
-    <HeaderContainer row width={mobile ? 11 : 10}>
-      <Div style={{ height: '30px' }} />
-      <BurgerButton src={BurgerIcon} alt="burger button" />
-    </HeaderContainer>
-  )
-}
