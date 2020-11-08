@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 import imageCompression from 'browser-image-compression'
 import ClipLoader from 'react-spinners/ClipLoader'
 
-import { useDetectMobile } from '../libs/hooks'
+import { useMobile } from '../libs/hooks'
 import { useAppContext, setUsername, setOnboarded } from '../context/AppContext'
 import {
   useOnboardingContext,
@@ -336,7 +336,7 @@ export const OnboardingHeadshot: React.FC<OnboardingHeadshotProps> = ({
   placeholder,
   setShowButton,
 }) => {
-  let mobile = useDetectMobile()
+  let mobile = useMobile()
   const { onboardingState, onboardingDispatch } = useOnboardingContext()
 
   // local state to render spinner while uploading image

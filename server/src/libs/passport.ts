@@ -1,20 +1,11 @@
-import { v4 as uuidv4 } from 'uuid'
 import passport from 'passport'
 import { Strategy } from 'passport-magic'
+import { v4 as uuidv4 } from 'uuid'
 
 import magic from './magic'
 import AuthModel, { Auth } from '../models/Auth'
 
 const strategy = new Strategy(async (user, done) => {
-  console.log('in magic strategy')
-
-  let userMetadata = null
-  try {
-    userMetadata = await magic.users.getMetadataByIssuer(user.issuer)
-  } catch (err) {
-    console.log('error while calling getMetaDataByIssuer', err, err?.data)
-  }
-
   const existingAuth = await AuthModel.findOne({ authId: user.issuer }).exec()
 
   // Log in existing user
@@ -33,15 +24,25 @@ const strategy = new Strategy(async (user, done) => {
   }
 
   // Sign up new user
-  const newUser: Auth = {
+  // first get email from Magic metadata
+  let userMetadata = null
+  try {
+    userMetadata = await magic.users.getMetadataByIssuer(user.issuer)
+  } catch (err) {
+    console.log('error while calling getMetaDataByIssuer', err, err?.data)
+  }
+
+  // then create Auth object and save to db
+  console.log('signing up new user, creating new Auth object')
+  const newAuth = new AuthModel({
     authId: user.issuer,
     userId: uuidv4(),
     email: userMetadata?.email || '',
     lastLogin: user.claim.iat,
-  }
-  await AuthModel.updateOne({ authId: user.issuer }, newUser).exec()
+  })
+  await newAuth.save()
 
-  return done(null, newUser)
+  return done(null, newAuth)
 })
 
 passport.use(strategy)

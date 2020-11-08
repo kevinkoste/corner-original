@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { useDetectMobile } from '../libs/hooks'
+import { useMobile } from '../libs/hooks'
 import { Div, Button } from '../components/Base'
 import { Header } from '../components/Header'
 import { Transition } from 'react-transition-group'
@@ -12,7 +12,7 @@ import { PostProtectInviteCheck } from '../libs/api'
 
 export const OnboardingPage: React.FC = () => {
   let history = useHistory()
-  const mobile = useDetectMobile()
+  const mobile = useMobile()
 
   const duration: number = 400
   const [animate, setAnimate] = useState(false)

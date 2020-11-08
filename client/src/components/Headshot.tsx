@@ -4,7 +4,7 @@ import imageCompression from 'browser-image-compression'
 import ClipLoader from 'react-spinners/ClipLoader'
 
 // presentation/types
-import { useDetectMobile } from '../libs/hooks'
+import { useMobile } from '../libs/hooks'
 import { Img } from '../components/Base'
 import { HeadshotComponent } from '../models/Profile'
 
@@ -17,7 +17,7 @@ import {
 import { PostProtectProfileImage } from '../libs/api'
 
 export const EditHeadshot: React.FC<HeadshotComponent> = ({ id, props }) => {
-  const mobile = useDetectMobile()
+  const mobile = useMobile()
 
   const { profileState, profileDispatch } = useProfileContext()
 
@@ -84,7 +84,7 @@ export const EditHeadshot: React.FC<HeadshotComponent> = ({ id, props }) => {
 
 // public profile version
 export const Headshot: React.FC<HeadshotComponent> = ({ id, props }) => {
-  const mobile = useDetectMobile()
+  const mobile = useMobile()
   return (
     <ProfileImage
       size={mobile ? 12 : 10}

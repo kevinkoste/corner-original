@@ -11,7 +11,7 @@ import {
   Loader,
 } from '../components/Base'
 import { Header } from '../components/Header'
-import { useDetectMobile } from '../libs/hooks'
+import { useMobile } from '../libs/hooks'
 import {
   useAppContext,
   setAuth,
@@ -25,7 +25,7 @@ import magic from '../libs/magic'
 
 export const LoginPage: React.FC = () => {
   let history = useHistory()
-  const mobile = useDetectMobile()
+  const mobile = useMobile()
   const { state, dispatch } = useAppContext()
 
   const [loading, setLoading] = useState<boolean>(false)

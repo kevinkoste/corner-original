@@ -36,6 +36,7 @@ const UPDATE_EDUCATION = 'UPDATE_EDUCATION'
 const DELETE_EDUCATION = 'DELETE_EDUCATION'
 const DELETE_BOOK_BY_ID = 'DELETE_BOOK_BY_ID'
 const DELETE_INTEGRATION = 'DELETE_INTEGRATION'
+const SWAP_COMPONENTS = 'SWAP_COMPONENTS'
 
 // Valid action types
 type Action =
@@ -51,6 +52,7 @@ type Action =
   | { type: 'DELETE_EDUCATION'; education: any }
   | { type: 'DELETE_BOOK_BY_ID'; id: string }
   | { type: 'DELETE_INTEGRATION'; id: string }
+  | { type: 'SWAP_COMPONENTS'; fromIdx: number; toIdx: number }
 
 // Action creators
 export const updateProfile = (profile: Profile): Action => {
@@ -99,6 +101,10 @@ export const deleteBookById = (id: string): Action => {
 
 export const deleteIntegration = (id: string): Action => {
   return { type: DELETE_INTEGRATION, id: id }
+}
+
+export const swapComponents = (fromIdx: number, toIdx: number): Action => {
+  return { type: SWAP_COMPONENTS, fromIdx: fromIdx, toIdx: toIdx }
 }
 
 // Reducer
@@ -307,6 +313,38 @@ const ProfileReducer = (state: StateType, action: Action) => {
                   },
                 }
           ),
+        },
+      }
+
+    case SWAP_COMPONENTS:
+      const comp = state.profile.components[action.fromIdx]
+      const removed = state.profile.components.filter(
+        (val, idx) => idx !== action.fromIdx
+      )
+
+      if (action.toIdx === 0) {
+        return {
+          ...state,
+          profile: { ...state.profile, components: [comp, ...removed] },
+        }
+      }
+
+      if (action.toIdx === state.profile.components.length - 1) {
+        return {
+          ...state,
+          profile: { ...state.profile, components: [...removed, comp] },
+        }
+      }
+
+      return {
+        ...state,
+        profile: {
+          ...state.profile,
+          components: [
+            ...removed.slice(0, action.toIdx),
+            comp,
+            ...removed.slice(action.toIdx),
+          ],
         },
       }
 

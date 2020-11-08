@@ -93,6 +93,7 @@
       "semi": "off",
       "no-console": "off",
       "object-shorthand": "off",
+      "no-unused-vars": "off",
       "import/extensions": [
         "error",
         "ignorePackages",

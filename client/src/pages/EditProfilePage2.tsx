@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { v4 as uuidv4 } from 'uuid'
+import {
+  Container as DndContainer,
+  Draggable as DndDraggable,
+} from 'react-smooth-dnd'
 
 // presentation
 import { useMobile } from '../libs/hooks'
@@ -15,6 +19,7 @@ import {
   updateProfile,
   setEditing,
   postComponents,
+  swapComponents,
 } from '../context/ProfileContext'
 import { GenerateEditComponent } from '../components/ProfileEdit'
 import { GetPublicProfileData } from '../libs/api'
@@ -77,20 +82,20 @@ export const EditProfilePage: React.FC = () => {
         }
       }
 
-      // sort components
-      const sortMap: { [index: string]: any } = {
-        name: 0,
-        headshot: 1,
-        headline: 2,
-        bio: 3,
-        experiences: 4,
-        education: 5,
-        integrations: 6,
-        bookshelf: 7,
-      }
-      profile.components.sort((a, b) => {
-        return sortMap[a.type] - sortMap[b.type]
-      })
+      // // sort components
+      // const sortMap: { [index: string]: any } = {
+      //   name: 0,
+      //   headshot: 1,
+      //   headline: 2,
+      //   bio: 3,
+      //   experiences: 4,
+      //   education: 5,
+      //   integrations: 6,
+      //   bookshelf: 7,
+      // }
+      // profile.components.sort((a, b) => {
+      //   return sortMap[a.type] - sortMap[b.type]
+      // })
 
       // dispatch to profile context
       profileDispatch(updateProfile(profile))
@@ -108,6 +113,12 @@ export const EditProfilePage: React.FC = () => {
     profileDispatch(setEditing(!profileState.editing))
   }
 
+  // helper function for drag and drop support
+  const onDrop = (dropResult: any) => {
+    const { removedIndex, addedIndex } = dropResult
+    profileDispatch(swapComponents(removedIndex, addedIndex))
+  }
+
   return (
     <PageContainer column width={12}>
       <Header
@@ -118,6 +129,18 @@ export const EditProfilePage: React.FC = () => {
       />
 
       <BodyContainer column width={mobile ? 11 : 8}>
+        <DndContainer
+          onDrop={onDrop}
+          // dragHandleSelector=".field"
+          lockAxis="y"
+        >
+          {profileState.profile.components.map((comp, idx) => (
+            <DndDraggable key={idx}>{GenerateEditComponent(comp)}</DndDraggable>
+          ))}
+        </DndContainer>
+      </BodyContainer>
+
+      {/* <BodyContainer column width={mobile ? 11 : 8}>
         <CenteredContainer column width={12}>
           <FrontPageWrapper>
             {profileState.profile.components
@@ -152,9 +175,10 @@ export const EditProfilePage: React.FC = () => {
               )
               .map((comp) => GenerateEditComponent(comp))}
         </Div>
-      </BodyContainer>
+      </BodyContainer> */}
 
       <ButtonContainer row width={12}>
+        {/* {profileState.editing && <AddButton>Add Components</AddButton>} */}
         <EditButton onClick={onSave}>
           {profileState.editing ? 'Finish Editing' : 'Edit Corner'}
         </EditButton>
@@ -166,24 +190,36 @@ export const EditProfilePage: React.FC = () => {
 }
 export default EditProfilePage
 
-const CenteredContainer = styled(Div)`
-  justify-content: center;
-  flex-direction: row;
-  min-height: ${window.innerHeight - 51 + 'px'};
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-`
+// const CenteredContainer = styled(Div)`
+//   justify-content: center;
+//   flex-direction: row;
+//   min-height: ${window.innerHeight - 51 + 'px'};
+//   @media (max-width: 768px) {
+//     flex-direction: column;
+//   }
+// `
 
-const FrontPageWrapper = styled(Div)`
-  width: 50%;
-  flex-direction: column;
-  justify-content: center;
-  display: flex;
-  @media (max-width: 768px) {
-    width: unset;
-  }
-`
+// const FrontPageWrapper = styled(Div)`
+//   width: 50%;
+//   flex-direction: column;
+//   justify-content: center;
+//   display: flex;
+//   @media (max-width: 768px) {
+//     width: unset;
+//   }
+// `
+
+// const AddButton = styled(Button)`
+//   position: fixed;
+//   bottom: 10px;
+//   left: 8.34vw;
+//   @media (max-width: 768px) {
+//     left: 4.17vw;
+//   }
+//   @media (min-width: 1560px) {
+//     left: ${parseInt(((window.innerWidth - 1300) * 0.5).toString(), 10) + 'px'};
+//   }
+// `
 
 const EditButton = styled(Button)`
   position: fixed;

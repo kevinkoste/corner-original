@@ -1,12 +1,12 @@
 import React from 'react'
 
 // presentation
-import { useDetectMobile } from '../libs/hooks'
+import { useMobile } from '../libs/hooks'
 import { PageContainer, BodyContainer, H1 } from '../components/Base'
 import { Header } from '../components/Header'
 
 export const NotInvitedPage: React.FC = () => {
-  const mobile = useDetectMobile()
+  const mobile = useMobile()
 
   return (
     <PageContainer column width={12}>

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import { CSSTransition } from 'react-transition-group'
 
-import { useDetectMobile } from '../libs/hooks'
+import { useMobile } from '../libs/hooks'
 import { Div, Button } from '../components/Base'
 
 import { Profile } from '../models/Profile'
@@ -31,7 +31,7 @@ function useOutsideAlerter(ref: any, setShowing: any) {
 
 type ProfileModalProps = { profile: Profile }
 export const ProfileModal: React.FC<ProfileModalProps> = ({ profile }) => {
-  const mobile = useDetectMobile()
+  const mobile = useMobile()
 
   const [showing, setShowing] = useState<boolean>(false)
 

@@ -12,6 +12,7 @@ import {
 } from '../context/AppContext'
 import { OnboardingProvider } from '../context/OnboardingContext'
 import { ProfileProvider } from '../context/ProfileContext'
+import { DndContextProvider } from '../context/DndContext'
 
 import { PostAuthCheck } from '../libs/api'
 
@@ -22,6 +23,8 @@ const LoginPage = lazy(() => import('../pages/LoginPage'))
 const OnboardingPage = lazy(() => import('../pages/OnboardingPage'))
 const BrowsePage = lazy(() => import('../pages/BrowsePage'))
 const NotInvitedPage = lazy(() => import('../pages/NotInvitedPage'))
+const DragPage3 = lazy(() => import('../pages/DragPage3'))
+const EditProfilePage2 = lazy(() => import('../pages/EditProfilePage2'))
 
 export const AppNavigator: React.FC = () => {
   const { dispatch } = useAppContext()
@@ -76,6 +79,18 @@ export const AppNavigator: React.FC = () => {
             <Route exact path="/browse" component={BrowsePage} />
 
             <Route exact path="/not-invited" component={NotInvitedPage} />
+
+            <Route exact path="/drag3">
+              <DndContextProvider>
+                <DragPage3 />
+              </DndContextProvider>
+            </Route>
+
+            <Route exact path="/edit2/:username">
+              <ProfileProvider>
+                <EditProfilePage2 />
+              </ProfileProvider>
+            </Route>
 
             {/* if own profile, navigate to edit version of profile */}
             <Route exact path="/edit/:username">

@@ -38,8 +38,8 @@ export const deleteImageById = async (userId: string) => {
         Key: `large/${imageId}`,
       }),
     ])
-  } catch (e) {
-    console.log(e)
+  } catch {
+    console.log('Unable to delete existing photos')
   }
 }
 

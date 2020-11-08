@@ -4,7 +4,7 @@ import mongoose from 'mongoose'
 import connectMongo from 'connect-mongo'
 
 import passport from './libs/passport'
-import connectDb from './libs/mongo'
+import connectMongoDB from './libs/mongo'
 import { corsMiddleware, loggerMiddleware } from './libs/middleware'
 
 import authRouter from './routes/auth'
@@ -12,24 +12,20 @@ import protectRouter from './routes/protect'
 import publicRouter from './routes/public'
 import socialRouter from './routes/social'
 
-try {
-  await connectDb()
-} catch (err) {
-  console.log('mongo error', err)
-}
+// top-level await to connect to mongo before establishing session connection
+await connectMongoDB()
+const MongoStore = connectMongo(session)
+const store = new MongoStore({ mongooseConnection: mongoose.connection })
 
 const app = express()
-
-const MongoStore = connectMongo(session)
-
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.use(
   session({
     name: 'corner-sid',
-    secret: process.env.SESSION_SECRET || 'xyz',
-    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    secret: process.env.SESSION_SECRET!,
+    store: store,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -41,12 +37,13 @@ app.use(
   })
 )
 
-if (process.env.NODE_ENV === 'production') {
-  app.set('trust proxy', 1) // trust first proxy
-}
-
 app.use(passport.initialize())
 app.use(passport.session())
+
+// trust first proxy in prod
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1)
+}
 
 app.use(loggerMiddleware)
 app.use(corsMiddleware)

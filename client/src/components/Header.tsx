@@ -7,7 +7,7 @@ import BurgerIcon from '../icons/burger.svg'
 import ExitIcon from '../icons/exit.png'
 
 import { useAppContext, setAuth } from '../context/AppContext'
-import { useDetectMobile } from '../libs/hooks'
+import { useMobile } from '../libs/hooks'
 import { PostProtectInviteNewEmail, PostAuthLogout } from '../libs/api'
 
 type HeaderProps = { title: string }
@@ -15,7 +15,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
   let history = useHistory()
   const { state, dispatch } = useAppContext()
   const [showingBurger, setShowingBurger] = useState<boolean>(false)
-  const mobile = useDetectMobile()
+  const mobile = useMobile()
 
   const onClick = () => setShowingBurger(!showingBurger)
   const takeHome = () => {

@@ -3,7 +3,7 @@ import { useParams, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 // presentation
-import { useDetectMobile } from '../libs/hooks'
+import { useMobile } from '../libs/hooks'
 import {
   PageContainer,
   BodyContainer,
@@ -23,7 +23,7 @@ import { GenerateComponent } from '../components/ProfilePublic'
 
 export const ProfilePage: React.FC = () => {
   let history = useHistory()
-  const mobile = useDetectMobile()
+  const mobile = useMobile()
   const { state } = useAppContext()
 
   const { username } = useParams<{ username: string }>()
@@ -129,101 +129,8 @@ export const ProfilePage: React.FC = () => {
       <Div style={{ height: '54px' }} />
     </PageContainer>
   )
-
-  // if (!loading && profileExists) {
-  //   return (
-  //     <PageContainer column width={12}>
-  //       <Header
-  //         title={
-  //           profile.components.find((component) => component.type === 'name')
-  //             ?.props.name
-  //         }
-  //       />
-
-  //       <BodyContainer column width={mobile ? 11 : 8}>
-  //         <CenteredContainer column width={12}>
-  //           <FrontPageWrapper>
-  //             {profile.components
-  //               .filter((comp) => comp.type === 'headshot')
-  //               .map((comp) => GenerateComponent(comp, profile))}
-  //           </FrontPageWrapper>
-  //           <FrontPageWrapper>
-  //             {profile.components
-  //               .filter((comp) => comp.type === 'headline')
-  //               .map((comp) => GenerateComponent(comp, profile))}
-  //             {!mobile &&
-  //               profile.components
-  //                 .filter((comp) => comp.type === 'bio')
-  //                 .map((comp) => GenerateComponent(comp, profile))}
-  //             {!mobile &&
-  //               profile.components
-  //                 .filter((comp) => comp.type === 'experiences')
-  //                 .map((comp) => GenerateComponent(comp, profile))}
-  //           </FrontPageWrapper>
-  //         </CenteredContainer>
-
-  //         <Div column width={12}>
-  //           {mobile &&
-  //             profile.components
-  //               .filter(
-  //                 (comp) => comp.type !== 'headshot' && comp.type !== 'headline'
-  //               )
-  //               .map((comp) => GenerateComponent(comp, profile))}
-  //           {!mobile &&
-  //             profile.components
-  //               .filter(
-  //                 (comp) =>
-  //                   comp.type !== 'headshot' &&
-  //                   comp.type !== 'headline' &&
-  //                   comp.type !== 'bio' &&
-  //                   comp.type !== 'experiences'
-  //               )
-  //               .map((comp) => GenerateComponent(comp, profile))}
-  //         </Div>
-  //       </BodyContainer>
-
-  //       {!state.auth && (
-  //         <ButtonContainer row width={12}>
-  //           <EditButton onClick={() => history.push('/login')}>
-  //             Join Corner
-  //           </EditButton>
-  //         </ButtonContainer>
-  //       )}
-
-  //       {state.auth && <ProfileModal profile={profile} />}
-
-  //       <Div style={{ height: '54px' }} />
-  //     </PageContainer>
-  //   )
-  // } else if (!loading && !profileExists) {
-  //   return (
-  //     <PageContainer column width={12}>
-  //       <Header title={'Profile Not Found'} />
-
-  //       <NotFoundContainer width={mobile ? 11 : 6}>
-  //         <H1>This profile doesn't exist!</H1>
-  //       </NotFoundContainer>
-
-  //       {!state.auth && (
-  //         <ButtonContainer row width={12}>
-  //           <EditButton onClick={() => history.push('/login')}>
-  //             Join Corner
-  //           </EditButton>
-  //         </ButtonContainer>
-  //       )}
-  //       {mobile && <Div style={{ height: '60px' }} />}
-  //     </PageContainer>
-  //   )
-  // } else {
-  //   return <div style={{ height: '100vh', backgroundColor: 'white' }} />
-  // }
 }
 export default ProfilePage
-
-// const BodyContainer = styled(Div)`
-//   padding-top: 51px;
-//   max-width: 1150px;
-// `
 
 const CenteredContainer = styled(Div)`
   justify-content: center;
@@ -243,11 +150,6 @@ const FrontPageWrapper = styled(Div)`
     width: unset;
   }
 `
-
-// const NotFoundContainer = styled(Div)`
-//   flex: 1;
-//   justify-content: center;
-// `
 
 const ButtonContainer = styled(Div)`
   display: flex;

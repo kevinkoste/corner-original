@@ -11,12 +11,12 @@ import {
 } from '../components/Base'
 import { Header } from '../components/Header'
 
-import { useDetectMobile } from '../libs/hooks'
+import { useMobile } from '../libs/hooks'
 import { useAppContext } from '../context/AppContext'
 
 export const HomePage: React.FC = () => {
   let history = useHistory()
-  const mobile = useDetectMobile()
+  const mobile = useMobile()
   const { state } = useAppContext()
 
   const onClick = () => {

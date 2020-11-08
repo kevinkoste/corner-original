@@ -10,28 +10,31 @@ import { EditEducation } from '../components/Education'
 import { EditBookshelf } from './Bookshelf'
 import { EditIntegrations } from './Integrations'
 
-// GenerateComponent takes JSON {id, component, props},
-// then generates a component from the Components map above
+// GenerateComponent takes array of objects {id, component, props}[],
+// and generates a component from the Components map above
 // id, key, are injected as props to each component
 type ComponentIndex = {
-	[index: string]: any
+  [index: string]: any
 }
-const Components: ComponentIndex  = {
-	headline: EditHeadline,
-	bio: EditBio,
-	bookshelf: EditBookshelf,
-	headshot: EditHeadshot,
-	experiences: EditExperience,
-	education: EditEducation,
-  integrations: EditIntegrations
+const Components: ComponentIndex = {
+  headline: EditHeadline,
+  bio: EditBio,
+  bookshelf: EditBookshelf,
+  headshot: EditHeadshot,
+  experiences: EditExperience,
+  education: EditEducation,
+  integrations: EditIntegrations,
 }
 
 export const GenerateEditComponent = (component: Component) => {
   // component exists
-  if (typeof Components[component.type] !== 'undefined') {	
-		return React.createElement(Components[component.type], {...component, key:component.id} )
-	} else {
-		// component does not exist
-		return <React.Fragment key={component.id} />
-	}
+  if (typeof Components[component.type] !== 'undefined') {
+    return React.createElement(Components[component.type], {
+      ...component,
+      key: component.id,
+    })
+  } else {
+    // component does not exist
+    return <React.Fragment key={component.id} />
+  }
 }
