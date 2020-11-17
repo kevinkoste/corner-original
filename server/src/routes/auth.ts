@@ -56,6 +56,7 @@ router.post('/login', passport.authenticate('magic'), async (req, res) => {
 // POST /auth/check - handles session check
 router.post('/check', async (req, res) => {
   if (!req.isAuthenticated()) {
+    console.log('user is not authenticated')
     return res.status(200).json({
       auth: false,
     })
@@ -64,6 +65,10 @@ router.post('/check', async (req, res) => {
   const { userId, email } = req.user as Auth
 
   const user = await UserModel.findOne({ userId: userId })
+
+  // is it possible for user to not exist at this point?
+
+  console.log('user is authenticated with username: ', user!.username)
 
   if (user?.username) {
     return res.status(200).json({

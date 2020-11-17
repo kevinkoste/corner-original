@@ -27,7 +27,8 @@ app.use(
     secret: process.env.SESSION_SECRET!,
     store: store,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    unset: 'destroy',
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 7 * 2, // 2 weeks
       secure: process.env.NODE_ENV === 'production',
@@ -36,6 +37,13 @@ app.use(
     },
   })
 )
+
+console.log('cookie settings are: ', {
+  maxAge: 1000 * 60 * 60 * 24 * 7 * 2, // 2 weeks
+  secure: process.env.NODE_ENV === 'production',
+  httpOnly: process.env.NODE_ENV === 'production',
+  sameSite: process.env.NODE_ENV === 'production' ? 'none' : false,
+})
 
 app.use(passport.initialize())
 app.use(passport.session())

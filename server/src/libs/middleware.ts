@@ -7,11 +7,13 @@ export const loggerMiddleware = (
   next: any
 ) => {
   if (req.method !== 'OPTIONS') {
+    console.log('\n ________________________')
     console.log(
       `${req.method.padEnd(8, ' ')}${req.path.padEnd(24, ' ')}${JSON.stringify(
         req.query
       )}`
     )
+    console.log('cookies:', req.cookies)
   }
   next()
 }
@@ -19,6 +21,7 @@ export const loggerMiddleware = (
 export const corsMiddleware = cors({
   credentials: true,
   origin: (origin, callback) => {
+    console.log('request from origin:', origin)
     if (!origin || process.env.ALLOWED_ORIGINS === '*') {
       return callback(null, true)
     }
