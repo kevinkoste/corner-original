@@ -3,31 +3,10 @@ import styled from 'styled-components'
 import { CSSTransition } from 'react-transition-group'
 
 import { useMobile } from '../libs/hooks'
-import { Div, Button } from '../components/Base'
+import { Div, HoverButton, HoverButtonContainer } from '../components/Base'
 
 import { Profile } from '../models/Profile'
 import { PostProtectFollow } from '../libs/api'
-
-function useOutsideAlerter(ref: any, setShowing: any) {
-  useEffect(() => {
-    // Alert if clicked on outside of element
-    function handleClickOutside(event: any) {
-      if (ref.current && !ref.current.contains(event.target)) {
-        setShowing(false)
-      }
-    }
-
-    // Bind the event listener
-    document.addEventListener('mousedown', handleClickOutside)
-    window.addEventListener('scroll', handleClickOutside, true)
-    return () => {
-      // Unbind the event listener on clean up
-      document.removeEventListener('mousedown', handleClickOutside)
-      window.removeEventListener('scroll', handleClickOutside, true)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ref])
-}
 
 type ProfileModalProps = { profile: Profile }
 export const ProfileModal: React.FC<ProfileModalProps> = ({ profile }) => {
@@ -41,15 +20,15 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ profile }) => {
   return (
     <BodyContainer column width={mobile ? 11 : 10}>
       {showing && (
-        <ButtonContainer row width={12} ref={wrapperRef}>
-          <ModalButton onClick={() => setShowing(false)}>Done</ModalButton>
-        </ButtonContainer>
+        <HoverButtonContainer row width={12} ref={wrapperRef}>
+          <HoverButton onClick={() => setShowing(false)}>Done</HoverButton>
+        </HoverButtonContainer>
       )}
 
       {!showing && (
-        <ButtonContainer row width={12}>
-          <ModalButton onClick={() => setShowing(true)}>Social</ModalButton>
-        </ButtonContainer>
+        <HoverButtonContainer row width={12}>
+          <HoverButton onClick={() => setShowing(true)}>Social</HoverButton>
+        </HoverButtonContainer>
       )}
 
       <Buttons inProp={showing} profile={profile} />
@@ -96,14 +75,8 @@ const Buttons: React.FC<ButtonsProps> = ({ inProp, profile }) => {
   )
 }
 
-const ButtonContainer = styled(Div)`
-  display: flex;
-  position: relative;
-  justify-content: space-between;
-  max-width: 350px;
-  @media (max-width: 768px) {
-    margin: 0;
-  }
+const BodyContainer = styled(Div)`
+  max-width: 1300px;
 `
 
 const TransitionContainer = styled(Div)`
@@ -130,33 +103,11 @@ const TransitionContainer = styled(Div)`
   }
 `
 
-const ModalButton = styled(Button)`
-  position: fixed;
-  bottom: 10px;
-  right: 8.34vw;
-  @media (max-width: 768px) {
-    right: 4.17vw;
-  }
-  @media (min-width: 1560px) {
-    right: ${parseInt(((window.innerWidth - 1300) * 0.5).toString(), 10) +
-    'px'};
-  }
-`
-
-const EndorseButton = styled(Button)`
-  position: fixed;
+const EndorseButton = styled(HoverButton)`
   bottom: 63px;
-  right: 8.34vw;
   color: black;
   background-color: white;
   border: 1px solid black;
-  @media (max-width: 768px) {
-    right: 4.17vw;
-  }
-  @media (min-width: 1560px) {
-    right: ${parseInt(((window.innerWidth - 1300) * 0.5).toString(), 10) +
-    'px'};
-  }
 `
 
 const FollowButton = styled(EndorseButton)`
@@ -164,6 +115,23 @@ const FollowButton = styled(EndorseButton)`
   bottom: 116px;
 `
 
-const BodyContainer = styled(Div)`
-  max-width: 1300px;
-`
+const useOutsideAlerter = (ref: any, setShowing: any) => {
+  useEffect(() => {
+    // Alert if clicked on outside of element
+    function handleClickOutside(event: any) {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setShowing(false)
+      }
+    }
+
+    // Bind the event listener
+    document.addEventListener('mousedown', handleClickOutside)
+    window.addEventListener('scroll', handleClickOutside, true)
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener('mousedown', handleClickOutside)
+      window.removeEventListener('scroll', handleClickOutside, true)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ref])
+}

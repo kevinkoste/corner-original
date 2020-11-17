@@ -23,6 +23,7 @@ const LoginPage = lazy(() => import('../pages/LoginPage'))
 const OnboardingPage = lazy(() => import('../pages/OnboardingPage'))
 const BrowsePage = lazy(() => import('../pages/BrowsePage'))
 const NotInvitedPage = lazy(() => import('../pages/NotInvitedPage'))
+
 const DragPage3 = lazy(() => import('../pages/DragPage3'))
 const EditProfilePage2 = lazy(() => import('../pages/EditProfilePage2'))
 
@@ -35,12 +36,13 @@ export const AppNavigator: React.FC = () => {
     // on mount, handle auth checks
     const onMount = async () => {
       // attempt to retrieve existing session
-      try {
-        const auth = await PostAuthCheck()
+      const { data } = await PostAuthCheck()
+      const { auth, userId, email, onboarded, username } = data
+
+      if (!auth) {
+        dispatch(setAuth(false))
+      } else {
         dispatch(setAuth(true))
-
-        const { userId, email, onboarded, username } = auth.data
-
         dispatch(setUserId(userId))
         dispatch(setEmail(email))
 
@@ -48,8 +50,6 @@ export const AppNavigator: React.FC = () => {
           dispatch(setOnboarded(true))
           dispatch(setUsername(username))
         }
-      } catch (err) {
-        // user is not logged in
       }
 
       setLoading(false)

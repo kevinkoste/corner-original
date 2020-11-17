@@ -11,8 +11,8 @@
     "dev": "tsc && concurrently \"tsc -w\" \"nodemon -r dotenv/config --experimental-specifier-resolution=node dist/app.js\"",
     "dev-static": "tsc && node -r dotenv/config --experimental-specifier-resolution=node dist/app.js",
     "dev-docker": "docker rm -f corner || true && docker rmi -f kevinkoste/corner || true && tsc && docker build -t kevinkoste/corner . && docker run --publish 8000:8000 --name corner kevinkoste/corner:latest",
-    "deploy": "heroku container:push web -a corner-server && heroku container:release web -a corner-server",
-    "deploy-staging": "heroku container:push web -a corner-server-staging && heroku container:release web -a corner-server-staging",
+    "deploy": "docker system prune -y && heroku container:push web -a corner-server && heroku container:release web -a corner-server",
+    "deploy-staging": "docker system prune -y && heroku container:push web -a corner-server-staging && heroku container:release web -a corner-server-staging",
     "create-tables": "aws cloudformation update-stack --stack-name corner-tables --template-body file://src/resources/tables.yml"
   },
   "dependencies": {

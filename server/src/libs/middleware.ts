@@ -19,7 +19,7 @@ export const loggerMiddleware = (
 export const corsMiddleware = cors({
   credentials: true,
   origin: (origin, callback) => {
-    if (!origin) {
+    if (!origin || process.env.ALLOWED_ORIGINS === '*') {
       return callback(null, true)
     }
     if (process.env.ALLOWED_ORIGINS!.indexOf(origin) === -1) {

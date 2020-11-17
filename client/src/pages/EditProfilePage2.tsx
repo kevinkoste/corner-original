@@ -7,8 +7,17 @@ import {
 } from 'react-smooth-dnd'
 
 // presentation
-import { useMobile } from '../libs/hooks'
-import { PageContainer, BodyContainer, Div, Button } from '../components/Base'
+// import { useMobile } from '../libs/hooks'
+import {
+  H1,
+  PageContainer,
+  // BodyContainer,
+  Div,
+  Button,
+  WhiteButton,
+  HoverButton,
+  HoverButtonContainer,
+} from '../components/Base'
 import { Header } from '../components/Header'
 
 // logic
@@ -18,84 +27,25 @@ import {
   useProfileContext,
   updateProfile,
   setEditing,
+  setModal,
   postComponents,
   swapComponents,
+  updateComponent,
 } from '../context/ProfileContext'
 import { GenerateEditComponent } from '../components/ProfileEdit'
 import { GetPublicProfileData } from '../libs/api'
 
 export const EditProfilePage: React.FC = () => {
-  const mobile = useMobile()
-
-  // not yet sure which we are using...
+  // const mobile = useMobile()
   const { state } = useAppContext()
   const { profileState, profileDispatch } = useProfileContext()
 
-  // on mount, supply profileState with public profile data and add missing components if needed
+  // on mount, supply profileState with public profile data
   useEffect(() => {
     const onMount = async () => {
       const { data } = await GetPublicProfileData(state.username)
+
       const profile: Profile = data
-
-      // add any missing components
-      for (let type of [
-        'bio',
-        'bookshelf',
-        'experiences',
-        'education',
-        'integrations',
-      ]) {
-        if (
-          profile.components.find((comp) => comp.type === type) === undefined
-        ) {
-          if (type === 'bio') {
-            profile.components.push({
-              id: uuidv4().toString(),
-              type: type,
-              props: { bio: '' },
-            })
-          } else if (type === 'bookshelf') {
-            profile.components.push({
-              id: uuidv4().toString(),
-              type: 'bookshelf',
-              props: { books: [] },
-            })
-          } else if (type === 'experiences') {
-            profile.components.push({
-              id: uuidv4().toString(),
-              type: 'experiences',
-              props: { experiences: [] },
-            })
-          } else if (type === 'education') {
-            profile.components.push({
-              id: uuidv4().toString(),
-              type: 'education',
-              props: { education: [] },
-            })
-          } else if (type === 'integrations') {
-            profile.components.push({
-              id: uuidv4().toString(),
-              type: 'integrations',
-              props: { integrations: [] },
-            })
-          }
-        }
-      }
-
-      // // sort components
-      // const sortMap: { [index: string]: any } = {
-      //   name: 0,
-      //   headshot: 1,
-      //   headline: 2,
-      //   bio: 3,
-      //   experiences: 4,
-      //   education: 5,
-      //   integrations: 6,
-      //   bookshelf: 7,
-      // }
-      // profile.components.sort((a, b) => {
-      //   return sortMap[a.type] - sortMap[b.type]
-      // })
 
       // dispatch to profile context
       profileDispatch(updateProfile(profile))
@@ -128,61 +78,35 @@ export const EditProfilePage: React.FC = () => {
         }
       />
 
-      <BodyContainer column width={mobile ? 11 : 8}>
+      <BodyContainer column width={12}>
         <DndContainer
           onDrop={onDrop}
-          // dragHandleSelector=".field"
+          // dragClass='animate'
+          dragHandleSelector=".field"
           lockAxis="y"
         >
           {profileState.profile.components.map((comp, idx) => (
             <DndDraggable key={idx}>{GenerateEditComponent(comp)}</DndDraggable>
           ))}
         </DndContainer>
+
+        {profileState.editing && (
+          <WhiteButton
+            onClick={() => profileDispatch(setModal(true))}
+            style={{ margin: '0 auto' }}
+          >
+            <H1>+</H1>
+          </WhiteButton>
+        )}
       </BodyContainer>
 
-      {/* <BodyContainer column width={mobile ? 11 : 8}>
-        <CenteredContainer column width={12}>
-          <FrontPageWrapper>
-            {profileState.profile.components
-              .filter((comp) => comp.type === 'headshot')
-              .map((comp) => GenerateEditComponent(comp))}
-          </FrontPageWrapper>
-          <FrontPageWrapper>
-            {profileState.profile.components
-              .filter((comp) => comp.type === 'headline')
-              .map((comp) => GenerateEditComponent(comp))}
-            {!mobile &&
-              profileState.profile.components
-                .filter((comp) => comp.type === 'bio')
-                .map((comp) => GenerateEditComponent(comp))}
-          </FrontPageWrapper>
-        </CenteredContainer>
-
-        <Div column width={12}>
-          {mobile &&
-            profileState.profile.components
-              .filter(
-                (comp) => comp.type !== 'headshot' && comp.type !== 'headline'
-              )
-              .map((comp) => GenerateEditComponent(comp))}
-          {!mobile &&
-            profileState.profile.components
-              .filter(
-                (comp) =>
-                  comp.type !== 'headshot' &&
-                  comp.type !== 'headline' &&
-                  comp.type !== 'bio'
-              )
-              .map((comp) => GenerateEditComponent(comp))}
-        </Div>
-      </BodyContainer> */}
-
-      <ButtonContainer row width={12}>
-        {/* {profileState.editing && <AddButton>Add Components</AddButton>} */}
-        <EditButton onClick={onSave}>
+      <HoverButtonContainer row width={12}>
+        <HoverButton onClick={onSave}>
           {profileState.editing ? 'Finish Editing' : 'Edit Corner'}
-        </EditButton>
-      </ButtonContainer>
+        </HoverButton>
+      </HoverButtonContainer>
+
+      {profileState.modal && <AddComponentModal />}
 
       <Div style={{ height: '54px' }} />
     </PageContainer>
@@ -190,56 +114,77 @@ export const EditProfilePage: React.FC = () => {
 }
 export default EditProfilePage
 
-// const CenteredContainer = styled(Div)`
-//   justify-content: center;
-//   flex-direction: row;
-//   min-height: ${window.innerHeight - 51 + 'px'};
-//   @media (max-width: 768px) {
-//     flex-direction: column;
-//   }
-// `
-
-// const FrontPageWrapper = styled(Div)`
-//   width: 50%;
-//   flex-direction: column;
-//   justify-content: center;
-//   display: flex;
-//   @media (max-width: 768px) {
-//     width: unset;
-//   }
-// `
-
-// const AddButton = styled(Button)`
-//   position: fixed;
-//   bottom: 10px;
-//   left: 8.34vw;
-//   @media (max-width: 768px) {
-//     left: 4.17vw;
-//   }
-//   @media (min-width: 1560px) {
-//     left: ${parseInt(((window.innerWidth - 1300) * 0.5).toString(), 10) + 'px'};
-//   }
-// `
-
-const EditButton = styled(Button)`
-  position: fixed;
-  bottom: 10px;
-  right: 8.34vw;
-  @media (max-width: 768px) {
-    right: 4.17vw;
-  }
-  @media (min-width: 1560px) {
-    right: ${parseInt(((window.innerWidth - 1300) * 0.5).toString(), 10) +
-    'px'};
-  }
+const BodyContainer = styled(Div)`
+  padding-top: calc(51px);
+  padding-bottom: 60px;
+  max-width: 1150px;
 `
 
-const ButtonContainer = styled(Div)`
-  display: flex;
-  position: relative;
-  justify-content: space-between;
-  max-width: 350px;
-  @media (max-width: 768px) {
-    margin: 0;
-  }
+const AddComponentModal: React.FC = () => {
+  const { profileDispatch } = useProfileContext()
+
+  const components = [
+    {
+      display: 'Bio',
+      type: 'bio',
+      props: { bio: '' },
+    },
+    {
+      display: 'Bookshelf',
+      type: 'bookshelf',
+      props: { books: [] },
+    },
+    {
+      display: 'Experiences',
+      type: 'experiences',
+      props: { experiences: [] },
+    },
+    {
+      display: 'Education',
+      type: 'education',
+      props: { education: [] },
+    },
+    {
+      display: 'Integrations',
+      type: 'integrations',
+      props: { integrations: [] },
+    },
+  ]
+
+  return (
+    <FullScreenModal onClick={() => profileDispatch(setModal(false))}>
+      {components.map((comp, idx) => (
+        <Button
+          key={idx}
+          onClick={() => {
+            profileDispatch(setModal(false))
+            profileDispatch(
+              updateComponent({
+                id: uuidv4().toString(),
+                type: comp.type,
+                props: comp.props,
+              })
+            )
+          }}
+          style={{ marginBottom: '12px' }}
+        >
+          Add {comp.display}
+        </Button>
+      ))}
+    </FullScreenModal>
+  )
+}
+
+const FullScreenModal = styled(Div)`
+  position: fixed;
+  z-index: 10;
+  width: 100vw;
+  height: 100vh;
+
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 `

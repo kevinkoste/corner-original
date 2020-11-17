@@ -6,11 +6,13 @@ import { PostProtectUsername, PostProtectComponents } from '../libs/api'
 type StateType = {
   profile: Profile
   editing: boolean
+  modal: boolean
 }
 
 const initialState: StateType = {
   profile: EmptyProfile,
   editing: false,
+  modal: false,
 }
 
 type ProfileContextType = {
@@ -28,6 +30,7 @@ const UPDATE_PROFILE = 'UPDATE_PROFILE'
 const POST_USERNAME = 'POST_USERNAME'
 const POST_COMPONENTS = 'POST_COMPONENTS'
 const SET_EDITING = 'SET_EDITING'
+const SET_MODAL = 'SET_MODAL'
 const UPDATE_COMPONENT = 'UPDATE_COMPONENT'
 const DELETE_COMPONENT = 'DELETE_COMPONENT'
 const UPDATE_EXPERIENCE = 'UPDATE_EXPERIENCE'
@@ -44,6 +47,7 @@ type Action =
   | { type: 'POST_USERNAME' }
   | { type: 'POST_COMPONENTS' }
   | { type: 'SET_EDITING'; editing: boolean }
+  | { type: 'SET_MODAL'; modal: boolean }
   | { type: 'UPDATE_COMPONENT'; component: any }
   | { type: 'DELETE_COMPONENT'; id: string }
   | { type: 'UPDATE_EXPERIENCE'; experience: any }
@@ -69,6 +73,10 @@ export const postComponents = (): Action => {
 
 export const setEditing = (editing: boolean): Action => {
   return { type: SET_EDITING, editing: editing }
+}
+
+export const setModal = (modal: boolean): Action => {
+  return { type: SET_MODAL, modal: modal }
 }
 
 export const updateComponent = (component: any): Action => {
@@ -128,6 +136,12 @@ const ProfileReducer = (state: StateType, action: Action) => {
       return {
         ...state,
         editing: action.editing,
+      }
+
+    case SET_MODAL:
+      return {
+        ...state,
+        modal: action.modal,
       }
 
     case UPDATE_COMPONENT:

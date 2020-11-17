@@ -15,14 +15,9 @@ router.post('/login', passport.authenticate('magic'), async (req, res) => {
 
   const { userId, email } = req.user as Auth
 
-  // let existingUser = null
-  // try {
-  //   existingUser = await UserModel.findOne({ userId: userId }).exec()
-  //   console.log('mongo response from findOne', existingUser)
-  // } catch (err) {
-  //   console.log('mongodb error getting UserModel', err)
-  // }
   const existingUser = await UserModel.findOne({ userId: userId }).exec()
+
+  // console.log('existing user is: ', existingUser)
 
   if (existingUser) {
     // user exists
@@ -48,12 +43,6 @@ router.post('/login', passport.authenticate('magic'), async (req, res) => {
 
   // user is brand new
   console.log('new user')
-  // try {
-  //   const newUser = new UserModel({ userId: userId })
-  //   await newUser.save()
-  // } catch (err) {
-  //   console.log('mongo save new user error:', err)
-  // }
   const newUser = new UserModel({ userId: userId })
   await newUser.save()
 
@@ -67,7 +56,9 @@ router.post('/login', passport.authenticate('magic'), async (req, res) => {
 // POST /auth/check - handles session check
 router.post('/check', async (req, res) => {
   if (!req.isAuthenticated()) {
-    return res.status(401).end(`No session found`)
+    return res.status(200).json({
+      auth: false,
+    })
   }
 
   const { userId, email } = req.user as Auth
@@ -76,6 +67,7 @@ router.post('/check', async (req, res) => {
 
   if (user?.username) {
     return res.status(200).json({
+      auth: true,
       userId: userId,
       email: email,
       onboarded: true,
@@ -84,6 +76,7 @@ router.post('/check', async (req, res) => {
   }
 
   return res.status(200).json({
+    auth: true,
     userId: userId,
     email: email,
     onboarded: false,
