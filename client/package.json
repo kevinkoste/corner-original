@@ -11,6 +11,8 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "@sentry/react": "^5.27.4",
+    "@sentry/tracing": "^5.27.4",
     "axios": "^0.19.2",
     "browser-image-compression": "^1.0.12",
     "magic-sdk": "^2.7.0",
